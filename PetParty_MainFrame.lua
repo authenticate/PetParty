@@ -18,8 +18,18 @@
 -- along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+function PetParty.OnDragStartMainFrame()
+    PetParty_MainFrame:StartMoving();
+    return;
+end
+
+function PetParty.OnDragStopMainFrame()
+    PetParty_MainFrame:StopMovingOrSizing();
+    return;
+end
+
 function PetParty.OnLoadMainFrame()
-    print("Hello World from the Main Frame!");
+    PetParty_MainFrame:RegisterForDrag("LeftButton");
     return;
 end
 

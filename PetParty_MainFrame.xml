@@ -21,7 +21,7 @@
     
     <Script File="PetParty_MainFrame.lua"/>
     
-    <Frame name="PetParty_MainFrame" parent="UIParent" hidden="true" enableMouse="true" frameStrata="DIALOG" movable="true">
+    <Frame name="PetParty_MainFrame" parent="UIParent" hidden="true" enableMouse="true" frameStrata="DIALOG" movable="true" resizable="true">
         <Size x="384" y="512"/>
         <Anchors>
             <Anchor point="CENTER" relativePoint="CENTER" relativeTo="UIParent"/>
@@ -63,6 +63,12 @@
             </Layer>
         </Layers>
         <Scripts>
+            <OnDragStart>
+                PetParty.OnDragStartMainFrame();
+            </OnDragStart>
+            <OnDragStop>
+                PetParty.OnDragStopMainFrame();
+            </OnDragStop>
             <OnLoad>
                 PetParty.OnLoadMainFrame();
             </OnLoad>
