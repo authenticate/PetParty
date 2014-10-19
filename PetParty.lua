@@ -25,8 +25,8 @@ PetParty.L = PetParty.L_enUS;
 -- TODO: Debugging code.  Remove later.
 --
 
-PetParty_Frame:Show();
---PetParty_Frame:Hide();
+PetParty_MainFrame:Show();
+--PetParty_MainFrame:Hide();
 
 local frame = CreateFrame("Frame");
 frame:RegisterEvent("PLAYER_ENTERING_WORLD");

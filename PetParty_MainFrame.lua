@@ -18,11 +18,12 @@
 -- along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 --
 
---
--- TODO: Debugging code.  Remove later.
---
+function PetParty.OnLoadMainFrame()
+    print("Hello World from the Main Frame!");
+    return;
+end
 
-function PetParty.OnLoadPetParty_Frame()
-    print("Hello world from the frame!");
+function PetParty.OnShowMainFrame()
+    PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
     return;
 end
