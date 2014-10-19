@@ -35,5 +35,6 @@ end
 
 function PetParty.OnShowMainFrame()
     PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
+    PetParty_MainFrame_Button_Close:SetText(PetParty.L["Close"]);
     return;
 end

@@ -62,6 +62,20 @@
                 </FontString>
             </Layer>
         </Layers>
+        <Frames>
+            <Button name="$parent_Button_Close" inherits="OptionsButtonTemplate" hidden="false">
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset x="-12" y="16"/>
+                    </Anchor> 
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        self:GetParent():Hide();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
         <Scripts>
             <OnDragStart>
                 PetParty.OnDragStartMainFrame();
