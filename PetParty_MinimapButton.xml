@@ -1,0 +1,83 @@
+
+<!-- Pet Party -->
+<!-- Copyright 2014 James Lammlein -->
+
+<!-- This file is part of Pet Party. -->
+
+<!-- Pet Party is free software: you can redistribute it and/or modify -->
+<!-- it under the terms of the GNU General Public License as published by -->
+<!-- the Free Software Foundation, either version 3 of the License, or -->
+<!-- any later version. -->
+
+<!-- Pet Party is distributed in the hope that it will be useful, -->
+<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of -->
+<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the -->
+<!-- GNU General Public License for more details. -->
+
+<!-- You should have received a copy of the GNU General Public License -->
+<!-- along with Pet Party.  If not, see <http://www.gnu.org/licenses/>. -->
+
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ../FrameXML/UI.xsd">
+    
+    <Script File="PetParty_MinimapButton.lua"/>
+    
+    <Button name="PetParty_MinimapButton" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+        <Size>
+            <AbsDimension x="33" y="33"/>
+        </Size>
+        <Anchors>
+            <Anchor point="TOPLEFT"/>
+        </Anchors>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture name="$parent_Icon" file="Interface\Icons\INV_Misc_QuestionMark">
+                    <Size>
+                        <AbsDimension x="21" y="21"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT">
+                            <Offset>
+                                <AbsDimension x="7" y="-6"/>
+                            </Offset>
+                        </Anchor>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="OVERLAY">
+                <Texture file="Interface\Minimap\MiniMap-TrackingBorder">
+                    <Size>
+                        <AbsDimension x="56" y="56"/>
+                    </Size>
+                    <Anchors>
+                        <Anchor point="TOPLEFT"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Frame name="$parent_DraggingFrame" hidden="true">
+                <Scripts>
+                    <OnUpdate>
+                        PetParty.OnUpdateMinimapButtonDraggingFrame();
+                    </OnUpdate>
+                </Scripts>
+            </Frame>
+        </Frames>
+        <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
+        <Scripts>
+            <OnLoad>
+                PetParty.OnLoadMinimapButton();
+            </OnLoad>
+            <OnDragStart>
+                PetParty.OnDragStartMinimapButton();
+            </OnDragStart>
+            <OnDragStop>
+                PetParty.OnDragStopMinimapButton();
+            </OnDragStop>
+            <OnClick>
+                PetParty.OnClickMinimapButton(button, down);
+            </OnClick>
+        </Scripts>
+    </Button>
+    
+</Ui>

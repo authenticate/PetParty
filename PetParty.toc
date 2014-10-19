@@ -34,6 +34,8 @@ locales\PetParty_enUS.lua
 # The UI files.
 PetParty_MainFrame.xml
 PetParty_MainFrame.lua
+PetParty_MinimapButton.xml
+PetParty_MinimapButton.lua
 
 # The add on files.
 PetParty.lua
