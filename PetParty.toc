@@ -24,6 +24,7 @@
 ## Notes: Creates groups of pets for the pet battle system.
 ## Author: Authentication
 ## SavedVariables: PetPartyDB
+## SavedVariablesPerCharacter: PetPartyCharacterDB
 
 # The configuration files.
 PetParty_Configuration.lua

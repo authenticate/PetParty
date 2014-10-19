@@ -18,21 +18,25 @@
 -- along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+-- Called when the main frame starts dragging.
 function PetParty.OnDragStartMainFrame()
     PetParty_MainFrame:StartMoving();
     return;
 end
 
+-- Called when the main frame stops dragging.
 function PetParty.OnDragStopMainFrame()
     PetParty_MainFrame:StopMovingOrSizing();
     return;
 end
 
+-- Called when the main frame loads.
 function PetParty.OnLoadMainFrame()
     PetParty_MainFrame:RegisterForDrag("LeftButton");
     return;
 end
 
+-- Called when the main frame is shown.
 function PetParty.OnShowMainFrame()
     PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
     PetParty_MainFrame_Button_Close:SetText(PetParty.L["Close"]);

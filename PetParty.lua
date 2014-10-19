@@ -20,17 +20,3 @@
 
 -- Pet Party localization.  Use US English as the default localization.
 PetParty.L = PetParty.L_enUS;
-
---
--- TODO: Debugging code.  Remove later.
---
-
-PetParty_MainFrame:Show();
---PetParty_MainFrame:Hide();
-
-local frame = CreateFrame("Frame");
-frame:RegisterEvent("PLAYER_ENTERING_WORLD");
-frame:SetScript("OnEvent", function()
-    print(PetParty.L["Hello World!"]);
-    end
-);

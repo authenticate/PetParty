@@ -21,7 +21,7 @@
 -- Pet Party US English localization.
 PetParty.L_enUS = {};
 
--- The translate function.
+-- The translation function.
 function PetParty.translate_enUS(L, key)
     -- For US English, just return the key.
     return key;

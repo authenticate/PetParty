@@ -18,13 +18,31 @@
 -- along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--
 -- Constants.
+--
+
 local ICON_OFFSET = 70;
 local ICON_OFFSET_X = 52;
 local ICON_OFFSET_Y = 80;
 
--- The icon position.
-local icon_position = 45;
+local ICON_POSITION = 45;
+
+-- TODO: This color is inconsistent with Blizzard's default tooltips.  Does anyone know the correct color?
+local TOOLTIP_BACKGROUND_R = 0;
+local TOOLTIP_BACKGROUND_G = 0;
+local TOOLTIP_BACKGROUND_B = 0;
+
+local TOOLTIP_TITLE_R = 1;
+local TOOLTIP_TITLE_G = 1;
+local TOOLTIP_TITLE_B = 1;
+
+-- TODO: This color is inconsistent with Blizzard's default tooltips.  Does anyone know the correct color?
+local TOOLTIP_DESCRIPTION_R = 1;
+local TOOLTIP_DESCRIPTION_G = 210 / 255;
+local TOOLTIP_DESCRIPTION_B = 0;
+
+local icon_position = ICON_POSITION;
 
 -- Called when the minimap button is clicked.
 function PetParty.OnClickMinimapButton(button, down)
@@ -37,12 +55,6 @@ function PetParty.OnClickMinimapButton(button, down)
     end
 end
 
--- Called when the minimap button is loaded.
-function PetParty.OnLoadMinimapButton()
-    PetParty_MinimapButton:RegisterForClicks("LeftButtonUp");
-    PetParty_MinimapButton:RegisterForDrag("LeftButton");
-end
-
 -- Called when the minimap button is started dragging.
 function PetParty.OnDragStartMinimapButton()
     PetParty_MinimapButton:LockHighlight();
@@ -53,6 +65,49 @@ end
 function PetParty.OnDragStopMinimapButton()
     PetParty_MinimapButton:UnlockHighlight();
     PetParty_MinimapButton_DraggingFrame:Hide();
+end
+
+-- Called when the mouse enters the minimap button.
+function PetParty.OnEnterMinimapButton()
+    PetParty_MinimapButton_Tooltip:ClearLines();
+    PetParty_MinimapButton_Tooltip:SetOwner(PetParty_MinimapButton_Tooltip:GetParent(), "ANCHOR_LEFT");
+    PetParty_MinimapButton_Tooltip:SetBackdropColor(TOOLTIP_BACKGROUND_R, TOOLTIP_BACKGROUND_G, TOOLTIP_BACKGROUND_B);
+    PetParty_MinimapButton_Tooltip:AddLine(PetParty.L["Pet Party"],
+                                           TOOLTIP_TITLE_R,
+                                           TOOLTIP_TITLE_G,
+                                           TOOLTIP_TITLE_B);
+    PetParty_MinimapButton_Tooltip:AddLine(PetParty.L["Creates groups of pets for the pet battle system."],
+                                           TOOLTIP_DESCRIPTION_R,
+                                           TOOLTIP_DESCRIPTION_G,
+                                           TOOLTIP_DESCRIPTION_B);
+    PetParty_MinimapButton_Tooltip:Show();
+end
+
+-- Called when the minimap button receives an event.
+function PetParty.OnEventMinimapButton(event)
+    if (event == "ADDON_LOADED") then
+        if (PetPartyCharacterDB ~= nil) then
+            if (PetPartyCharacterDB.icon_position ~= nil) then
+                icon_position = PetPartyCharacterDB.icon_position;
+                PetParty.OnRepositionMinimapButton();
+            end
+        end
+    elseif (event == "PLAYER_LOGOUT") then
+        PetPartyCharacterDB.icon_position = icon_position;
+    end
+end
+
+-- Called when the mouse leaves the minimap button.
+function PetParty.OnLeaveMinimapButton()
+    PetParty_MinimapButton_Tooltip:Hide();
+end
+
+-- Called when the minimap button is loaded.
+function PetParty.OnLoadMinimapButton()
+    PetParty_MinimapButton:RegisterEvent("ADDON_LOADED");
+    PetParty_MinimapButton:RegisterEvent("PLAYER_LOGOUT");
+    PetParty_MinimapButton:RegisterForClicks("LeftButtonUp");
+    PetParty_MinimapButton:RegisterForDrag("LeftButton");
 end
 
 -- Repositions the minimap button.

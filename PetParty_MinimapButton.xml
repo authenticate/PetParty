@@ -62,21 +62,31 @@
                     </OnUpdate>
                 </Scripts>
             </Frame>
+            <GameTooltip name="$parent_Tooltip" inherits="GameTooltipTemplate"/>
         </Frames>
         <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
         <Scripts>
-            <OnLoad>
-                PetParty.OnLoadMinimapButton();
-            </OnLoad>
+            <OnClick>
+                PetParty.OnClickMinimapButton(button, down);
+            </OnClick>
             <OnDragStart>
                 PetParty.OnDragStartMinimapButton();
             </OnDragStart>
             <OnDragStop>
                 PetParty.OnDragStopMinimapButton();
             </OnDragStop>
-            <OnClick>
-                PetParty.OnClickMinimapButton(button, down);
-            </OnClick>
+            <OnEnter>
+                PetParty.OnEnterMinimapButton();
+            </OnEnter>
+            <OnEvent>
+                PetParty.OnEventMinimapButton(event);
+            </OnEvent>
+            <OnLeave>
+                PetParty.OnLeaveMinimapButton();
+            </OnLeave>
+            <OnLoad>
+                PetParty.OnLoadMinimapButton();
+            </OnLoad>
         </Scripts>
     </Button>
     
