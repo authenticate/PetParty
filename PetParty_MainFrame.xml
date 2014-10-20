@@ -83,6 +83,9 @@
             <OnDragStop>
                 PetParty.OnDragStopMainFrame();
             </OnDragStop>
+            <OnEvent>
+                PetParty.OnEventMainFrame(event);
+            </OnEvent>
             <OnLoad>
                 PetParty.OnLoadMainFrame();
             </OnLoad>

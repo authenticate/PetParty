@@ -28,9 +28,28 @@ function PetParty.OnDragStopMainFrame()
     PetParty_MainFrame:StopMovingOrSizing();
 end
 
+-- Called when the main frame receives an event.
+function PetParty.OnEventMainFrame(event)
+    if (event == "ADDON_LOADED") then
+        if (PetPartyCharacterDB ~= nil) then
+            if (PetPartyCharacterDB.main_frame_hidden ~= nil) then
+                if (PetPartyCharacterDB.main_frame_hidden) then
+                    PetParty_MainFrame:Hide();
+                else
+                    PetParty_MainFrame:Show();
+                end
+            end
+        end
+    elseif (event == "PLAYER_LOGOUT") then
+        PetPartyCharacterDB.main_frame_hidden = not PetParty_MainFrame:IsShown();
+    end
+end
+
 -- Called when the main frame loads.
 function PetParty.OnLoadMainFrame()
     PetParty_MainFrame:SetUserPlaced(true);
+    PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
+    PetParty_MainFrame:RegisterEvent("PLAYER_LOGOUT");
     PetParty_MainFrame:RegisterForDrag("LeftButton");
 end
 
