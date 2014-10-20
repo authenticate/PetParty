@@ -107,7 +107,7 @@ function PetParty.OnLoadMinimapButton()
     PetParty_MinimapButton:RegisterEvent("ADDON_LOADED");
     PetParty_MinimapButton:RegisterEvent("PLAYER_LOGOUT");
     PetParty_MinimapButton:RegisterForClicks("LeftButtonUp");
-    PetParty_MinimapButton:RegisterForDrag("LeftButton");
+    PetParty_MinimapButton:RegisterForDrag("RightButton");
 end
 
 -- Repositions the minimap button.

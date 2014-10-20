@@ -29,8 +29,8 @@
             <Anchor point="TOPLEFT"/>
         </Anchors>
         <Layers>
-            <Layer level="BACKGROUND">
-                <Texture name="$parent_Icon" file="Interface\Icons\INV_Misc_QuestionMark">
+            <Layer level="ARTWORK">
+                <Texture name="$parent_Icon" file="Interface\Icons\INV_MISC_PETMOONKINTA">
                     <Size>
                         <AbsDimension x="21" y="21"/>
                     </Size>
