@@ -91,8 +91,12 @@
                     <AbsDimension x="21" y="21"/>
                 </Size>
                 <Scripts>
-                    <OnClick>
-                    </OnClick>
+                    <OnDragStart>
+                        PetParty.OnDragStartMainFrameButtonResize();
+                    </OnDragStart>
+                    <OnDragStop>
+                        PetParty.OnDragStopMainFrameButtonResize();
+                    </OnDragStop>
                 </Scripts>
                 <NormalTexture file="Interface\Buttons\UI-Panel-SmallerButton-Up">
                     <TexCoords left="1" right="0" top="0" bottom="1"/>
