@@ -30,6 +30,7 @@ end
 
 -- Called when the main frame loads.
 function PetParty.OnLoadMainFrame()
+    PetParty_MainFrame:SetUserPlaced(true);
     PetParty_MainFrame:RegisterForDrag("LeftButton");
 end
 
