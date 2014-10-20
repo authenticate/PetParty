@@ -47,10 +47,14 @@ end
 
 -- Called when the main frame loads.
 function PetParty.OnLoadMainFrame()
+    PetParty_MainFrame:SetClampedToScreen(true);
     PetParty_MainFrame:SetUserPlaced(true);
+    
     PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
     PetParty_MainFrame:RegisterEvent("PLAYER_LOGOUT");
     PetParty_MainFrame:RegisterForDrag("LeftButton");
+    
+    PetParty.CreateContentAndScrollFrames();
 end
 
 -- Called when the main frame is shown.
