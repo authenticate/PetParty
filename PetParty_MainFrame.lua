@@ -60,5 +60,4 @@ end
 -- Called when the main frame is shown.
 function PetParty.OnShowMainFrame()
     PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
-    PetParty_MainFrame_Button_Close:SetText(PetParty.L["Close"]);
 end

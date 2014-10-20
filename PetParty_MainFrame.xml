@@ -65,15 +65,38 @@
         <Frames>
             <Button name="$parent_Button_Close" inherits="OptionsButtonTemplate" hidden="false">
                 <Anchors>
-                    <Anchor point="BOTTOMRIGHT">
-                        <Offset x="-12" y="16"/>
+                    <Anchor point="TOPRIGHT">
+                        <Offset x="-12" y="-12"/>
                     </Anchor> 
                 </Anchors>
+                <Size>
+                    <AbsDimension x="21" y="21"/>
+                </Size>
                 <Scripts>
                     <OnClick>
                         self:GetParent():Hide();
                     </OnClick>
                 </Scripts>
+                <NormalTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Up"/>
+                <PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
+                <HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
+            </Button>
+            <Button name="$parent_Button_Resize" inherits="OptionsButtonTemplate" hidden="false">
+                <Anchors>
+                    <Anchor point="BOTTOMRIGHT">
+                        <Offset x="-12" y="12"/>
+                    </Anchor> 
+                </Anchors>
+                <Size>
+                    <AbsDimension x="21" y="21"/>
+                </Size>
+                <Scripts>
+                    <OnClick>
+                    </OnClick>
+                </Scripts>
+                <NormalTexture file="Interface\Buttons\UI-Panel-SmallerButton-Up">
+                    <TexCoords left="1" right="0" top="0" bottom="1"/>
+                </NormalTexture>
             </Button>
         </Frames>
         <Scripts>
