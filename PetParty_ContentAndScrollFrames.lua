@@ -38,6 +38,7 @@ local SCROLL_BAR_OFFSET_RIGHT = -30;
 local SCROLL_BAR_OFFSET_TOP = -52;
 local SCROLL_BAR_OFFSET_BOTTOM = 50;
 
+local SCROLL_BAR_SCROLL_STEP = 1;
 local SCROLL_BAR_STEPS_PER_PAGE = 1;
 
 local SCROLL_BAR_WIDTH = 16;
@@ -63,6 +64,7 @@ function PetParty.CreateContentAndScrollFrames()
     PetParty_ScrollBar:SetPoint("BOTTOMLEFT", PetParty_MainFrame, "BOTTOMRIGHT", SCROLL_BAR_OFFSET_RIGHT, SCROLL_BAR_OFFSET_BOTTOM);
     PetParty_ScrollBar:SetMinMaxValues(0, 0);
     PetParty_ScrollBar:SetValueStep(0);
+    PetParty_ScrollBar.scrollStep = BATTLE_PET_FRAME_SIZE;
     PetParty_ScrollBar:SetStepsPerPage(SCROLL_BAR_STEPS_PER_PAGE);
     PetParty_ScrollBar:SetValue(0);
     PetParty_ScrollBar:SetWidth(SCROLL_BAR_WIDTH);
