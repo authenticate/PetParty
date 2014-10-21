@@ -78,6 +78,7 @@ function PetParty.OnLoadMainFrame()
     PetParty_MainFrame_Button_Resize:RegisterForDrag("LeftButton");
     
     PetParty.CreateContentAndScrollFrames();
+    PetParty.CreateBattlePetFrames();
 end
 
 -- Called when the main frame is shown.
