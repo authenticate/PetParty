@@ -33,12 +33,14 @@ local SCROLL_FRAME_OFFSET_BOTTOM = 34;
 
 local SCROLL_BAR_ALPHA = 0.4;
 
-local SCROLL_BAR_WIDTH = 16;
-
 local SCROLL_BAR_OFFSET_LEFT = -30;
 local SCROLL_BAR_OFFSET_RIGHT = -30;
 local SCROLL_BAR_OFFSET_TOP = -52;
 local SCROLL_BAR_OFFSET_BOTTOM = 50;
+
+local SCROLL_BAR_STEPS_PER_PAGE = 1;
+
+local SCROLL_BAR_WIDTH = 16;
 
 -- The height of the content frame.
 local height_content_frame = 0;
@@ -61,7 +63,7 @@ function PetParty.CreateContentAndScrollFrames()
     PetParty_ScrollBar:SetPoint("BOTTOMLEFT", PetParty_MainFrame, "BOTTOMRIGHT", SCROLL_BAR_OFFSET_RIGHT, SCROLL_BAR_OFFSET_BOTTOM);
     PetParty_ScrollBar:SetMinMaxValues(0, 0);
     PetParty_ScrollBar:SetValueStep(0);
-    PetParty_ScrollBar:SetStepsPerPage(1);
+    PetParty_ScrollBar:SetStepsPerPage(SCROLL_BAR_STEPS_PER_PAGE);
     PetParty_ScrollBar:SetValue(0);
     PetParty_ScrollBar:SetWidth(SCROLL_BAR_WIDTH);
     PetParty_ScrollBar:SetObeyStepOnDrag(true);
