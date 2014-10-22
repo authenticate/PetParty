@@ -35,18 +35,19 @@ end
 -- Called when the main frame stops dragging.
 function PetParty.OnDragStopMainFrame()
     PetParty_MainFrame:StopMovingOrSizing();
-    PetParty.UpdateBattlePetScrollBar();
-    PetParty.UpdatePetPartyScrollBar();
 end
 
 -- Called when the main frame's resize button starts dragging.
 function PetParty.OnDragStartMainFrameButtonResize()
+    PetParty_MainFrame.is_sizing = true;
     PetParty_MainFrame:StartSizing();
 end
 
 -- Called when the main frame's resize button stops dragging.
 function PetParty.OnDragStopMainFrameButtonResize()
     PetParty_MainFrame:StopMovingOrSizing();
+    PetParty_MainFrame.is_sizing = false;
+    
     PetParty.UpdateBattlePetScrollBar();
     PetParty.UpdatePetPartyScrollBar();
 end
@@ -71,6 +72,7 @@ end
 -- Called when the main frame loads.
 function PetParty.OnLoadMainFrame()
     tinsert(UISpecialFrames, PetParty_MainFrame:GetName());
+    PetParty_MainFrame.is_sizing = false;
     PetParty_MainFrame:SetClampedToScreen(true);
     PetParty_MainFrame:SetUserPlaced(true);
     PetParty_MainFrame:SetMaxResize(FRAME_MAXIMUM_WIDTH, FRAME_MAXIMUM_HEIGHT);
@@ -91,4 +93,12 @@ end
 -- Called when the main frame is shown.
 function PetParty.OnShowMainFrame()
     PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
+end
+
+-- Called when the main frame is updated.
+function PetParty.OnUpdateMainFrame()
+    if (PetParty_MainFrame.is_sizing) then
+        PetParty.UpdateBattlePetScrollBar();
+        PetParty.UpdatePetPartyScrollBar();
+    end
 end
