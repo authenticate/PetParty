@@ -66,6 +66,7 @@ end
 
 -- Called when the main frame loads.
 function PetParty.OnLoadMainFrame()
+    tinsert(UISpecialFrames, PetParty_MainFrame:GetName());
     PetParty_MainFrame:SetClampedToScreen(true);
     PetParty_MainFrame:SetUserPlaced(true);
     PetParty_MainFrame:SetMaxResize(FRAME_MAXIMUM_WIDTH, FRAME_MAXIMUM_HEIGHT);
