@@ -93,6 +93,7 @@ end
 
 -- Called when the main frame is loaded.
 function PetParty.OnLoadMainFrame()
+    -- Configure the main frame.
     tinsert(UISpecialFrames, PetParty_MainFrame:GetName());
     PetParty_MainFrame.is_sizing = false;
     PetParty_MainFrame:SetClampedToScreen(true);
@@ -100,21 +101,22 @@ function PetParty.OnLoadMainFrame()
     PetParty_MainFrame:SetMaxResize(FRAME_MAXIMUM_WIDTH, FRAME_MAXIMUM_HEIGHT);
     PetParty_MainFrame:SetMinResize(FRAME_MINIMUM_WIDTH, FRAME_MINIMUM_HEIGHT);
     
+    -- Register the main frame for events.
     PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
     PetParty_MainFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
     PetParty_MainFrame:RegisterEvent("PLAYER_LOGOUT");
     PetParty_MainFrame:RegisterForDrag("LeftButton");
     
+    -- Register the main frame's resize button for events.
     PetParty_MainFrame_Button_Resize:RegisterForDrag("LeftButton");
     
+    -- Create the main frame's scroll frames.
     PetParty.CreateBattlePetContentAndScrollFrames();
     PetParty.CreateBattlePetFrames();
     PetParty.CreatePetPartyContentAndScrollFrames();
     PetParty.CreatePetPartyFrames();
-end
-
--- Called when the main frame is shown.
-function PetParty.OnShowMainFrame()
+    
+    -- Localize the UI.
     PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
     PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L["Create"]);
     PetParty_MainFrame_Button_Delete_Pet_Party:SetText(PetParty.L["Delete"]);

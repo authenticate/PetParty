@@ -32,6 +32,9 @@ PetParty_Configuration.lua
 # The localization files.
 locales\PetParty_enUS.lua
 
+# The add on files.
+PetParty_Main.lua
+
 # The UI files.
 PetParty_BattlePetContentAndScrollFrames.lua
 PetParty_PetPartyContentAndScrollFrames.lua
@@ -39,6 +42,3 @@ PetParty_MainFrame.xml
 PetParty_MainFrame.lua
 PetParty_MinimapButton.xml
 PetParty_MinimapButton.lua
-
-# The add on files.
-PetParty.lua

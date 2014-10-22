@@ -130,9 +130,6 @@
             <OnLoad>
                 PetParty.OnLoadMainFrame();
             </OnLoad>
-            <OnShow>
-                PetParty.OnShowMainFrame();
-            </OnShow>
             <OnUpdate>
                 PetParty.OnUpdateMainFrame();
             </OnUpdate>
