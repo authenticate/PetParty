@@ -69,7 +69,7 @@ function PetParty.OnEventMainFrame(event)
     end
 end
 
--- Called when the main frame loads.
+-- Called when the main frame is loaded.
 function PetParty.OnLoadMainFrame()
     tinsert(UISpecialFrames, PetParty_MainFrame:GetName());
     PetParty_MainFrame.is_sizing = false;
