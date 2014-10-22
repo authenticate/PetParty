@@ -64,6 +64,11 @@ function PetParty.OnEventMainFrame(event)
                 end
             end
         end
+    elseif (event == "PET_JOURNAL_LIST_UPDATE") then
+        PetParty.CreateBattlePetContentAndScrollFrames();
+        PetParty.CreateBattlePetFrames();
+        PetParty.CreatePetPartyContentAndScrollFrames();
+        PetParty.CreatePetPartyFrames();
     elseif (event == "PLAYER_LOGOUT") then
         PetPartyCharacterDB.main_frame_hidden = not PetParty_MainFrame:IsShown();
     end
@@ -79,6 +84,7 @@ function PetParty.OnLoadMainFrame()
     PetParty_MainFrame:SetMinResize(FRAME_MINIMUM_WIDTH, FRAME_MINIMUM_HEIGHT);
     
     PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
+    PetParty_MainFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
     PetParty_MainFrame:RegisterEvent("PLAYER_LOGOUT");
     PetParty_MainFrame:RegisterForDrag("LeftButton");
     

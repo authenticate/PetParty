@@ -47,6 +47,25 @@ local height_content_frame = 0;
 
 -- Call to create the pet party content and scroll frames.
 function PetParty.CreatePetPartyContentAndScrollFrames()
+    -- Clean up the old UI elements.
+    if (PetParty_PetPartyScrollFrame ~= nil) then
+        PetParty_PetPartyScrollFrame:Hide();
+        PetParty_PetPartyScrollFrame:SetParent(nil);
+        PetParty_PetPartyScrollFrame = nil;
+    end
+    
+    if (PetParty_PetPartyScrollBar ~= nil) then
+        PetParty_PetPartyScrollBar:Hide();
+        PetParty_PetPartyScrollBar:SetParent(nil);
+        PetParty_PetPartyScrollBar = nil;
+    end
+    
+    if (PetParty_PetPartyContentFrame ~= nil) then
+        PetParty_PetPartyContentFrame:Hide();
+        PetParty_PetPartyContentFrame:SetParent(nil);
+        PetParty_PetPartyContentFrame = nil;
+    end
+    
     -- Create the scroll frame.
     CreateFrame("ScrollFrame", "PetParty_PetPartyScrollFrame", PetParty_MainFrame);
     PetParty_PetPartyScrollFrame:SetPoint("TOPLEFT", PetParty_PetPartyScrollFrame:GetParent():GetWidth() / 2, SCROLL_FRAME_OFFSET_TOP);
