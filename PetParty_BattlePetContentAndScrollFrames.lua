@@ -46,8 +46,8 @@ local SCROLL_BAR_WIDTH = 16;
 -- The height of the content frame.
 local height_content_frame = 0;
 
--- Call to create the content and scroll frames.
-function PetParty.CreateContentAndScrollFrames()
+-- Call to create the battle pet content and scroll frames.
+function PetParty.CreateBattlePetContentAndScrollFrames()
     -- Create the scroll frame.
     CreateFrame("ScrollFrame", "PetParty_ScrollFrame", PetParty_MainFrame);
     PetParty_ScrollFrame:SetPoint("TOPLEFT", SCROLL_FRAME_OFFSET_LEFT, SCROLL_FRAME_OFFSET_TOP);
@@ -80,7 +80,7 @@ function PetParty.CreateContentAndScrollFrames()
     -- Add a size changed handler for the scroll frame.
     PetParty_ScrollFrame:SetScript("OnSizeChanged",
         function(self, width, height)
-            PetParty.UpdateScrollBar();
+            PetParty.UpdateBattlePetScrollBar();
         end
     );
     
@@ -144,11 +144,11 @@ function PetParty.CreateBattlePetFrames()
     end
     
     -- Update the scroll bar.
-    PetParty.UpdateScrollBar();
+    PetParty.UpdateBattlePetScrollBar();
 end
 
--- Call to update the scroll bar.
-function PetParty.UpdateScrollBar()
+-- Call to update the battle pet scroll bar.
+function PetParty.UpdateBattlePetScrollBar()
     if (height_content_frame < PetParty_ScrollFrame:GetHeight()) then
         PetParty_ScrollBar:SetMinMaxValues(0, 0);
         PetParty_ScrollBar:SetValueStep(0);
