@@ -81,6 +81,30 @@
                 <PushedTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Down"/>
                 <HighlightTexture file="Interface\Buttons\UI-Panel-MinimizeButton-Highlight" alphaMode="ADD"/>
             </Button>
+            <Button name="$parent_Button_Create_Pet_Party" inherits="OptionsButtonTemplate" hidden="false">
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset x="12" y="-12"/>
+                    </Anchor> 
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        PetParty.OnClickMainFrameButtonCreatePetParty();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parent_Button_Delete_Pet_Party" inherits="OptionsButtonTemplate" hidden="false">
+                <Anchors>
+                    <Anchor point="TOPLEFT">
+                        <Offset x="112" y="-12"/>
+                    </Anchor> 
+                </Anchors>
+                <Scripts>
+                    <OnClick>
+                        PetParty.OnClickMainFrameButtonDeletePetParty();
+                    </OnClick>
+                </Scripts>
+            </Button>
             <Button name="$parent_Button_Resize" inherits="OptionsButtonTemplate" hidden="false">
                 <Anchors>
                     <Anchor point="BOTTOMRIGHT">

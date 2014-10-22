@@ -99,7 +99,7 @@ function PetParty.CreateBattlePetContentAndScrollFrames()
     -- Add a size changed handler for the scroll frame.
     PetParty_BattlePetScrollFrame:SetScript("OnSizeChanged",
         function(self, width, height)
-            PetParty.UpdateBattlePetScrollBar();
+            PetParty.UpdateBattlePetScrollBarLayout();
         end
     );
     
@@ -162,12 +162,12 @@ function PetParty.CreateBattlePetFrames()
         end
     end
     
-    -- Update the scroll bar.
-    PetParty.UpdateBattlePetScrollBar();
+    -- Update the scroll bar layout.
+    PetParty.UpdateBattlePetScrollBarLayout();
 end
 
--- Call to update the battle pet scroll bar.
-function PetParty.UpdateBattlePetScrollBar()
+-- Call to update the battle pet scroll bar layout.
+function PetParty.UpdateBattlePetScrollBarLayout()
     -- Update the width of the battle pet scroll frame.
     PetParty_BattlePetScrollFrame:SetWidth((PetParty_BattlePetScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_LEFT);
     

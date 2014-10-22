@@ -99,7 +99,7 @@ function PetParty.CreatePetPartyContentAndScrollFrames()
     -- Add a size changed handler for the scroll frame.
     PetParty_PetPartyScrollFrame:SetScript("OnSizeChanged",
         function(self, width, height)
-            PetParty.UpdatePetPartyScrollBar();
+            PetParty.UpdatePetPartyScrollBarLayout();
         end
     );
     
@@ -162,12 +162,12 @@ function PetParty.CreatePetPartyFrames()
         end
     end
     
-    -- Update the scroll bar.
-    PetParty.UpdatePetPartyScrollBar();
+    -- Update the scroll bar layout.
+    PetParty.UpdatePetPartyScrollBarLayout();
 end
 
--- Call to update the pet party scroll bar.
-function PetParty.UpdatePetPartyScrollBar()
+-- Call to update the pet party scroll bar layout.
+function PetParty.UpdatePetPartyScrollBarLayout()
     -- Update the anchors of the pet party scroll frame.
     PetParty_PetPartyScrollFrame:SetPoint("TOPLEFT", PetParty_PetPartyScrollFrame:GetParent():GetWidth() / 2, SCROLL_FRAME_OFFSET_TOP);
     PetParty_PetPartyScrollFrame:SetPoint("BOTTOM", 0, SCROLL_FRAME_OFFSET_BOTTOM);
