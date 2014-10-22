@@ -27,16 +27,15 @@ local BATTLE_PET_FRAME_FONT_SIZE = 18;
 local BATTLE_PET_FRAME_SIZE = 18;
 
 local SCROLL_FRAME_OFFSET_LEFT = 14;
-local SCROLL_FRAME_OFFSET_RIGHT = -14;
 local SCROLL_FRAME_OFFSET_TOP = -36;
 local SCROLL_FRAME_OFFSET_BOTTOM = 34;
 
 local SCROLL_BAR_ALPHA = 0.4;
 
-local SCROLL_BAR_OFFSET_LEFT = -30;
-local SCROLL_BAR_OFFSET_RIGHT = -30;
-local SCROLL_BAR_OFFSET_TOP = -52;
-local SCROLL_BAR_OFFSET_BOTTOM = 50;
+local SCROLL_BAR_OFFSET_LEFT = -16;
+local SCROLL_BAR_OFFSET_RIGHT = -16;
+local SCROLL_BAR_OFFSET_TOP = -16;
+local SCROLL_BAR_OFFSET_BOTTOM = 16;
 
 local SCROLL_BAR_SCROLL_STEP = 1;
 local SCROLL_BAR_STEPS_PER_PAGE = 1;
@@ -49,52 +48,53 @@ local height_content_frame = 0;
 -- Call to create the battle pet content and scroll frames.
 function PetParty.CreateBattlePetContentAndScrollFrames()
     -- Create the scroll frame.
-    CreateFrame("ScrollFrame", "PetParty_ScrollFrame", PetParty_MainFrame);
-    PetParty_ScrollFrame:SetPoint("TOPLEFT", SCROLL_FRAME_OFFSET_LEFT, SCROLL_FRAME_OFFSET_TOP);
-    PetParty_ScrollFrame:SetPoint("BOTTOMRIGHT", SCROLL_FRAME_OFFSET_RIGHT, SCROLL_FRAME_OFFSET_BOTTOM);
-    PetParty_ScrollFrame:EnableMouseWheel(true);
+    CreateFrame("ScrollFrame", "PetParty_BattlePetScrollFrame", PetParty_MainFrame);
+    PetParty_BattlePetScrollFrame:SetPoint("TOPLEFT", SCROLL_FRAME_OFFSET_LEFT, SCROLL_FRAME_OFFSET_TOP);
+    PetParty_BattlePetScrollFrame:SetPoint("BOTTOM", 0, SCROLL_FRAME_OFFSET_BOTTOM);
+    PetParty_BattlePetScrollFrame:EnableMouseWheel(true);
+    PetParty_BattlePetScrollFrame:SetWidth((PetParty_BattlePetScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_LEFT);
     
-    local texture = PetParty_ScrollFrame:CreateTexture();
+    local texture = PetParty_BattlePetScrollFrame:CreateTexture();
     texture:SetAllPoints();
     texture:SetTexture(0, 0, 0, 0);
     
     -- Create the scroll bar.
-    CreateFrame("Slider", "PetParty_ScrollBar", PetParty_ScrollFrame, "UIPanelScrollBarTemplate");
-    PetParty_ScrollBar:SetPoint("TOPLEFT", PetParty_MainFrame, "TOPRIGHT", SCROLL_BAR_OFFSET_LEFT, SCROLL_BAR_OFFSET_TOP);
-    PetParty_ScrollBar:SetPoint("BOTTOMLEFT", PetParty_MainFrame, "BOTTOMRIGHT", SCROLL_BAR_OFFSET_RIGHT, SCROLL_BAR_OFFSET_BOTTOM);
-    PetParty_ScrollBar:SetMinMaxValues(0, 0);
-    PetParty_ScrollBar:SetValueStep(0);
-    PetParty_ScrollBar.scrollStep = BATTLE_PET_FRAME_SIZE;
-    PetParty_ScrollBar:SetStepsPerPage(SCROLL_BAR_STEPS_PER_PAGE);
-    PetParty_ScrollBar:SetValue(0);
-    PetParty_ScrollBar:SetWidth(SCROLL_BAR_WIDTH);
-    PetParty_ScrollBar:SetObeyStepOnDrag(true);
+    CreateFrame("Slider", "PetParty_BattlePetScrollBar", PetParty_BattlePetScrollFrame, "UIPanelScrollBarTemplate");
+    PetParty_BattlePetScrollBar:SetPoint("TOPLEFT", PetParty_BattlePetScrollFrame, "TOPRIGHT", SCROLL_BAR_OFFSET_LEFT, SCROLL_BAR_OFFSET_TOP);
+    PetParty_BattlePetScrollBar:SetPoint("BOTTOMLEFT", PetParty_BattlePetScrollFrame, "BOTTOMRIGHT", SCROLL_BAR_OFFSET_RIGHT, SCROLL_BAR_OFFSET_BOTTOM);
+    PetParty_BattlePetScrollBar:SetMinMaxValues(0, 0);
+    PetParty_BattlePetScrollBar:SetValueStep(0);
+    PetParty_BattlePetScrollBar.scrollStep = BATTLE_PET_FRAME_SIZE;
+    PetParty_BattlePetScrollBar:SetStepsPerPage(SCROLL_BAR_STEPS_PER_PAGE);
+    PetParty_BattlePetScrollBar:SetValue(0);
+    PetParty_BattlePetScrollBar:SetWidth(SCROLL_BAR_WIDTH);
+    PetParty_BattlePetScrollBar:SetObeyStepOnDrag(true);
     
     -- Add a mouse wheel handler for the scroll frame.
-    PetParty_ScrollFrame:SetScript("OnMouseWheel",
+    PetParty_BattlePetScrollFrame:SetScript("OnMouseWheel",
         function(self, delta)
-            PetParty_ScrollBar:SetValue(PetParty_ScrollBar:GetValue() - (delta * PetParty_ScrollBar:GetValueStep()));
+            PetParty_BattlePetScrollBar:SetValue(PetParty_BattlePetScrollBar:GetValue() - (delta * PetParty_BattlePetScrollBar:GetValueStep()));
         end
     );
     
     -- Add a size changed handler for the scroll frame.
-    PetParty_ScrollFrame:SetScript("OnSizeChanged",
+    PetParty_BattlePetScrollFrame:SetScript("OnSizeChanged",
         function(self, width, height)
             PetParty.UpdateBattlePetScrollBar();
         end
     );
     
-    local texture_background = PetParty_ScrollBar:CreateTexture(nil, "BACKGROUND");
-    texture_background:SetAllPoints(PetParty_ScrollBar);
+    local texture_background = PetParty_BattlePetScrollBar:CreateTexture(nil, "BACKGROUND");
+    texture_background:SetAllPoints(PetParty_BattlePetScrollBar);
     texture_background:SetTexture(0, 0, 0, SCROLL_BAR_ALPHA);
     
     -- Create the content frame.
-    CreateFrame("Frame", "PetParty_ContentFrame", PetParty_ScrollFrame);
-    PetParty_ContentFrame:SetWidth(1);
-    PetParty_ContentFrame:SetHeight(1);
+    CreateFrame("Frame", "PetParty_BattlePetContentFrame", PetParty_BattlePetScrollFrame);
+    PetParty_BattlePetContentFrame:SetWidth(1);
+    PetParty_BattlePetContentFrame:SetHeight(1);
     
     -- Set up the scroll child.
-    PetParty_ScrollFrame:SetScrollChild(PetParty_ContentFrame);
+    PetParty_BattlePetScrollFrame:SetScrollChild(PetParty_BattlePetContentFrame);
 end
 
 -- Call to create the battle pet frames.
@@ -119,7 +119,7 @@ function PetParty.CreateBattlePetFrames()
         -- If the player owns this pet and it is a battle pet...
         if (owned) and (canBattle) then
             --  Create a battle pet frame.
-            local font_string = PetParty_ContentFrame:CreateFontString();
+            local font_string = PetParty_BattlePetContentFrame:CreateFontString();
             font_string:SetFont(BATTLE_PET_FRAME_FONT, BATTLE_PET_FRAME_FONT_SIZE);
             font_string:SetHeight(BATTLE_PET_FRAME_SIZE);
             font_string:SetText(speciesName);
@@ -129,7 +129,7 @@ function PetParty.CreateBattlePetFrames()
             
             if (previous_battle_pet_frame == nil) then
                 -- Anchor the frame to the content frame.
-                font_string:SetPoint("TOPLEFT", PetParty_ContentFrame);
+                font_string:SetPoint("TOPLEFT", PetParty_BattlePetContentFrame);
             else
                 -- Anchor the frame to the previous frame.
                 font_string:SetPoint("BOTTOMLEFT", previous_battle_pet_frame, "BOTTOMLEFT", 0, -BATTLE_PET_FRAME_SIZE);
@@ -149,11 +149,15 @@ end
 
 -- Call to update the battle pet scroll bar.
 function PetParty.UpdateBattlePetScrollBar()
-    if (height_content_frame < PetParty_ScrollFrame:GetHeight()) then
-        PetParty_ScrollBar:SetMinMaxValues(0, 0);
-        PetParty_ScrollBar:SetValueStep(0);
+    -- Update the width of the battle pet scroll frame.
+    PetParty_BattlePetScrollFrame:SetWidth((PetParty_BattlePetScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_LEFT);
+    
+    -- Update the battle pet scroll bar.
+    if (height_content_frame < PetParty_BattlePetScrollFrame:GetHeight()) then
+        PetParty_BattlePetScrollBar:SetMinMaxValues(0, 0);
+        PetParty_BattlePetScrollBar:SetValueStep(0);
     else
-        PetParty_ScrollBar:SetMinMaxValues(1, height_content_frame - PetParty_ScrollFrame:GetHeight());
-        PetParty_ScrollBar:SetValueStep(BATTLE_PET_FRAME_SIZE);
+        PetParty_BattlePetScrollBar:SetMinMaxValues(1, height_content_frame - PetParty_BattlePetScrollFrame:GetHeight());
+        PetParty_BattlePetScrollBar:SetValueStep(BATTLE_PET_FRAME_SIZE);
     end
 end

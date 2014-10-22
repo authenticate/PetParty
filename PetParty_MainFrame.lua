@@ -35,6 +35,8 @@ end
 -- Called when the main frame stops dragging.
 function PetParty.OnDragStopMainFrame()
     PetParty_MainFrame:StopMovingOrSizing();
+    PetParty.UpdateBattlePetScrollBar();
+    PetParty.UpdatePetPartyScrollBar();
 end
 
 -- Called when the main frame's resize button starts dragging.
@@ -45,6 +47,8 @@ end
 -- Called when the main frame's resize button stops dragging.
 function PetParty.OnDragStopMainFrameButtonResize()
     PetParty_MainFrame:StopMovingOrSizing();
+    PetParty.UpdateBattlePetScrollBar();
+    PetParty.UpdatePetPartyScrollBar();
 end
 
 -- Called when the main frame receives an event.
