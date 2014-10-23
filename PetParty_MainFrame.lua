@@ -22,12 +22,14 @@
 -- Constants.
 --
 
+local BUTTON_WIDTH = 100;
+
 local FRAME_MAXIMUM_WIDTH = 0;
 local FRAME_MAXIMUM_HEIGHT = 0;
-local FRAME_MINIMUM_WIDTH = 384;
-local FRAME_MINIMUM_HEIGHT = 512;
+local FRAME_MINIMUM_WIDTH = 480;
+local FRAME_MINIMUM_HEIGHT = 640;
 local FRAME_OFFSET_X = 14;
-local FRAME_OFFSET_Y = -12;
+local FRAME_OFFSET_Y = -34;
 
 local PET_PARTY_BUTTON_COUNT = 2;
 
@@ -116,6 +118,10 @@ function PetParty.OnLoadMainFrame()
     PetParty.CreatePetPartyContentAndScrollFrames();
     PetParty.CreatePetPartyFrames();
     
+    -- Configure the buttons.
+    PetParty_MainFrame_Button_Create_Pet_Party:SetWidth(BUTTON_WIDTH);
+    PetParty_MainFrame_Button_Delete_Pet_Party:SetWidth(BUTTON_WIDTH);
+    
     -- Localize the UI.
     PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
     PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L["Create"]);
@@ -134,7 +140,7 @@ end
 -- Call to update the main frame layout.
 function PetParty.UpdateMainFrameLayout()
     -- Calculate the main frame offsets.
-    local offset_main_frame_x = (PetParty_MainFrame:GetWidth() / 2) - FRAME_OFFSET_X;
+    local offset_main_frame_x = PetParty_MainFrame:GetWidth() / 2;
     local offset_main_frame_y = FRAME_OFFSET_Y;
     
     -- Calculate the width of all the pet party buttons.
@@ -142,7 +148,7 @@ function PetParty.UpdateMainFrameLayout()
                          PetParty_MainFrame_Button_Delete_Pet_Party:GetWidth();
     
     -- Calculate the center offsets.
-    local offset_center_x = (offset_main_frame_x - button_width) / (PET_PARTY_BUTTON_COUNT + 1);
+    local offset_center_x = (offset_main_frame_x - button_width - FRAME_OFFSET_X) / (PET_PARTY_BUTTON_COUNT + 1);
     local offset_center_y = 0;
     
     -- Calculate the current offsets.
