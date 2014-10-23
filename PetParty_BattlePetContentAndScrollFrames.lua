@@ -131,7 +131,6 @@ function PetParty.CreateBattlePetFrames()
             
             -- Reuse any old frames.
             if (allocated_frame_count > PetParty_BattlePetContentFrame.content.frame_count) then
-                print("what");
                 font_string = PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count];
             else
                 font_string = PetParty_BattlePetContentFrame:CreateFontString();
