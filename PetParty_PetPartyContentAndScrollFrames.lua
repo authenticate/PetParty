@@ -22,9 +22,9 @@
 -- Constants.
 --
 
-local BATTLE_PET_FRAME_FONT = "Fonts\\FRIZQT__.TTF";
-local BATTLE_PET_FRAME_FONT_SIZE = 18;
-local BATTLE_PET_FRAME_SIZE = 18;
+local PET_PARTY_FRAME_FONT = "Fonts\\FRIZQT__.TTF";
+local PET_PARTY_FRAME_FONT_SIZE = 18;
+local PET_PARTY_FRAME_SIZE = 18;
 
 local SCROLL_FRAME_OFFSET_RIGHT = 14;
 local SCROLL_FRAME_OFFSET_TOP = -60;
@@ -42,8 +42,54 @@ local SCROLL_BAR_STEPS_PER_PAGE = 1;
 
 local SCROLL_BAR_WIDTH = 16;
 
--- The height of the content frame.
-local height_content_frame = 0;
+-- Call to add a pet party frame.
+function PetParty.AddPetPartyFrame(name)
+    -- Initialize the battle pet frame variables.
+    if (PetParty_PetPartyContentFrame.content == nil) then
+        PetParty_PetPartyContentFrame.content = {};
+        PetParty_PetPartyContentFrame.content.frames = {};
+        PetParty_PetPartyContentFrame.content.frame_count = 0;
+        PetParty_PetPartyContentFrame.content.frame_count_allocated = 0;
+    end
+    
+    -- Create or reuse a pet party frame.
+    local font_string = nil;
+    
+    -- Reuse any old frames.
+    if (PetParty_PetPartyContentFrame.content.frame_count_allocated > PetParty_PetPartyContentFrame.content.frame_count) then
+        font_string = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
+    else
+        font_string = PetParty_PetPartyContentFrame:CreateFontString();
+        
+        -- Update the allocated frame count.
+        PetParty_PetPartyContentFrame.content.frame_count_allocated = PetParty_PetPartyContentFrame.content.frame_count_allocated + 1;
+    end
+    
+    font_string:SetFont(PET_PARTY_FRAME_FONT, PET_PARTY_FRAME_FONT_SIZE);
+    font_string:SetHeight(PET_PARTY_FRAME_SIZE);
+    font_string:SetText(name);
+    font_string:ClearAllPoints();
+    
+    -- Store the pet party frame's index.
+    font_string.id = PetParty_PetPartyContentFrame.content.frame_count;
+    
+    if (PetParty_PetPartyContentFrame.content.frame_count == 0) then
+        -- Anchor the frame to the content frame.
+        font_string:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
+    else
+        -- Anchor the frame to the previous frame.
+        font_string:SetPoint("BOTTOMLEFT", PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1], "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+    end
+    
+    -- Store the pet party frame.
+    PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = font_string;
+    
+    -- Update the frame count.
+    PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count + 1;
+    
+    -- Update the scroll bar layout.
+    PetParty.UpdatePetPartyScrollBarLayout();
+end
 
 -- Call to create the pet party content and scroll frames.
 function PetParty.CreatePetPartyContentAndScrollFrames()
@@ -97,15 +143,6 @@ function PetParty.CreatePetPartyContentAndScrollFrames()
     PetParty_PetPartyScrollFrame:SetScrollChild(PetParty_PetPartyContentFrame);
 end
 
--- Call to create the pet party frames.
-function PetParty.CreatePetPartyFrames()
-    -- Reset the height of the content frame.
-    height_content_frame = 0;
-    
-    -- Update the scroll bar layout.
-    PetParty.UpdatePetPartyScrollBarLayout();
-end
-
 -- Call to update the pet party scroll bar layout.
 function PetParty.UpdatePetPartyScrollBarLayout()
     -- Update the anchors of the pet party scroll frame.
@@ -115,12 +152,23 @@ function PetParty.UpdatePetPartyScrollBarLayout()
     -- Update the width of the pet party scroll frame.
     PetParty_PetPartyScrollFrame:SetWidth((PetParty_PetPartyScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_RIGHT);
     
+    -- The height of the content frame.
+    local height_content_frame = 0;
+    
+    if (PetParty_PetPartyContentFrame.content ~= nil) then
+        if (PetParty_PetPartyContentFrame.content.frame_count > 0) then
+            -- Calculate the height of the content frame.
+            height_content_frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1]:GetHeight() *
+                                   PetParty_PetPartyContentFrame.content.frame_count;
+        end
+    end
+    
     -- Update the pet party scroll bar.
     if (height_content_frame < PetParty_PetPartyScrollFrame:GetHeight()) then
         PetParty_PetPartyScrollBar:SetMinMaxValues(0, 0);
         PetParty_PetPartyScrollBar:SetValueStep(0);
     else
         PetParty_PetPartyScrollBar:SetMinMaxValues(1, height_content_frame - PetParty_PetPartyScrollFrame:GetHeight());
-        PetParty_PetPartyScrollBar:SetValueStep(BATTLE_PET_FRAME_SIZE);
+        PetParty_PetPartyScrollBar:SetValueStep(PET_PARTY_FRAME_SIZE);
     end
 end

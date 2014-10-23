@@ -84,7 +84,6 @@ function PetParty.OnEventMainFrame(event)
         PetParty.UpdateMainFrameLayout();
     elseif (event == "PET_JOURNAL_LIST_UPDATE") then
         PetParty.CreateBattlePetFrames();
-        PetParty.CreatePetPartyFrames();
     elseif (event == "PLAYER_LOGOUT") then
         PetPartyCharacterDB.main_frame_hidden = not PetParty_MainFrame:IsShown();
     end
@@ -126,6 +125,9 @@ function PetParty.OnLoadMainFrame()
         OnAccept =
             function (self)
                 local text = self.editBox:GetText();
+                if (text ~= nil) and (text ~= "") then
+                    PetParty.AddPetPartyFrame(text);
+                end
             end
         ,
         OnShow =
