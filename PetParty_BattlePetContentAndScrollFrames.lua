@@ -42,9 +42,6 @@ local SCROLL_BAR_STEPS_PER_PAGE = 1;
 
 local SCROLL_BAR_WIDTH = 16;
 
--- The height of the content frame.
-local height_content_frame = 0;
-
 -- Call to create the battle pet content and scroll frames.
 function PetParty.CreateBattlePetContentAndScrollFrames()
     -- Create the scroll frame.
@@ -110,9 +107,6 @@ function PetParty.CreateBattlePetFrames()
     -- Get the total number of pets.
     local number_of_pets = C_PetJournal.GetNumPets();
     
-    -- Reset the height of the content frame.
-    height_content_frame = 0;
-    
     -- Reset the frame count.
     PetParty_BattlePetContentFrame.content.frame_count = 0;
     
@@ -160,9 +154,6 @@ function PetParty.CreateBattlePetFrames()
             
             -- Update the frame count.
             PetParty_BattlePetContentFrame.content.frame_count = PetParty_BattlePetContentFrame.content.frame_count + 1;
-            
-            -- Update the height of the content frame.
-            height_content_frame = height_content_frame + font_string:GetHeight();
         end
     end
     
@@ -174,6 +165,17 @@ end
 function PetParty.UpdateBattlePetScrollBarLayout()
     -- Update the width of the battle pet scroll frame.
     PetParty_BattlePetScrollFrame:SetWidth((PetParty_BattlePetScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_LEFT);
+    
+    -- The height of the content frame.
+    local height_content_frame = 0;
+    
+    if (PetParty_BattlePetContentFrame.content ~= nil) then
+        if (PetParty_BattlePetContentFrame.content.frame_count > 0) then
+            -- Calculate the height of the content frame.
+            height_content_frame = PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count - 1]:GetHeight() *
+                                   PetParty_BattlePetContentFrame.content.frame_count;
+        end
+    end
     
     -- Update the battle pet scroll bar.
     if (height_content_frame < PetParty_BattlePetScrollFrame:GetHeight()) then

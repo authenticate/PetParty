@@ -24,7 +24,22 @@
 
 local PET_PARTY_FRAME_FONT = "Fonts\\FRIZQT__.TTF";
 local PET_PARTY_FRAME_FONT_SIZE = 18;
-local PET_PARTY_FRAME_SIZE = 18;
+local PET_PARTY_FRAME_SIZE = 22;
+
+local PET_PARTY_FRAME_TITLE_R = 1;
+local PET_PARTY_FRAME_TITLE_G = 1;
+local PET_PARTY_FRAME_TITLE_B = 1;
+local PET_PARTY_FRAME_TITLE_A = 1;
+
+local PET_PARTY_FRAME_TITLE_HIGHLIGHT_R = 0;
+local PET_PARTY_FRAME_TITLE_HIGHLIGHT_G = 0;
+local PET_PARTY_FRAME_TITLE_HIGHLIGHT_B = 1;
+local PET_PARTY_FRAME_TITLE_HIGHLIGHT_A = 1;
+
+local PET_PARTY_FRAME_TITLE_SELECTED_R = 0;
+local PET_PARTY_FRAME_TITLE_SELECTED_G = 1;
+local PET_PARTY_FRAME_TITLE_SELECTED_B = 0;
+local PET_PARTY_FRAME_TITLE_SELECTED_A = 1;
 
 local SCROLL_FRAME_OFFSET_RIGHT = 14;
 local SCROLL_FRAME_OFFSET_TOP = -60;
@@ -53,36 +68,83 @@ function PetParty.AddPetPartyFrame(name)
     end
     
     -- Create or reuse a pet party frame.
-    local font_string = nil;
+    local pet_party_frame = nil;
     
     -- Reuse any old frames.
     if (PetParty_PetPartyContentFrame.content.frame_count_allocated > PetParty_PetPartyContentFrame.content.frame_count) then
-        font_string = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
+        pet_party_frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
     else
-        font_string = PetParty_PetPartyContentFrame:CreateFontString();
+        -- Create the pet party frame.
+        pet_party_frame = CreateFrame("Frame", nil, PetParty_PetPartyContentFrame);
+        pet_party_frame:SetHeight(PET_PARTY_FRAME_SIZE);
+        
+        -- Add an enter handler for the pet party frame.
+        pet_party_frame:SetScript("OnEnter",
+            function(self, motion)
+                PetParty.OnEnterPetPartyFrame(self, motion);
+            end
+        );
+        
+        -- Add a leave handler for the pet party frame.
+        pet_party_frame:SetScript("OnLeave",
+            function(self, motion)
+                PetParty.OnLeavePetPartyFrame(self, motion);
+            end
+        );
+        
+        -- Add a load handler for the pet party frame.
+        pet_party_frame:SetScript("OnLoad",
+            function(self)
+                self:RegisterForClicks("LeftButtonUp");
+            end
+        );
+        
+        -- Add a mouse up handler for the pet party frame.
+        pet_party_frame:SetScript("OnMouseUp",
+            function(self, button)
+                PetParty.OnMouseUpPetPartyFrame(self, button);
+            end
+        );
+        
+        pet_party_frame.texture_background = pet_party_frame:CreateTexture();
+        pet_party_frame.texture_background:SetAllPoints();
+        pet_party_frame.texture_background:SetTexture(0, 0, 0, 0);
+        
+        -- Create the pet party title frame.
+        pet_party_frame.font_string_title = pet_party_frame:CreateFontString();
         
         -- Update the allocated frame count.
         PetParty_PetPartyContentFrame.content.frame_count_allocated = PetParty_PetPartyContentFrame.content.frame_count_allocated + 1;
     end
     
-    font_string:SetFont(PET_PARTY_FRAME_FONT, PET_PARTY_FRAME_FONT_SIZE);
-    font_string:SetHeight(PET_PARTY_FRAME_SIZE);
-    font_string:SetText(name);
-    font_string:ClearAllPoints();
-    
-    -- Store the pet party frame's index.
-    font_string.id = PetParty_PetPartyContentFrame.content.frame_count;
+    -- Update the pet party frame's anchors.
+    pet_party_frame:ClearAllPoints();
     
     if (PetParty_PetPartyContentFrame.content.frame_count == 0) then
         -- Anchor the frame to the content frame.
-        font_string:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
+        pet_party_frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
     else
         -- Anchor the frame to the previous frame.
-        font_string:SetPoint("BOTTOMLEFT", PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1], "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+        pet_party_frame:SetPoint("BOTTOMLEFT", PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1], "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
     end
     
+    pet_party_frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
+    
+    pet_party_frame.font_string_title:SetFont(PET_PARTY_FRAME_FONT, PET_PARTY_FRAME_FONT_SIZE);
+    pet_party_frame.font_string_title:SetHeight(PET_PARTY_FRAME_SIZE);
+    pet_party_frame.font_string_title:SetText(name);
+    pet_party_frame.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
+                                                   PET_PARTY_FRAME_TITLE_G,
+                                                   PET_PARTY_FRAME_TITLE_B,
+                                                   PET_PARTY_FRAME_TITLE_A);
+    pet_party_frame.font_string_title:ClearAllPoints();
+    pet_party_frame.font_string_title:SetPoint("CENTER", pet_party_frame);
+    
+    -- Update the pet party frame's index.
+    pet_party_frame.id = PetParty_PetPartyContentFrame.content.frame_count;
+    
     -- Store the pet party frame.
-    PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = font_string;
+    PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = pet_party_frame;
     
     -- Update the frame count.
     PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count + 1;
@@ -143,6 +205,29 @@ function PetParty.CreatePetPartyContentAndScrollFrames()
     PetParty_PetPartyScrollFrame:SetScrollChild(PetParty_PetPartyContentFrame);
 end
 
+-- Called when the mouse enters a pet party frame.
+function PetParty.OnEnterPetPartyFrame(self, motion)
+    self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_HIGHLIGHT_R,
+                                        PET_PARTY_FRAME_TITLE_HIGHLIGHT_G,
+                                        PET_PARTY_FRAME_TITLE_HIGHLIGHT_B,
+                                        PET_PARTY_FRAME_TITLE_HIGHLIGHT_A);
+end
+
+-- Called when the mouse leaves a pet party frame.
+function PetParty.OnLeavePetPartyFrame(self, motion)
+    self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
+                                        PET_PARTY_FRAME_TITLE_G,
+                                        PET_PARTY_FRAME_TITLE_B,
+                                        PET_PARTY_FRAME_TITLE_A);
+end
+
+-- Called when the mouse is released on a pet party frame.
+function PetParty.OnMouseUpPetPartyFrame(self, button)
+    if (button == "LeftButton") then
+        print(self.font_string_title:GetText() .. " was clicked!");
+    end
+end
+
 -- Call to update the pet party scroll bar layout.
 function PetParty.UpdatePetPartyScrollBarLayout()
     -- Update the anchors of the pet party scroll frame.
@@ -158,7 +243,8 @@ function PetParty.UpdatePetPartyScrollBarLayout()
     if (PetParty_PetPartyContentFrame.content ~= nil) then
         if (PetParty_PetPartyContentFrame.content.frame_count > 0) then
             -- Calculate the height of the content frame.
-            height_content_frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1]:GetHeight() *
+            local frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1];
+            height_content_frame = frame.font_string_title:GetHeight() *
                                    PetParty_PetPartyContentFrame.content.frame_count;
         end
     end
