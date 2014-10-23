@@ -47,25 +47,6 @@ local height_content_frame = 0;
 
 -- Call to create the battle pet content and scroll frames.
 function PetParty.CreateBattlePetContentAndScrollFrames()
-    -- Clean up the old UI elements.
-    if (PetParty_BattlePetScrollFrame ~= nil) then
-        PetParty_BattlePetScrollFrame:Hide();
-        PetParty_BattlePetScrollFrame:SetParent(nil);
-        PetParty_BattlePetScrollFrame = nil;
-    end
-    
-    if (PetParty_BattlePetScrollBar ~= nil) then
-        PetParty_BattlePetScrollBar:Hide();
-        PetParty_BattlePetScrollBar:SetParent(nil);
-        PetParty_BattlePetScrollBar = nil;
-    end
-    
-    if (PetParty_BattlePetContentFrame ~= nil) then
-        PetParty_BattlePetContentFrame:Hide();
-        PetParty_BattlePetContentFrame:SetParent(nil);
-        PetParty_BattlePetContentFrame = nil;
-    end
-    
     -- Create the scroll frame.
     CreateFrame("ScrollFrame", "PetParty_BattlePetScrollFrame", PetParty_MainFrame);
     PetParty_BattlePetScrollFrame:SetPoint("TOPLEFT", SCROLL_FRAME_OFFSET_LEFT, SCROLL_FRAME_OFFSET_TOP);
@@ -118,14 +99,22 @@ end
 
 -- Call to create the battle pet frames.
 function PetParty.CreateBattlePetFrames()
+    -- Initialize the battle pet frame variables.
+    if (PetParty_BattlePetContentFrame.content == nil) then
+        PetParty_BattlePetContentFrame.content = {};
+        PetParty_BattlePetContentFrame.content.frames = {};
+        PetParty_BattlePetContentFrame.content.frame_count = 0;
+    end
+    
     -- Get the total number of pets.
     local number_of_pets = C_PetJournal.GetNumPets();
     
-    -- Cache the previous battle pet frame.
-    local previous_battle_pet_frame = nil;
-    
     -- Reset the height of the content frame.
     height_content_frame = 0;
+    
+    -- Reset the frame count.
+    local allocated_frame_count = PetParty_BattlePetContentFrame.content.frame_count;
+    PetParty_BattlePetContentFrame.content.frame_count = 0;
     
     -- For each battle pet...
     for i = 1, number_of_pets do
@@ -137,25 +126,38 @@ function PetParty.CreateBattlePetFrames()
         
         -- If the player owns this pet and it is a battle pet...
         if (owned) and (canBattle) then
-            --  Create a battle pet frame.
-            local font_string = PetParty_BattlePetContentFrame:CreateFontString();
+            --  Create or reuse a battle pet frame.
+            local font_string = nil;
+            
+            -- Reuse any old frames.
+            if (allocated_frame_count > PetParty_BattlePetContentFrame.content.frame_count) then
+                print("what");
+                font_string = PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count];
+            else
+                font_string = PetParty_BattlePetContentFrame:CreateFontString();
+            end
+            
             font_string:SetFont(BATTLE_PET_FRAME_FONT, BATTLE_PET_FRAME_FONT_SIZE);
             font_string:SetHeight(BATTLE_PET_FRAME_SIZE);
             font_string:SetText(speciesName);
+            font_string:ClearAllPoints();
             
             -- Store this battle pet's ID.
             font_string.battle_pet_id = petID;
             
-            if (previous_battle_pet_frame == nil) then
+            if (PetParty_BattlePetContentFrame.content.frame_count == 0) then
                 -- Anchor the frame to the content frame.
                 font_string:SetPoint("TOPLEFT", PetParty_BattlePetContentFrame);
             else
                 -- Anchor the frame to the previous frame.
-                font_string:SetPoint("BOTTOMLEFT", previous_battle_pet_frame, "BOTTOMLEFT", 0, -BATTLE_PET_FRAME_SIZE);
+                font_string:SetPoint("BOTTOMLEFT", PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count - 1], "BOTTOMLEFT", 0, -BATTLE_PET_FRAME_SIZE);
             end
             
-            -- Cache the previous battle pet frame.
-            previous_battle_pet_frame = font_string;
+            -- Store the battle pet frame.
+            PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count] = font_string;
+            
+            -- Update the frame count.
+            PetParty_BattlePetContentFrame.content.frame_count = PetParty_BattlePetContentFrame.content.frame_count + 1;
             
             -- Update the height of the content frame.
             height_content_frame = height_content_frame + font_string:GetHeight();

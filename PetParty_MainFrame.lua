@@ -83,9 +83,7 @@ function PetParty.OnEventMainFrame(event)
         
         PetParty.UpdateMainFrameLayout();
     elseif (event == "PET_JOURNAL_LIST_UPDATE") then
-        PetParty.CreateBattlePetContentAndScrollFrames();
         PetParty.CreateBattlePetFrames();
-        PetParty.CreatePetPartyContentAndScrollFrames();
         PetParty.CreatePetPartyFrames();
     elseif (event == "PLAYER_LOGOUT") then
         PetPartyCharacterDB.main_frame_hidden = not PetParty_MainFrame:IsShown();
@@ -118,9 +116,7 @@ function PetParty.OnLoadMainFrame()
     
     -- Create the main frame's scroll frames.
     PetParty.CreateBattlePetContentAndScrollFrames();
-    PetParty.CreateBattlePetFrames();
     PetParty.CreatePetPartyContentAndScrollFrames();
-    PetParty.CreatePetPartyFrames();
     
     -- Create the create pet party dialog box.
     StaticPopupDialogs["PetParty_CreatePetPartyDialog"] = {
