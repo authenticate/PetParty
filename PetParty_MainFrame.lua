@@ -130,7 +130,6 @@ function PetParty.OnLoadMainFrame()
         OnAccept =
             function (self)
                 local text = self.editBox:GetText();
-                print(text);
             end
         ,
         OnShow =
@@ -150,6 +149,18 @@ function PetParty.OnLoadMainFrame()
                 else
                     self:GetParent().button1:Disable();
                 end
+            end
+        ,
+        EditBoxOnEnterPressed =
+            function (self)
+                if (self:GetParent().button1:IsEnabled()) then
+                    self:GetParent().button1:Click("LeftButton", false);
+                end
+            end
+        ,
+        EditBoxOnEscapePressed =
+            function (self)
+                self:GetParent():Hide();
             end
         ,
         hasEditBox = true,
