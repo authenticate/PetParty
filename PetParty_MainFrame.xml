@@ -127,6 +127,9 @@
             <OnEvent>
                 PetParty.OnEventMainFrame(event);
             </OnEvent>
+            <OnHide>
+                PetParty.OnHideMainFrame();
+            </OnHide>
             <OnLoad>
                 PetParty.OnLoadMainFrame();
             </OnLoad>

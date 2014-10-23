@@ -35,12 +35,11 @@ local PET_PARTY_BUTTON_COUNT = 2;
 
 -- Called when the main frame's create pet party button is clicked.
 function PetParty.OnClickMainFrameButtonCreatePetParty()
-    print("Implement me!");
+    StaticPopup_Show("PetParty_CreatePetPartyDialog");
 end
 
 -- Called when the main frame's delete pet party button is clicked.
 function PetParty.OnClickMainFrameButtonDeletePetParty()
-    print("Implement me!");
 end
 
 -- Called when the main frame starts dragging.
@@ -93,6 +92,11 @@ function PetParty.OnEventMainFrame(event)
     end
 end
 
+-- Called when the main frame is hidden.
+function PetParty.OnHideMainFrame()
+    StaticPopup_Hide("PetParty_CreatePetPartyDialog");
+end
+
 -- Called when the main frame is loaded.
 function PetParty.OnLoadMainFrame()
     -- Configure the main frame.
@@ -117,6 +121,43 @@ function PetParty.OnLoadMainFrame()
     PetParty.CreateBattlePetFrames();
     PetParty.CreatePetPartyContentAndScrollFrames();
     PetParty.CreatePetPartyFrames();
+    
+    -- Create the create pet party dialog box.
+    StaticPopupDialogs["PetParty_CreatePetPartyDialog"] = {
+        text = PetParty.L["Create a pet party."],
+        button1 = PetParty.L["Create"],
+        button2 = PetParty.L["Cancel"],
+        OnAccept =
+            function (self)
+                local text = self.editBox:GetText();
+                print(text);
+            end
+        ,
+        OnShow =
+            function (self, data)
+                if (data ~= nil) then
+                    self.editBox:SetText(data);
+                else
+                    self.button1:Disable();
+                end
+            end
+        ,
+        EditBoxOnTextChanged =
+            function (self)
+                local text = self:GetText();
+                if (text ~= nil) and (text ~= "") then
+                    self:GetParent().button1:Enable();
+                else
+                    self:GetParent().button1:Disable();
+                end
+            end
+        ,
+        hasEditBox = true,
+        timeout = 0,
+        whileDead = true,
+        hideOnEscape = true,
+        preferredIndex = 3,
+    };
     
     -- Configure the buttons.
     PetParty_MainFrame_Button_Create_Pet_Party:SetWidth(BUTTON_WIDTH);
