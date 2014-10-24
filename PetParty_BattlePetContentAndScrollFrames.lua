@@ -104,11 +104,18 @@ function PetParty.CreateBattlePetFrames()
         PetParty_BattlePetContentFrame.content.frame_count_allocated = 0;
     end
     
-    -- Get the total number of pets.
-    local number_of_pets = C_PetJournal.GetNumPets();
+    -- Clear the old frames.
+    for i = 1, PetParty_BattlePetContentFrame.content.frame_count do
+        local battle_pet_frame = PetParty_BattlePetContentFrame.content.frames[i];
+        battle_pet_frame:Hide();
+        battle_pet_frame:SetParent(nil);
+    end
     
     -- Reset the frame count.
     PetParty_BattlePetContentFrame.content.frame_count = 0;
+    
+    -- Get the total number of pets.
+    local number_of_pets = C_PetJournal.GetNumPets();
     
     -- For each battle pet...
     for i = 1, number_of_pets do
@@ -121,36 +128,38 @@ function PetParty.CreateBattlePetFrames()
         -- If the player owns this pet and it is a battle pet...
         if (owned) and (canBattle) then
             --  Create or reuse a battle pet frame.
-            local font_string = nil;
+            local battle_pet_frame = nil;
             
             -- Reuse any old frames.
             if (PetParty_BattlePetContentFrame.content.frame_count_allocated > PetParty_BattlePetContentFrame.content.frame_count) then
-                font_string = PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count];
+                battle_pet_frame = PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count];
+                battle_pet_frame:SetParent(PetParty_BattlePetContentFrame);
+                battle_pet_frame:Show();
             else
-                font_string = PetParty_BattlePetContentFrame:CreateFontString();
+                battle_pet_frame = PetParty_BattlePetContentFrame:CreateFontString();
                 
                 -- Update the allocated frame count.
                 PetParty_BattlePetContentFrame.content.frame_count_allocated = PetParty_BattlePetContentFrame.content.frame_count_allocated + 1;
             end
             
-            font_string:SetFont(BATTLE_PET_FRAME_FONT, BATTLE_PET_FRAME_FONT_SIZE);
-            font_string:SetHeight(BATTLE_PET_FRAME_SIZE);
-            font_string:SetText(speciesName);
-            font_string:ClearAllPoints();
+            battle_pet_frame:SetFont(BATTLE_PET_FRAME_FONT, BATTLE_PET_FRAME_FONT_SIZE);
+            battle_pet_frame:SetHeight(BATTLE_PET_FRAME_SIZE);
+            battle_pet_frame:SetText(speciesName);
+            battle_pet_frame:ClearAllPoints();
             
             -- Store this battle pet's ID.
-            font_string.battle_pet_id = petID;
+            battle_pet_frame.battle_pet_id = petID;
             
             if (PetParty_BattlePetContentFrame.content.frame_count == 0) then
                 -- Anchor the frame to the content frame.
-                font_string:SetPoint("TOPLEFT", PetParty_BattlePetContentFrame);
+                battle_pet_frame:SetPoint("TOPLEFT", PetParty_BattlePetContentFrame);
             else
                 -- Anchor the frame to the previous frame.
-                font_string:SetPoint("BOTTOMLEFT", PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count - 1], "BOTTOMLEFT", 0, -BATTLE_PET_FRAME_SIZE);
+                battle_pet_frame:SetPoint("BOTTOMLEFT", PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count - 1], "BOTTOMLEFT", 0, -BATTLE_PET_FRAME_SIZE);
             end
             
             -- Store the battle pet frame.
-            PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count] = font_string;
+            PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count] = battle_pet_frame;
             
             -- Update the frame count.
             PetParty_BattlePetContentFrame.content.frame_count = PetParty_BattlePetContentFrame.content.frame_count + 1;
