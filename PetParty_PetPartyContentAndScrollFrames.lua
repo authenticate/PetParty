@@ -57,6 +57,9 @@ local SCROLL_BAR_STEPS_PER_PAGE = 1;
 
 local SCROLL_BAR_WIDTH = 16;
 
+-- The currently selected pet party frame.
+local pet_party_frame_selected = nil;
+
 -- Call to add a pet party frame.
 function PetParty.AddPetPartyFrame(name)
     -- Initialize the battle pet frame variables.
@@ -73,6 +76,8 @@ function PetParty.AddPetPartyFrame(name)
     -- Reuse any old frames.
     if (PetParty_PetPartyContentFrame.content.frame_count_allocated > PetParty_PetPartyContentFrame.content.frame_count) then
         pet_party_frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
+        pet_party_frame:SetParent(PetParty_PetPartyContentFrame);
+        pet_party_frame:Show();
     else
         -- Create the pet party frame.
         pet_party_frame = CreateFrame("Frame", nil, PetParty_PetPartyContentFrame);
@@ -205,6 +210,48 @@ function PetParty.CreatePetPartyContentAndScrollFrames()
     PetParty_PetPartyScrollFrame:SetScrollChild(PetParty_PetPartyContentFrame);
 end
 
+-- Call to delete the currently selected pet party frame.
+function PetParty.DeletePetPartyFrame()
+    if (pet_party_frame_selected ~= nil) then
+        -- Remove the frame the scroll area.
+        pet_party_frame_selected:Hide();
+        pet_party_frame_selected:SetParent(nil);
+        
+        -- Decrement the frame count.
+        PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count - 1;
+        
+        -- Get the previous frame.
+        local frame_previous = nil;
+        if (PetParty_PetPartyContentFrame.content.frame_count > 0) and (pet_party_frame_selected.id - 1 >= 0) then
+            frame_previous = PetParty_PetPartyContentFrame.content.frames[pet_party_frame_selected.id - 1];
+        end
+        -- Update the other frames.
+        for i = pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count do
+            -- Get the frame.
+            local frame = PetParty_PetPartyContentFrame.content.frames[i];
+            
+            -- Update the pet party frame's anchors.
+            frame:ClearAllPoints();
+            
+            if (frame_previous == nil) then
+                -- Anchor the frame to the content frame.
+                frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
+            else
+                -- Anchor the frame to the previous frame.
+                frame:SetPoint("BOTTOMLEFT", frame_previous, "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+            end
+            
+            frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
+            
+            -- Update the previous frame.
+            frame_previous = frame;
+        end
+        
+        -- Clear the selected frame.
+        pet_party_frame_selected = nil;
+    end
+end
+
 -- Called when the mouse enters a pet party frame.
 function PetParty.OnEnterPetPartyFrame(self, motion)
     self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_HIGHLIGHT_R,
@@ -215,16 +262,40 @@ end
 
 -- Called when the mouse leaves a pet party frame.
 function PetParty.OnLeavePetPartyFrame(self, motion)
-    self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
-                                        PET_PARTY_FRAME_TITLE_G,
-                                        PET_PARTY_FRAME_TITLE_B,
-                                        PET_PARTY_FRAME_TITLE_A);
+    if (self ~= pet_party_frame_selected) then
+        self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
+                                            PET_PARTY_FRAME_TITLE_G,
+                                            PET_PARTY_FRAME_TITLE_B,
+                                            PET_PARTY_FRAME_TITLE_A);
+    else
+        self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_SELECTED_R,
+                                            PET_PARTY_FRAME_TITLE_SELECTED_G,
+                                            PET_PARTY_FRAME_TITLE_SELECTED_B,
+                                            PET_PARTY_FRAME_TITLE_SELECTED_A);
+    end
 end
 
 -- Called when the mouse is released on a pet party frame.
 function PetParty.OnMouseUpPetPartyFrame(self, button)
     if (button == "LeftButton") then
-        print(self.font_string_title:GetText() .. " was clicked!");
+        -- Reset the old frame.
+        if (pet_party_frame_selected ~= nil) then
+            -- Cache the old frame.
+            local frame = pet_party_frame_selected;
+            pet_party_frame_selected = nil;
+            
+            -- Store the new frame.
+            pet_party_frame_selected = self;
+            
+            -- Reset the old frame.
+            PetParty.OnLeavePetPartyFrame(frame, false);
+        end
+        
+        -- Store the new frame.
+        pet_party_frame_selected = self;
+        
+        -- Update the new frame.
+        PetParty.OnEnterPetPartyFrame(self, false);
     end
 end
 

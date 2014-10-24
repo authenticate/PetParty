@@ -40,6 +40,7 @@ end
 
 -- Called when the main frame's delete pet party button is clicked.
 function PetParty.OnClickMainFrameButtonDeletePetParty()
+    PetParty.DeletePetPartyFrame();
 end
 
 -- Called when the main frame starts dragging.
