@@ -25,6 +25,8 @@ PetParty = {};
 -- Constants.
 --
 
+PetParty.PETS_PER_PARTY = 3;
+
 PetParty.MAIN_FRAME_MAXIMUM_WIDTH = 0;
 PetParty.MAIN_FRAME_MAXIMUM_HEIGHT = 0;
 PetParty.MAIN_FRAME_MINIMUM_WIDTH = 480;

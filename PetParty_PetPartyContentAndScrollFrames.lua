@@ -136,7 +136,6 @@ function PetParty.AddPetPartyFrame(name)
     pet_party_frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
     
     pet_party_frame.font_string_title:SetFont(PET_PARTY_FRAME_FONT, PET_PARTY_FRAME_FONT_SIZE);
-    pet_party_frame.font_string_title:SetHeight(PET_PARTY_FRAME_SIZE);
     pet_party_frame.font_string_title:SetText(name);
     pet_party_frame.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
                                                    PET_PARTY_FRAME_TITLE_G,
