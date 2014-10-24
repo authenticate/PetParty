@@ -120,10 +120,10 @@ function PetParty.CreateBattlePetFrames()
     -- For each battle pet...
     for i = 1, number_of_pets do
         -- Get the battle pet information.
-        local petID, speciesID, owned, customName, level, favorite,
+        local petGUID, speciesID, owned, customName, level, isFavorite,
               isRevoked, speciesName, icon, petType, companionID,
               tooltip, description, isWild, canBattle, isTradeable,
-              isUnique, obtainable = C_PetJournal.GetPetInfoByIndex(i);
+              isUnique, isObtainable = C_PetJournal.GetPetInfoByIndex(i);
         
         -- If the player owns this pet and it is a battle pet...
         if (owned) and (canBattle) then
@@ -147,8 +147,8 @@ function PetParty.CreateBattlePetFrames()
             battle_pet_frame:SetText(speciesName);
             battle_pet_frame:ClearAllPoints();
             
-            -- Store this battle pet's ID.
-            battle_pet_frame.battle_pet_id = petID;
+            -- Store this battle pet's GUID.
+            battle_pet_frame.pet_guid = petGUID;
             
             if (PetParty_BattlePetContentFrame.content.frame_count == 0) then
                 -- Anchor the frame to the content frame.
