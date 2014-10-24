@@ -217,17 +217,14 @@ function PetParty.DeletePetPartyFrame()
         pet_party_frame_selected:Hide();
         pet_party_frame_selected:SetParent(nil);
         
-        -- Decrement the frame count.
-        PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count - 1;
-        
         -- Get the previous frame.
         local frame_previous = nil;
-        if (PetParty_PetPartyContentFrame.content.frame_count > 0) and (pet_party_frame_selected.id - 1 >= 0) then
+        if (pet_party_frame_selected.id - 1 >= 0) then
             frame_previous = PetParty_PetPartyContentFrame.content.frames[pet_party_frame_selected.id - 1];
         end
         
         -- Update the other frames.
-        for i = pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count do
+        for i = pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count - 1 do
             -- Get the frame.
             local frame = PetParty_PetPartyContentFrame.content.frames[i];
             
@@ -247,6 +244,22 @@ function PetParty.DeletePetPartyFrame()
             -- Update the previous frame.
             frame_previous = frame;
         end
+        
+        -- Move the selected frame to the end of the array.
+        if (PetParty_PetPartyContentFrame.content.frame_count > 1) then
+            for i = pet_party_frame_selected.id, PetParty_PetPartyContentFrame.content.frame_count - 2 do
+                --  Swap the frames.
+                PetParty_PetPartyContentFrame.content.frames[i], PetParty_PetPartyContentFrame.content.frames[i + 1] =
+                PetParty_PetPartyContentFrame.content.frames[i + 1], PetParty_PetPartyContentFrame.content.frames[i];
+                
+                -- Update the frames' IDs.
+                PetParty_PetPartyContentFrame.content.frames[i].id = i;
+                PetParty_PetPartyContentFrame.content.frames[i + 1].id = i + 1;
+            end
+        end
+        
+        -- Decrement the frame count.
+        PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count - 1;
         
         -- Clear the selected frame.
         pet_party_frame_selected = nil;
