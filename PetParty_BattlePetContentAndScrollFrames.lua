@@ -105,10 +105,10 @@ function PetParty.CreateBattlePetFrames()
     end
     
     -- Clear the old frames.
-    for i = 1, PetParty_BattlePetContentFrame.content.frame_count do
+    for i = 1, PetParty_BattlePetContentFrame.content.frame_count - 1 do
         local battle_pet_frame = PetParty_BattlePetContentFrame.content.frames[i];
         battle_pet_frame:Hide();
-        battle_pet_frame:SetParent(nil);
+        battle_pet_frame:SetText("");
     end
     
     -- Reset the frame count.
