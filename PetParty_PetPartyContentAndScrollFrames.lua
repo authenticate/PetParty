@@ -150,6 +150,20 @@ function PetParty.AddPetPartyFrame(name)
     -- Store the pet party frame.
     PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = pet_party_frame;
     
+    -- Select the new pet party frame.
+    local pet_party_frame_previously_selected = pet_party_frame_selected;
+    pet_party_frame_selected = pet_party_frame;
+    
+    -- Update the previously selected frame. 
+    if (pet_party_frame_previously_selected ~= nil) then
+        PetParty.OnLeavePetPartyFrame(pet_party_frame_previously_selected, false);
+    end
+    
+    -- Update the selected frame.
+    if (pet_party_frame_selected ~= nil) then
+        PetParty.OnLeavePetPartyFrame(pet_party_frame_selected, false);
+    end
+    
     -- Update the frame count.
     PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count + 1;
     
