@@ -246,16 +246,14 @@ function PetParty.DeletePetPartyFrame()
         end
         
         -- Move the selected frame to the end of the array.
-        if (PetParty_PetPartyContentFrame.content.frame_count > 1) then
-            for i = pet_party_frame_selected.id, PetParty_PetPartyContentFrame.content.frame_count - 2 do
-                --  Swap the frames.
-                PetParty_PetPartyContentFrame.content.frames[i], PetParty_PetPartyContentFrame.content.frames[i + 1] =
-                PetParty_PetPartyContentFrame.content.frames[i + 1], PetParty_PetPartyContentFrame.content.frames[i];
-                
-                -- Update the frames' IDs.
-                PetParty_PetPartyContentFrame.content.frames[i].id = i;
-                PetParty_PetPartyContentFrame.content.frames[i + 1].id = i + 1;
-            end
+        for i = pet_party_frame_selected.id, PetParty_PetPartyContentFrame.content.frame_count - 2 do
+            --  Swap the frames.
+            PetParty_PetPartyContentFrame.content.frames[i], PetParty_PetPartyContentFrame.content.frames[i + 1] =
+            PetParty_PetPartyContentFrame.content.frames[i + 1], PetParty_PetPartyContentFrame.content.frames[i];
+            
+            -- Update the frames' IDs.
+            PetParty_PetPartyContentFrame.content.frames[i].id = i;
+            PetParty_PetPartyContentFrame.content.frames[i + 1].id = i + 1;
         end
         
         -- Decrement the frame count.
