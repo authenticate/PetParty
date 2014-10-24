@@ -24,13 +24,6 @@
 
 local BUTTON_WIDTH = 100;
 
-local FRAME_MAXIMUM_WIDTH = 0;
-local FRAME_MAXIMUM_HEIGHT = 0;
-local FRAME_MINIMUM_WIDTH = 480;
-local FRAME_MINIMUM_HEIGHT = 640;
-local FRAME_OFFSET_X = 14;
-local FRAME_OFFSET_Y = -34;
-
 local PET_PARTY_BUTTON_COUNT = 2;
 
 -- Called when the main frame's create pet party button is clicked.
@@ -102,8 +95,8 @@ function PetParty.OnLoadMainFrame()
     PetParty_MainFrame.is_sizing = false;
     PetParty_MainFrame:SetClampedToScreen(true);
     PetParty_MainFrame:SetUserPlaced(true);
-    PetParty_MainFrame:SetMaxResize(FRAME_MAXIMUM_WIDTH, FRAME_MAXIMUM_HEIGHT);
-    PetParty_MainFrame:SetMinResize(FRAME_MINIMUM_WIDTH, FRAME_MINIMUM_HEIGHT);
+    PetParty_MainFrame:SetMaxResize(PetParty.MAIN_FRAME_MAXIMUM_WIDTH, PetParty.MAIN_FRAME_MAXIMUM_HEIGHT);
+    PetParty_MainFrame:SetMinResize(PetParty.MAIN_FRAME_MINIMUM_WIDTH, PetParty.MAIN_FRAME_MINIMUM_HEIGHT);
     
     -- Register the main frame for events.
     PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
@@ -192,14 +185,14 @@ end
 function PetParty.UpdateMainFrameLayout()
     -- Calculate the main frame offsets.
     local offset_main_frame_x = PetParty_MainFrame:GetWidth() / 2;
-    local offset_main_frame_y = FRAME_OFFSET_Y;
+    local offset_main_frame_y = PetParty.MAIN_FRAME_OFFSET_Y;
     
     -- Calculate the width of all the pet party buttons.
     local button_width = PetParty_MainFrame_Button_Create_Pet_Party:GetWidth() +
                          PetParty_MainFrame_Button_Delete_Pet_Party:GetWidth();
     
     -- Calculate the center offsets.
-    local offset_center_x = (offset_main_frame_x - button_width - FRAME_OFFSET_X) / (PET_PARTY_BUTTON_COUNT + 1);
+    local offset_center_x = (offset_main_frame_x - button_width - PetParty.MAIN_FRAME_OFFSET_X) / (PET_PARTY_BUTTON_COUNT + 1);
     local offset_center_y = 0;
     
     -- Calculate the current offsets.

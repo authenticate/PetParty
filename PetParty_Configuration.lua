@@ -20,3 +20,16 @@
 
 -- Pet Party namespace.
 PetParty = {};
+
+--
+-- Constants.
+--
+
+PetParty.MAIN_FRAME_MAXIMUM_WIDTH = 0;
+PetParty.MAIN_FRAME_MAXIMUM_HEIGHT = 0;
+PetParty.MAIN_FRAME_MINIMUM_WIDTH = 480;
+PetParty.MAIN_FRAME_MINIMUM_HEIGHT = 640;
+PetParty.MAIN_FRAME_OFFSET_X = 14;
+PetParty.MAIN_FRAME_OFFSET_Y = -34;
+
+PetParty.PET_PARTY_FRAME_HEIGHT = 175;
