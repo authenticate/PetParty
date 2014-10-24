@@ -60,6 +60,12 @@ local SCROLL_BAR_WIDTH = 16;
 -- The currently selected pet party frame.
 local pet_party_frame_selected = nil;
 
+-- The currently entered pet party frame.
+local pet_party_frame_entered = nil;
+
+-- The currently pressed pet party frame.
+local pet_party_frame_pressed = nil;
+
 -- Call to add a pet party frame.
 function PetParty.AddPetPartyFrame(name)
     -- Initialize the battle pet frame variables.
@@ -101,6 +107,12 @@ function PetParty.AddPetPartyFrame(name)
         pet_party_frame:SetScript("OnLoad",
             function(self)
                 self:RegisterForClicks("LeftButtonUp");
+            end
+        );
+        
+        pet_party_frame:SetScript("OnMouseDown",
+            function(self, button)
+                PetParty.OnMouseDownPetPartyFrame(self, button);
             end
         );
         
@@ -292,6 +304,11 @@ end
 
 -- Called when the mouse enters a pet party frame.
 function PetParty.OnEnterPetPartyFrame(self, motion)
+    -- Store the entered frame.
+    if (motion) then
+        pet_party_frame_entered = self;
+    end
+    
     self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_HIGHLIGHT_R,
                                         PET_PARTY_FRAME_TITLE_HIGHLIGHT_G,
                                         PET_PARTY_FRAME_TITLE_HIGHLIGHT_B,
@@ -300,6 +317,11 @@ end
 
 -- Called when the mouse leaves a pet party frame.
 function PetParty.OnLeavePetPartyFrame(self, motion)
+    -- Reset the entered frame.
+    if (motion) then
+        pet_party_frame_entered = nil;
+    end
+    
     if (self ~= pet_party_frame_selected) then
         self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
                                             PET_PARTY_FRAME_TITLE_G,
@@ -313,9 +335,14 @@ function PetParty.OnLeavePetPartyFrame(self, motion)
     end
 end
 
+-- Called when the mouse is pressed on a pet party frame.
+function PetParty.OnMouseDownPetPartyFrame(self, button)
+    pet_party_frame_pressed = self;
+end
+
 -- Called when the mouse is released on a pet party frame.
 function PetParty.OnMouseUpPetPartyFrame(self, button)
-    if (button == "LeftButton") then
+    if (button == "LeftButton") and (pet_party_frame_entered == pet_party_frame_pressed) then
         -- Reset the old frame.
         if (pet_party_frame_selected ~= nil) then
             -- Cache the old frame.
@@ -335,6 +362,9 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
         -- Update the new frame.
         PetParty.OnEnterPetPartyFrame(self, false);
     end
+    
+    -- Reset the pressed frame.
+    pet_party_frame_pressed = nil;
 end
 
 -- Call to update the pet party scroll bar layout.
