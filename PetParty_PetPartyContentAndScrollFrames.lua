@@ -245,6 +245,9 @@ function PetParty.DeletePetPartyFrame()
             frame_previous = frame;
         end
         
+        -- Cache the original ID of the selected frame.
+        local original_id = pet_party_frame_selected.id;
+        
         -- Move the selected frame to the end of the array.
         for i = pet_party_frame_selected.id, PetParty_PetPartyContentFrame.content.frame_count - 2 do
             --  Swap the frames.
@@ -259,8 +262,18 @@ function PetParty.DeletePetPartyFrame()
         -- Decrement the frame count.
         PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count - 1;
         
-        -- Clear the selected frame.
-        pet_party_frame_selected = nil;
+        -- Update the selected frame.
+        if (PetParty_PetPartyContentFrame.content.frame_count > 0) and (original_id < PetParty_PetPartyContentFrame.content.frame_count) then
+            pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[original_id];
+        elseif (PetParty_PetPartyContentFrame.content.frame_count > 0) then
+            pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1];
+        else
+            pet_party_frame_selected = nil;
+        end
+        
+        if (pet_party_frame_selected ~= nil) then
+            PetParty.OnLeavePetPartyFrame(pet_party_frame_selected, false);
+        end
     end
 end
 
