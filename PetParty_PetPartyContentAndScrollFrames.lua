@@ -225,6 +225,7 @@ function PetParty.DeletePetPartyFrame()
         if (PetParty_PetPartyContentFrame.content.frame_count > 0) and (pet_party_frame_selected.id - 1 >= 0) then
             frame_previous = PetParty_PetPartyContentFrame.content.frames[pet_party_frame_selected.id - 1];
         end
+        
         -- Update the other frames.
         for i = pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count do
             -- Get the frame.
