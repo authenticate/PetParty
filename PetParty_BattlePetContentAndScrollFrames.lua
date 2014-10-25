@@ -37,8 +37,8 @@ local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_Y;
 
 local SCROLL_BAR_ALPHA = 0.4;
 
-local SCROLL_BAR_OFFSET_LEFT = -16;
-local SCROLL_BAR_OFFSET_RIGHT = -16;
+local SCROLL_BAR_OFFSET_LEFT = 0;
+local SCROLL_BAR_OFFSET_RIGHT = 16;
 local SCROLL_BAR_OFFSET_TOP = -16;
 local SCROLL_BAR_OFFSET_BOTTOM = 16;
 
@@ -57,7 +57,7 @@ function PetParty.CreateBattlePetContentAndScrollFrames()
     PetParty_BattlePetScrollFrame:SetPoint("TOPLEFT", SCROLL_FRAME_OFFSET_LEFT, SCROLL_FRAME_OFFSET_TOP);
     PetParty_BattlePetScrollFrame:SetPoint("BOTTOM", 0, SCROLL_FRAME_OFFSET_BOTTOM);
     PetParty_BattlePetScrollFrame:EnableMouseWheel(true);
-    PetParty_BattlePetScrollFrame:SetWidth((PetParty_BattlePetScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_LEFT);
+    PetParty_BattlePetScrollFrame:SetWidth((PetParty_BattlePetScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_LEFT - SCROLL_BAR_WIDTH);
     
     local texture = PetParty_BattlePetScrollFrame:CreateTexture();
     texture:SetAllPoints();
@@ -72,7 +72,6 @@ function PetParty.CreateBattlePetContentAndScrollFrames()
     PetParty_BattlePetScrollBar.scrollStep = BATTLE_PET_FRAME_SIZE;
     PetParty_BattlePetScrollBar:SetStepsPerPage(SCROLL_BAR_STEPS_PER_PAGE);
     PetParty_BattlePetScrollBar:SetValue(0);
-    PetParty_BattlePetScrollBar:SetWidth(SCROLL_BAR_WIDTH);
     PetParty_BattlePetScrollBar:SetObeyStepOnDrag(true);
     
     -- Add a mouse wheel handler for the scroll frame.
@@ -239,9 +238,9 @@ end
 -- Called when a battle pet frame stops dragging.
 function PetParty.OnDragStopBattlePetFrame(self)
     -- If the mouse is over a pet party frame...
-    if (PetParty.pet_party_frame_hovered ~= nil) then
+    if (PetParty.pet_information_frame_hovered ~= nil) then
         -- Store the pet being dragged in the hovered pet party frame.
-        PetParty.SetPetPetPartyFrame(PetParty.pet_party_frame_hovered.id, self.pet_guid);
+        PetParty.SetPetGUIDPetInformationFrame(PetParty.pet_information_frame_hovered.id, self.pet_guid);
     end
     
     -- Reset the pet being dragged.
@@ -254,7 +253,7 @@ end
 -- Call to update the battle pet scroll bar layout.
 function PetParty.UpdateBattlePetScrollBarLayout()
     -- Update the width of the battle pet scroll frame.
-    PetParty_BattlePetScrollFrame:SetWidth((PetParty_BattlePetScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_LEFT);
+    PetParty_BattlePetScrollFrame:SetWidth((PetParty_BattlePetScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_LEFT - SCROLL_BAR_WIDTH);
     
     -- The height of the content frame.
     local height_content_frame = 0;

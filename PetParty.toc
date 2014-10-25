@@ -40,7 +40,7 @@ PetParty_BattlePetContentAndScrollFrames.lua
 PetParty_PetPartyContentAndScrollFrames.lua
 PetParty_MainFrame.xml
 PetParty_MainFrame.lua
-PetParty_PetPartyFrame.xml
-PetParty_PetPartyFrame.lua
+PetParty_PetPartyInformationFrame.xml
+PetParty_PetPartyInformationFrame.lua
 PetParty_MinimapButton.xml
 PetParty_MinimapButton.lua

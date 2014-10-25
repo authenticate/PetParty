@@ -19,15 +19,15 @@
 
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ../FrameXML/UI.xsd">
     
-    <Script File="PetParty_PetPartyFrame.lua"/>
+    <Script File="PetParty_PetPartyInformationFrame.lua"/>
     
-    <Frame name="PetParty_PetPartyFrame" parent="PetParty_MainFrame" hidden="false" enableMouse="false" movable="false" resizable="false">
+    <Frame name="PetParty_PetPartyInformationFrame" parent="PetParty_MainFrame" hidden="false" enableMouse="false" movable="false" resizable="false">
         <Scripts>
             <OnEvent>
-                PetParty.OnEventPetPartyFrame(event);
+                PetParty.OnEventPetPartyInformationFrame(event);
             </OnEvent>
             <OnLoad>
-                PetParty.OnLoadPetPartyFrame();
+                PetParty.OnLoadPetPartyInformationFrame();
             </OnLoad>
         </Scripts>
     </Frame>
