@@ -256,9 +256,11 @@ function PetParty.SetPetPetPartyFrame(slot_index, pet_guid)
             
             -- Get the other pet party frames.
             local index_a = ((slot_index + 1) % PetParty.PETS_PER_PARTY) + 1;
+            local petGUID_a, ability1_a, ability2_a, ability3_a, locked_a = C_PetJournal.GetPetLoadOutInfo(index_a);
             local pet_frame_a = PetParty_PetPartyFrame.pet_frames[index_a];
             
             local index_b = ((index_a + 1) % PetParty.PETS_PER_PARTY) + 1;
+            local petGUID_b, ability1_b, ability2_b, ability3_b, locked_b = C_PetJournal.GetPetLoadOutInfo(index_b);
             local pet_frame_b = PetParty_PetPartyFrame.pet_frames[index_b];
             
             -- Sanity.
