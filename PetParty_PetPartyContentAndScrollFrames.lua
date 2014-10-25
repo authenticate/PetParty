@@ -110,6 +110,7 @@ function PetParty.AddPetPartyFrame(name)
             end
         );
         
+        -- Add a mouse down handler for the pet party frame.
         pet_party_frame:SetScript("OnMouseDown",
             function(self, button)
                 PetParty.OnMouseDownPetPartyFrame(self, button);

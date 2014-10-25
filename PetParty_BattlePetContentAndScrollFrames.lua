@@ -26,6 +26,11 @@ local BATTLE_PET_FRAME_FONT = "Fonts\\FRIZQT__.TTF";
 local BATTLE_PET_FRAME_FONT_SIZE = 18;
 local BATTLE_PET_FRAME_SIZE = 18;
 
+local BATTLE_PET_FRAME_TITLE_R = 1;
+local BATTLE_PET_FRAME_TITLE_G = 1;
+local BATTLE_PET_FRAME_TITLE_B = 1;
+local BATTLE_PET_FRAME_TITLE_A = 1;
+
 local SCROLL_FRAME_OFFSET_LEFT = PetParty.MAIN_FRAME_OFFSET_X;
 local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_Y - 2;
 local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_Y;
@@ -136,19 +141,23 @@ function PetParty.CreateBattlePetFrames()
                 battle_pet_frame:SetParent(PetParty_BattlePetContentFrame);
                 battle_pet_frame:Show();
             else
-                battle_pet_frame = PetParty_BattlePetContentFrame:CreateFontString();
+                -- Create the battle pet frame.
+                battle_pet_frame = CreateFrame("Frame", nil, PetParty_BattlePetContentFrame);
+                battle_pet_frame:SetHeight(BATTLE_PET_FRAME_SIZE);
+                
+                battle_pet_frame.texture_background = battle_pet_frame:CreateTexture();
+                battle_pet_frame.texture_background:SetAllPoints();
+                battle_pet_frame.texture_background:SetTexture(0, 0, 0, 0);
+                
+                -- Create the battle pet title frame.
+                battle_pet_frame.font_string_title = battle_pet_frame:CreateFontString();
                 
                 -- Update the allocated frame count.
                 PetParty_BattlePetContentFrame.content.frame_count_allocated = PetParty_BattlePetContentFrame.content.frame_count_allocated + 1;
             end
             
-            battle_pet_frame:SetFont(BATTLE_PET_FRAME_FONT, BATTLE_PET_FRAME_FONT_SIZE);
-            battle_pet_frame:SetHeight(BATTLE_PET_FRAME_SIZE);
-            battle_pet_frame:SetText(speciesName);
+            -- Update the battle pet frame's anchors.
             battle_pet_frame:ClearAllPoints();
-            
-            -- Store this battle pet's GUID.
-            battle_pet_frame.pet_guid = petGUID;
             
             if (PetParty_BattlePetContentFrame.content.frame_count == 0) then
                 -- Anchor the frame to the content frame.
@@ -157,6 +166,29 @@ function PetParty.CreateBattlePetFrames()
                 -- Anchor the frame to the previous frame.
                 battle_pet_frame:SetPoint("BOTTOMLEFT", PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count - 1], "BOTTOMLEFT", 0, -BATTLE_PET_FRAME_SIZE);
             end
+            
+            battle_pet_frame:SetPoint("RIGHT", PetParty_BattlePetScrollFrame);
+            
+            battle_pet_frame.font_string_title:SetFont(BATTLE_PET_FRAME_FONT, BATTLE_PET_FRAME_FONT_SIZE);
+            
+            -- If this pet has a custom name...
+            if (customName ~= nil) and (customName ~= "") then
+                battle_pet_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
+            else
+                battle_pet_frame.font_string_title:SetText(speciesName);
+            end
+            
+            battle_pet_frame.font_string_title:SetJustifyH("LEFT");
+            battle_pet_frame.font_string_title:SetTextColor(BATTLE_PET_FRAME_TITLE_R,
+                                                            BATTLE_PET_FRAME_TITLE_G,
+                                                            BATTLE_PET_FRAME_TITLE_B,
+                                                            BATTLE_PET_FRAME_TITLE_A);
+            battle_pet_frame.font_string_title:ClearAllPoints();
+            battle_pet_frame.font_string_title:SetPoint("TOPLEFT", battle_pet_frame);
+            battle_pet_frame.font_string_title:SetPoint("BOTTOMRIGHT", battle_pet_frame);
+            
+            -- Store this battle pet's GUID.
+            battle_pet_frame.pet_guid = petGUID;
             
             -- Store the battle pet frame.
             PetParty_BattlePetContentFrame.content.frames[PetParty_BattlePetContentFrame.content.frame_count] = battle_pet_frame;
