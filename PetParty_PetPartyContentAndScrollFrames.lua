@@ -159,6 +159,12 @@ function PetParty.AddPetPartyFrame(name)
     -- Update the pet party frame's index.
     pet_party_frame.id = PetParty_PetPartyContentFrame.content.frame_count;
     
+    -- Update the pet party frame's pet information.
+    pet_party_frame.pet_guids = {};
+    pet_party_frame.pet_guids[1] = PetParty.GetPetPetPartyFrame(1);
+    pet_party_frame.pet_guids[2] = PetParty.GetPetPetPartyFrame(2);
+    pet_party_frame.pet_guids[3] = PetParty.GetPetPetPartyFrame(3);
+    
     -- Store the pet party frame.
     PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = pet_party_frame;
     
@@ -298,6 +304,11 @@ function PetParty.DeletePetPartyFrame()
         
         if (pet_party_frame_selected ~= nil) then
             PetParty.OnLeavePetPartyFrame(pet_party_frame_selected, false);
+            
+            -- Update the pet frames.
+            PetParty.SetPetsPetPartyFrame(pet_party_frame_selected.pet_guids[1],
+                                          pet_party_frame_selected.pet_guids[2],
+                                          pet_party_frame_selected.pet_guids[3]);
         end
     end
 end
@@ -355,6 +366,11 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
             -- Reset the old frame.
             PetParty.OnLeavePetPartyFrame(frame, false);
         end
+        
+        -- Update the pet frames.
+        PetParty.SetPetsPetPartyFrame(self.pet_guids[1],
+                                      self.pet_guids[2],
+                                      self.pet_guids[3]);
         
         -- Store the new frame.
         pet_party_frame_selected = self;

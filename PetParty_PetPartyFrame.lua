@@ -171,35 +171,64 @@ function PetParty.OnLoadPetPartyFrame()
     PetParty_PetPartyFrame.pet_frames[3] = pet_frame;
 end
 
+-- Call to get a pet's GUID from a pet party frame.
+function PetParty.GetPetPetPartyFrame(slot_index)
+    -- The result.
+    local pet_guid = nil;
+    
+    -- Get the pet frame.
+    local pet_frame = PetParty_PetPartyFrame.pet_frames[slot_index];
+    if (pet_frame ~= nil) then
+        pet_guid = pet_frame.pet_guid;
+    end
+    
+    -- Return the result.
+    return pet_guid;
+end
+
 -- Call to set a pet in the pet party frame.
 function PetParty.SetPetPetPartyFrame(slot_index, pet_guid)
-    -- If the slot is not locked...
-    local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(slot_index);
-    if (not locked) then
-        -- Get the pet frame.
-        local pet_frame = PetParty_PetPartyFrame.pet_frames[slot_index];
-        
-        -- Store the pet's GUID.
-        pet_frame.pet_guid = pet_guid;
-        
-        -- Get the pet's information.
-        local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-              speciesName, icon, petType, companionID,
-              tooltip, description, isWild, canBattle, isTradable,
-              isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_guid);
-        
-        -- If this pet has a custom name...
-        if (customName ~= nil) and (customName ~= "") then
-            pet_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
-        else
-            pet_frame.font_string_title:SetText(speciesName);
+    -- Sanity.
+    if (pet_guid ~= nil) then
+        -- If the slot is not locked...
+        local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(slot_index);
+        if (not locked) then
+            -- Get the pet frame.
+            local pet_frame = PetParty_PetPartyFrame.pet_frames[slot_index];
+            
+            -- Store the pet's GUID.
+            pet_frame.pet_guid = pet_guid;
+            
+            -- Get the pet's information.
+            local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+                speciesName, icon, petType, companionID,
+                tooltip, description, isWild, canBattle, isTradable,
+                isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_guid);
+            
+            -- If this pet has a custom name...
+            if (customName ~= nil) and (customName ~= "") then
+                pet_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
+            else
+                pet_frame.font_string_title:SetText(speciesName);
+            end
         end
     end
 end
 
 -- Call to set the pets in the pet party frame.
 function PetParty.SetPetsPetPartyFrame(pet_guid_one, pet_guid_two, pet_guid_three)
-    PetParty.SetPetPetPartyFrame(1, pet_guid_one);
-    PetParty.SetPetPetPartyFrame(2, pet_guid_two);
-    PetParty.SetPetPetPartyFrame(3, pet_guid_three);
+    -- Sanity.
+    if (pet_guid_one ~= nil) then
+        PetParty.SetPetPetPartyFrame(1, pet_guid_one);
+    end
+    
+    -- Sanity.
+    if (pet_guid_two ~= nil) then
+        PetParty.SetPetPetPartyFrame(2, pet_guid_two);
+    end
+    
+    -- Sanity.
+    if (pet_guid_three ~= nil) then
+        PetParty.SetPetPetPartyFrame(3, pet_guid_three);
+    end
 end
