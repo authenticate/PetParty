@@ -44,6 +44,9 @@ local PET_FRAME_TITLE_G = 1;
 local PET_FRAME_TITLE_B = 1;
 local PET_FRAME_TITLE_A = 1;
 
+-- The hovered pet party frame.
+PetParty.pet_party_frame_hovered = nil;
+
 -- Called when the pet party frame receives an event.
 function PetParty.OnEventPetPartyFrame(event)
     if (event == "PET_JOURNAL_LIST_UPDATE") then
@@ -94,6 +97,21 @@ function PetParty.OnLoadPetPartyFrame()
     pet_frame:SetPoint("RIGHT", PetParty_PetPartyFrame);
     pet_frame:SetHeight(PET_PARTY_FRAME_PET_FRAME_HEIGHT);
     
+    -- Add a handler for when the mouse enters the pet party frame.
+    pet_frame:SetScript("OnEnter",
+        function(self)
+            PetParty.OnEnterPetPartyFrame(self);
+        end
+    );
+    
+    -- Add a handler for when the mouse leaves the pet party frame.
+    pet_frame:SetScript("OnLeave",
+        function(self)
+            PetParty.OnLeavePetPartyFrame(self);
+        end
+    );
+    
+    pet_frame.id = 1;
     pet_frame.pet_guid = 0;
     
     texture = pet_frame:CreateTexture();
@@ -124,6 +142,21 @@ function PetParty.OnLoadPetPartyFrame()
     pet_frame:SetPoint("RIGHT", PetParty_PetPartyFrame);
     pet_frame:SetHeight(PET_PARTY_FRAME_PET_FRAME_HEIGHT);
     
+    -- Add a handler for when the mouse enters the pet party frame.
+    pet_frame:SetScript("OnEnter",
+        function(self)
+            PetParty.OnEnterPetPartyFrame(self);
+        end
+    );
+    
+    -- Add a handler for when the mouse leaves the pet party frame.
+    pet_frame:SetScript("OnLeave",
+        function(self)
+            PetParty.OnLeavePetPartyFrame(self);
+        end
+    );
+    
+    pet_frame.id = 2;
     pet_frame.pet_guid = 0;
     
     texture = pet_frame:CreateTexture();
@@ -150,6 +183,21 @@ function PetParty.OnLoadPetPartyFrame()
     pet_frame:SetPoint("TOPLEFT", PetParty_PetPartyFrame.pet_frames[2], "BOTTOMLEFT");
     pet_frame:SetPoint("BOTTOMRIGHT", PetParty_PetPartyFrame);
     
+    -- Add a handler for when the mouse enters the pet party frame.
+    pet_frame:SetScript("OnEnter",
+        function(self)
+            PetParty.OnEnterPetPartyFrame(self);
+        end
+    );
+    
+    -- Add a handler for when the mouse leaves the pet party frame.
+    pet_frame:SetScript("OnLeave",
+        function(self)
+            PetParty.OnLeavePetPartyFrame(self);
+        end
+    );
+    
+    pet_frame.id = 3;
     pet_frame.pet_guid = 0;
     
     texture = pet_frame:CreateTexture();
@@ -184,6 +232,16 @@ function PetParty.GetPetPetPartyFrame(slot_index)
     
     -- Return the result.
     return pet_guid;
+end
+
+-- Called when the mouse enters a pet party frame.
+function PetParty.OnEnterPetPartyFrame(self)
+    PetParty.pet_party_frame_hovered = self;
+end
+
+-- Called when the mouse leaves a pet party frame.
+function PetParty.OnLeavePetPartyFrame(self)
+    PetParty.pet_party_frame_hovered = nil;
 end
 
 -- Call to set a pet in the pet party frame.

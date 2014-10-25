@@ -47,6 +47,9 @@ local SCROLL_BAR_STEPS_PER_PAGE = 1;
 
 local SCROLL_BAR_WIDTH = 16;
 
+-- The pet being dragged.
+local pet_guid_dragged = nil;
+
 -- Call to create the battle pet content and scroll frames.
 function PetParty.CreateBattlePetContentAndScrollFrames()
     -- Create the scroll frame.
@@ -220,6 +223,9 @@ end
 
 -- Called when a battle pet frame starts dragging.
 function PetParty.OnDragStartBattlePetFrame(self)
+    -- Store the pet being dragged.
+    pet_guid_dragged = self.pet_guid;
+    
     -- Get the pet's information.
     local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
           speciesName, icon, petType, companionID,
@@ -232,6 +238,16 @@ end
 
 -- Called when a battle pet frame stops dragging.
 function PetParty.OnDragStopBattlePetFrame(self)
+    -- If the mouse is over a pet party frame...
+    if (PetParty.pet_party_frame_hovered ~= nil) then
+        -- Store the pet being dragged in the hovered pet party frame.
+        PetParty.SetPetPetPartyFrame(PetParty.pet_party_frame_hovered.id, self.pet_guid);
+    end
+    
+    -- Reset the pet being dragged.
+    pet_guid_dragged = nil;
+    
+    -- Reset the cursor.
     SetCursor(nil);
 end
 
