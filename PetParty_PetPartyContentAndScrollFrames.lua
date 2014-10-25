@@ -43,7 +43,7 @@ local PET_PARTY_FRAME_TITLE_SELECTED_A = 1;
 
 local SCROLL_FRAME_OFFSET_RIGHT = PetParty.MAIN_FRAME_OFFSET_X;
 local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_Y - 26;
-local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_Y + PetParty.PET_INFORMATION_PARTY_HEIGHT;
+local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_Y + PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT;
 
 local SCROLL_BAR_ALPHA = 0.4;
 
@@ -88,7 +88,6 @@ function PetParty.AddPetPartyFrame(name)
         -- Create the pet party frame.
         pet_party_frame = CreateFrame("Frame", nil, PetParty_PetPartyContentFrame);
         pet_party_frame:SetHeight(PET_PARTY_FRAME_SIZE);
-        pet_party_frame:EnableMouse(true);
         
         -- Add an enter handler for the pet party frame.
         pet_party_frame:SetScript("OnEnter",
@@ -301,8 +300,8 @@ function PetParty.DeletePetPartyFrame()
             
             -- Update the pet frames.
             PetParty.SetPetGUIDsPetInformationFrame(pet_party_frame_selected.pet_guids[1],
-                                          pet_party_frame_selected.pet_guids[2],
-                                          pet_party_frame_selected.pet_guids[3]);
+                                                    pet_party_frame_selected.pet_guids[2],
+                                                    pet_party_frame_selected.pet_guids[3]);
         end
     end
 end
@@ -363,8 +362,8 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
         
         -- Update the pet frames.
         PetParty.SetPetGUIDsPetInformationFrame(self.pet_guids[1],
-                                      self.pet_guids[2],
-                                      self.pet_guids[3]);
+                                                self.pet_guids[2],
+                                                self.pet_guids[3]);
         
         -- Store the new frame.
         pet_party_frame_selected = self;

@@ -24,7 +24,7 @@
 
 local PADDING = 2;
 
-local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = PetParty.PET_INFORMATION_PARTY_HEIGHT / PetParty.PETS_PER_PARTY;
+local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT / PetParty.PETS_PER_PARTY;
 
 local PET_INFORMATION_PARTY_R = 0;
 local PET_INFORMATION_PARTY_G = 0;
@@ -124,9 +124,9 @@ function PetParty.OnLoadPetPartyInformationFrame()
     pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
     pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
     pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
-                                             PET_INFORMATION_TITLE_G,
-                                             PET_INFORMATION_TITLE_B,
-                                             PET_INFORMATION_TITLE_A);
+                                                         PET_INFORMATION_TITLE_G,
+                                                         PET_INFORMATION_TITLE_B,
+                                                         PET_INFORMATION_TITLE_A);
     pet_information_frame.font_string_title:ClearAllPoints();
     pet_information_frame.font_string_title:SetPoint("CENTER", pet_information_frame);
     
@@ -169,9 +169,9 @@ function PetParty.OnLoadPetPartyInformationFrame()
     pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
     pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
     pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
-                                             PET_INFORMATION_TITLE_G,
-                                             PET_INFORMATION_TITLE_B,
-                                             PET_INFORMATION_TITLE_A);
+                                                         PET_INFORMATION_TITLE_G,
+                                                         PET_INFORMATION_TITLE_B,
+                                                         PET_INFORMATION_TITLE_A);
     pet_information_frame.font_string_title:ClearAllPoints();
     pet_information_frame.font_string_title:SetPoint("CENTER", pet_information_frame);
     
@@ -210,9 +210,9 @@ function PetParty.OnLoadPetPartyInformationFrame()
     pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
     pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
     pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
-                                             PET_INFORMATION_TITLE_G,
-                                             PET_INFORMATION_TITLE_B,
-                                             PET_INFORMATION_TITLE_A);
+                                                         PET_INFORMATION_TITLE_G,
+                                                         PET_INFORMATION_TITLE_B,
+                                                         PET_INFORMATION_TITLE_A);
     pet_information_frame.font_string_title:ClearAllPoints();
     pet_information_frame.font_string_title:SetPoint("CENTER", pet_information_frame);
     
