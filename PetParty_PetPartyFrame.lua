@@ -247,21 +247,63 @@ end
 -- Call to set a pet in the pet party frame.
 function PetParty.SetPetPetPartyFrame(slot_index, pet_guid)
     -- Sanity.
-    if (pet_guid ~= nil) then
+    if (slot_index > 0) and (slot_index < PetParty.PETS_PER_PARTY + 1) and (pet_guid ~= nil) then
         -- If the slot is not locked...
         local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(slot_index);
         if (not locked) then
-            -- Get the pet frame.
+            -- Get the pet party frame.
             local pet_frame = PetParty_PetPartyFrame.pet_frames[slot_index];
             
-            -- Store the pet's GUID.
-            pet_frame.pet_guid = pet_guid;
+            -- Get the other pet party frames.
+            local index_a = ((slot_index + 1) % PetParty.PETS_PER_PARTY) + 1;
+            local pet_frame_a = PetParty_PetPartyFrame.pet_frames[index_a];
+            
+            local index_b = ((index_a + 1) % PetParty.PETS_PER_PARTY) + 1;
+            local pet_frame_b = PetParty_PetPartyFrame.pet_frames[index_b];
+            
+            -- Sanity.
+            if (pet_guid ~= nil) then
+                -- This pet is already set in slot "a".
+                if (not locked_a) and (pet_frame_a.pet_guid ~= nil) and (pet_guid == pet_frame_a.pet_guid) then
+                    -- Swap the pet frames.
+                    pet_frame.pet_guid, pet_frame_a.pet_guid = pet_frame_a.pet_guid, pet_frame.pet_guid;
+                    
+                    -- Update pet frame "a"'s information.
+                    PetParty.SetPetInformationPetPartyFrame(pet_frame_a.id);
+                -- This pet is already set in slot "b".
+                elseif (not locked_b) and (pet_frame_b.pet_guid ~= nil) and (pet_guid == pet_frame_b.pet_guid) then
+                    -- Swap the pet frames.
+                    pet_frame.pet_guid, pet_frame_b.pet_guid = pet_frame_b.pet_guid, pet_frame.pet_guid;
+                    
+                    -- Update pet frame "b"'s information.
+                    PetParty.SetPetInformationPetPartyFrame(pet_frame_b.id);
+                -- The normal case.
+                else
+                    pet_frame.pet_guid = pet_guid;
+                end
+            end
+            
+            -- Update the pet frame's information.
+            PetParty.SetPetInformationPetPartyFrame(pet_frame.id);
+        end
+    end
+end
+
+-- Call to set the pet information in the pet party frame.
+function PetParty.SetPetInformationPetPartyFrame(slot_index)
+    -- Sanity.
+    if (slot_index > 0) and (slot_index < PetParty.PETS_PER_PARTY + 1) then
+        -- If the slot is not locked...
+        local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(slot_index);
+        if (not locked) then
+            -- Get the pet party frame.
+            local pet_frame = PetParty_PetPartyFrame.pet_frames[slot_index];
             
             -- Get the pet's information.
             local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-                speciesName, icon, petType, companionID,
-                tooltip, description, isWild, canBattle, isTradable,
-                isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_guid);
+                  speciesName, icon, petType, companionID,
+                  tooltip, description, isWild, canBattle, isTradable,
+                  isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_frame.pet_guid);
             
             -- If this pet has a custom name...
             if (customName ~= nil) and (customName ~= "") then
@@ -277,16 +319,25 @@ end
 function PetParty.SetPetsPetPartyFrame(pet_guid_one, pet_guid_two, pet_guid_three)
     -- Sanity.
     if (pet_guid_one ~= nil) then
-        PetParty.SetPetPetPartyFrame(1, pet_guid_one);
+        -- Enforce uniqueness.
+        if (pet_guid_one ~= pet_guid_two) and (pet_guid_one ~= pet_guid_three) then
+            PetParty.SetPetPetPartyFrame(1, pet_guid_one);
+        end
     end
     
     -- Sanity.
     if (pet_guid_two ~= nil) then
-        PetParty.SetPetPetPartyFrame(2, pet_guid_two);
+        -- Enforce uniqueness.
+        if (pet_guid_two ~= pet_guid_one) and (pet_guid_two ~= pet_guid_three) then
+            PetParty.SetPetPetPartyFrame(2, pet_guid_two);
+        end
     end
     
     -- Sanity.
     if (pet_guid_three ~= nil) then
-        PetParty.SetPetPetPartyFrame(3, pet_guid_three);
+        -- Enforce uniqueness.
+        if (pet_guid_three ~= pet_guid_one) and (pet_guid_three ~= pet_guid_two) then
+            PetParty.SetPetPetPartyFrame(3, pet_guid_three);
+        end
     end
 end
