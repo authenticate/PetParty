@@ -113,7 +113,7 @@ function PetParty.CreateBattlePetFrames()
     for i = 1, PetParty_BattlePetContentFrame.content.frame_count - 1 do
         local battle_pet_frame = PetParty_BattlePetContentFrame.content.frames[i];
         battle_pet_frame:Hide();
-        battle_pet_frame:SetText("");
+        battle_pet_frame:SetParent(nil);
     end
     
     -- Reset the frame count.
@@ -144,6 +144,22 @@ function PetParty.CreateBattlePetFrames()
                 -- Create the battle pet frame.
                 battle_pet_frame = CreateFrame("Frame", nil, PetParty_BattlePetContentFrame);
                 battle_pet_frame:SetHeight(BATTLE_PET_FRAME_SIZE);
+                battle_pet_frame:EnableMouse(true);
+                battle_pet_frame:RegisterForDrag("LeftButton");
+                
+                -- Add a drag start handler for the battle pet frame.
+                battle_pet_frame:SetScript("OnDragStart",
+                    function(self)
+                        PetParty.OnDragStartBattlePetFrame(self);
+                    end
+                );
+                
+                -- Add a drag stop handler for the battle pet frame.
+                battle_pet_frame:SetScript("OnDragStop",
+                    function(self)
+                        PetParty.OnDragStopBattlePetFrame(self);
+                    end
+                );
                 
                 battle_pet_frame.texture_background = battle_pet_frame:CreateTexture();
                 battle_pet_frame.texture_background:SetAllPoints();
@@ -200,6 +216,23 @@ function PetParty.CreateBattlePetFrames()
     
     -- Update the scroll bar layout.
     PetParty.UpdateBattlePetScrollBarLayout();
+end
+
+-- Called when a battle pet frame starts dragging.
+function PetParty.OnDragStartBattlePetFrame(self)
+    -- Get the pet's information.
+    local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+          speciesName, icon, petType, companionID,
+          tooltip, description, isWild, canBattle, isTradable,
+          isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(self.pet_guid);
+    
+    -- Update the cursor.
+    SetCursor(icon);
+end
+
+-- Called when a battle pet frame stops dragging.
+function PetParty.OnDragStopBattlePetFrame(self)
+    SetCursor(nil);
 end
 
 -- Call to update the battle pet scroll bar layout.
