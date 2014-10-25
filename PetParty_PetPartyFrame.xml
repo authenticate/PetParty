@@ -23,6 +23,9 @@
     
     <Frame name="PetParty_PetPartyFrame" parent="PetParty_MainFrame" hidden="false" enableMouse="false" movable="false" resizable="false">
         <Scripts>
+            <OnEvent>
+                PetParty.OnEventPetPartyFrame(event);
+            </OnEvent>
             <OnLoad>
                 PetParty.OnLoadPetPartyFrame();
             </OnLoad>

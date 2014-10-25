@@ -44,37 +44,17 @@ local PET_FRAME_TITLE_G = 1;
 local PET_FRAME_TITLE_B = 1;
 local PET_FRAME_TITLE_A = 1;
 
--- Call to set a pet in the pet party frame.
-function PetParty.SetPetPetPartyFrame(slot_index, pet_guid)
-    -- If the slot is not locked...
-    local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(slot_index);
-    if (not locked) then
-        -- Get the pet frame.
-        local pet_frame = PetParty_PetPartyFrame.pet_frames[slot_index];
-        
-        -- Store the pet's GUID.
-        pet_frame.pet_guid = pet_guid;
-        
-        -- Get the pet's information.
-        local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-              speciesName, icon, petType, companionID,
-              tooltip, description, isWild, canBattle, isTradable,
-              isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_guid);
-        
-        -- If this pet has a custom name...
-        if (customName ~= nil) and (customName ~= "") then
-            pet_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
-        else
-            pet_frame.font_string_title:SetText(speciesName);
+-- Called when the pet party frame receives an event.
+function PetParty.OnEventPetPartyFrame(event)
+    if (event == "PET_JOURNAL_LIST_UPDATE") then
+        -- Load some initial pets into the pet frames.
+        for i = 1, PetParty.PETS_PER_PARTY do
+            local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(i);
+            if (not locked) and (petGUID ~= nil) then
+                PetParty.SetPetPetPartyFrame(i, petGUID);
+            end
         end
     end
-end
-
--- Call to set the pets in the pet party frame.
-function PetParty.SetPetsPetPartyFrame(pet_guid_one, pet_guid_two, pet_guid_three)
-    PetParty.SetPetPetPartyFrame(1, pet_guid_one);
-    PetParty.SetPetPetPartyFrame(2, pet_guid_two);
-    PetParty.SetPetPetPartyFrame(3, pet_guid_three);
 end
 
 -- Called when the pet party frame is loaded.
@@ -85,6 +65,9 @@ function PetParty.OnLoadPetPartyFrame()
     PetParty_PetPartyFrame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
     PetParty_PetPartyFrame:SetPoint("TOP", PetParty_PetPartyScrollFrame, "BOTTOM", 0, -PADDING);
     PetParty_PetPartyFrame:SetPoint("BOTTOM", PetParty_MainFrame, "BOTTOM", 0, (-PetParty.MAIN_FRAME_OFFSET_Y) + PADDING);
+    
+    -- Register the per party frame for events.
+    PetParty_PetPartyFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
     
     -- Configure the pet party frame's background texture.
     local texture = PetParty_PetPartyFrame:CreateTexture();
@@ -186,15 +169,37 @@ function PetParty.OnLoadPetPartyFrame()
     pet_frame.font_string_title:SetPoint("CENTER", pet_frame);
     
     PetParty_PetPartyFrame.pet_frames[3] = pet_frame;
-    
-    --
-    -- Load some initial pets into the pet frames.
-    --
-    
-    for i = 1, PetParty.PETS_PER_PARTY do
-        local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(i);
-        if (not locked) then
-            PetParty.SetPetPetPartyFrame(i, petGUID);
+end
+
+-- Call to set a pet in the pet party frame.
+function PetParty.SetPetPetPartyFrame(slot_index, pet_guid)
+    -- If the slot is not locked...
+    local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(slot_index);
+    if (not locked) then
+        -- Get the pet frame.
+        local pet_frame = PetParty_PetPartyFrame.pet_frames[slot_index];
+        
+        -- Store the pet's GUID.
+        pet_frame.pet_guid = pet_guid;
+        
+        -- Get the pet's information.
+        local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+              speciesName, icon, petType, companionID,
+              tooltip, description, isWild, canBattle, isTradable,
+              isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_guid);
+        
+        -- If this pet has a custom name...
+        if (customName ~= nil) and (customName ~= "") then
+            pet_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
+        else
+            pet_frame.font_string_title:SetText(speciesName);
         end
     end
+end
+
+-- Call to set the pets in the pet party frame.
+function PetParty.SetPetsPetPartyFrame(pet_guid_one, pet_guid_two, pet_guid_three)
+    PetParty.SetPetPetPartyFrame(1, pet_guid_one);
+    PetParty.SetPetPetPartyFrame(2, pet_guid_two);
+    PetParty.SetPetPetPartyFrame(3, pet_guid_three);
 end
