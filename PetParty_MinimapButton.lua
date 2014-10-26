@@ -93,6 +93,9 @@ function PetParty.OnEventMinimapButton(event)
             end
         end
     elseif (event == "PLAYER_LOGOUT") then
+        if (PetPartyCharacterDB == nil) then
+            PetPartyCharacterDB = {};
+        end
         PetPartyCharacterDB.icon_position = icon_position;
     end
 end
@@ -128,5 +131,6 @@ function PetParty.OnUpdateMinimapButtonDraggingFrame()
     y_pos = y_pos / UIParent:GetScale() - y_min - ICON_OFFSET;
     
     icon_position = math.deg(math.atan2(y_pos, x_pos));
+    
     PetParty.OnRepositionMinimapButton();
 end
