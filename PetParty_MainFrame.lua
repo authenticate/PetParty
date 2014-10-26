@@ -22,8 +22,6 @@
 -- Constants.
 --
 
-local BUTTON_WIDTH = 100;
-
 local PET_PARTY_BUTTON_COUNT = 2;
 
 -- Called when the main frame's create pet party button is clicked.
@@ -60,6 +58,7 @@ function PetParty.OnDragStopMainFrameButtonResize()
     PetParty.UpdateMainFrameLayout();
     PetParty.UpdateBattlePetScrollBarLayout();
     PetParty.UpdatePetPartyScrollBarLayout();
+    PetParty.UpdatePetInformationFrameLayout();
 end
 
 -- Called when the main frame receives an event.
@@ -162,10 +161,6 @@ function PetParty.OnLoadMainFrame()
         preferredIndex = 3,
     };
     
-    -- Configure the buttons.
-    PetParty_MainFrame_Button_Create_Pet_Party:SetWidth(BUTTON_WIDTH);
-    PetParty_MainFrame_Button_Delete_Pet_Party:SetWidth(BUTTON_WIDTH);
-    
     -- Localize the UI.
     PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
     PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L["Create"]);
@@ -178,6 +173,7 @@ function PetParty.OnUpdateMainFrame()
         PetParty.UpdateMainFrameLayout();
         PetParty.UpdateBattlePetScrollBarLayout();
         PetParty.UpdatePetPartyScrollBarLayout();
+        PetParty.UpdatePetInformationFrameLayout();
     end
 end
 

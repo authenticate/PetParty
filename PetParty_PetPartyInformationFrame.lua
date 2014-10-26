@@ -24,7 +24,12 @@
 
 local PADDING = 2;
 
-local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT / PetParty.PETS_PER_PARTY;
+local BUTTON_HEIGHT = 22;
+
+local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = (PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT - BUTTON_HEIGHT) /
+                                                     PetParty.PETS_PER_PARTY;
+
+local PET_INFORMATION_PARTY_BUTTON_COUNT = 2;
 
 local PET_INFORMATION_PARTY_R = 0;
 local PET_INFORMATION_PARTY_G = 0;
@@ -46,6 +51,14 @@ local PET_INFORMATION_TITLE_A = 1;
 
 -- The hovered pet information frame.
 PetParty.pet_information_frame_hovered = nil;
+
+-- Called when the pet party information frame's activate button is clicked.
+function PetParty.OnClickPetPartyInformationFrameButtonActivate()
+end
+
+-- Called when the pet party information frame's save button is clicked.
+function PetParty.OnClickPetPartyInformationFrameButtonSave()
+end
 
 -- Called when the pet party information frame receives an event.
 function PetParty.OnEventPetPartyInformationFrame(event)
@@ -93,7 +106,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     
     local pet_information_frame = CreateFrame("Frame", nil, PetParty_PetPartyInformationFrame);
     pet_information_frame:ClearAllPoints();
-    pet_information_frame:SetPoint("TOPLEFT", PetParty_PetPartyInformationFrame);
+    pet_information_frame:SetPoint("TOPLEFT", PetParty_PetPartyInformationFrame, 0, -BUTTON_HEIGHT);
     pet_information_frame:SetPoint("RIGHT", PetParty_PetPartyInformationFrame);
     pet_information_frame:SetHeight(PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT);
     
@@ -217,6 +230,13 @@ function PetParty.OnLoadPetPartyInformationFrame()
     pet_information_frame.font_string_title:SetPoint("CENTER", pet_information_frame);
     
     PetParty_PetPartyInformationFrame.pet_frames[3] = pet_information_frame;
+    
+    -- Localize the buttons.
+    PetParty_PetPartyInformationFrame_Button_Activate:SetText(PetParty.L["Activate"]);
+    PetParty_PetPartyInformationFrame_Button_Save:SetText(PetParty.L["Save"]);
+    
+    -- Update pet information frame layout.
+    PetParty.UpdatePetInformationFrameLayout();
 end
 
 -- Call to get a pet's GUID from a pet information frame.
@@ -316,6 +336,28 @@ function PetParty.SetPetGUIDsPetInformationFrame(pet_guid_one, pet_guid_two, pet
             PetParty.SetPetGUIDPetInformationFrame(3, pet_guid_three);
         end
     end
+end
+
+-- Call to update the pet information frame layout.
+function PetParty.UpdatePetInformationFrameLayout()
+    -- Calculate the width of all the pet information buttons.
+    local button_width = PetParty_PetPartyInformationFrame_Button_Activate:GetWidth() +
+                         PetParty_PetPartyInformationFrame_Button_Save:GetWidth();
+    
+    -- Calculate the offsets.
+    local offset_x = (PetParty_PetPartyInformationFrame:GetWidth() - button_width ) / (PET_INFORMATION_PARTY_BUTTON_COUNT + 1);
+    local offset_y = 0;
+    
+    -- Update the position of the active pet information frame button.
+    PetParty_PetPartyInformationFrame_Button_Activate:ClearAllPoints();
+    PetParty_PetPartyInformationFrame_Button_Activate:SetPoint("TOPLEFT", offset_x, offset_y);
+    
+    -- Update the offsets.
+    offset_x = offset_x + PetParty_PetPartyInformationFrame_Button_Activate:GetWidth() + offset_x;
+    
+    -- Update the position of the save pet information frame button.
+    PetParty_PetPartyInformationFrame_Button_Save:ClearAllPoints();
+    PetParty_PetPartyInformationFrame_Button_Save:SetPoint("TOPLEFT", offset_x, offset_y);
 end
 
 -- Call to update the pet information in a pet information frame.

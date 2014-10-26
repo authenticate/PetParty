@@ -22,6 +22,22 @@
     <Script File="PetParty_PetPartyInformationFrame.lua"/>
     
     <Frame name="PetParty_PetPartyInformationFrame" parent="PetParty_MainFrame" hidden="false" enableMouse="false" movable="false" resizable="false">
+        <Frames>
+            <Button name="$parent_Button_Activate" inherits="OptionsButtonTemplate" hidden="false">
+                <Scripts>
+                    <OnClick>
+                        PetParty.OnClickPetPartyInformationFrameButtonActivate();
+                    </OnClick>
+                </Scripts>
+            </Button>
+            <Button name="$parent_Button_Save" inherits="OptionsButtonTemplate" hidden="false">
+                <Scripts>
+                    <OnClick>
+                        PetParty.OnClickPetPartyInformationFrameButtonSave();
+                    </OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
         <Scripts>
             <OnEvent>
                 PetParty.OnEventPetPartyInformationFrame(event);
@@ -29,6 +45,9 @@
             <OnLoad>
                 PetParty.OnLoadPetPartyInformationFrame();
             </OnLoad>
+            <OnSizeChanged>
+                PetParty.UpdatePetInformationFrameLayout();
+            </OnSizeChanged>
         </Scripts>
     </Frame>
     
