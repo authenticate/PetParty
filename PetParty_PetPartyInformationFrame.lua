@@ -54,6 +54,10 @@ PetParty.pet_information_frame_hovered = nil;
 
 -- Called when the pet party information frame's activate button is clicked.
 function PetParty.OnClickPetPartyInformationFrameButtonActivate()
+    -- Activate the pets from the UI.
+    for i = 1, PetParty.PETS_PER_PARTY do
+        C_PetJournal.SetPetLoadOutInfo(i, PetParty_PetPartyInformationFrame.pet_frames[i].pet_guid);
+    end
 end
 
 -- Called when the pet party information frame's save button is clicked.
@@ -65,9 +69,11 @@ function PetParty.OnEventPetPartyInformationFrame(event)
     if (event == "PET_JOURNAL_LIST_UPDATE") then
         -- Load some initial pets into the pet frames.
         for i = 1, PetParty.PETS_PER_PARTY do
-            local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(i);
-            if (not locked) and (petGUID ~= nil) then
-                PetParty.SetPetGUIDPetInformationFrame(i, petGUID);
+            if (PetParty_PetPartyInformationFrame.pet_frames[i].pet_guid == nil) then
+                local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(i);
+                if (not locked) and (petGUID ~= nil) then
+                    PetParty.SetPetGUIDPetInformationFrame(i, petGUID);
+                end
             end
         end
     end
@@ -125,7 +131,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     );
     
     pet_information_frame.id = 1;
-    pet_information_frame.pet_guid = 0;
+    pet_information_frame.pet_guid = nil;
     
     texture = pet_information_frame:CreateTexture();
     texture:SetAllPoints();
@@ -170,7 +176,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     );
     
     pet_information_frame.id = 2;
-    pet_information_frame.pet_guid = 0;
+    pet_information_frame.pet_guid = nil;
     
     texture = pet_information_frame:CreateTexture();
     texture:SetAllPoints();
@@ -211,7 +217,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     );
     
     pet_information_frame.id = 3;
-    pet_information_frame.pet_guid = 0;
+    pet_information_frame.pet_guid = nil;
     
     texture = pet_information_frame:CreateTexture();
     texture:SetAllPoints();
