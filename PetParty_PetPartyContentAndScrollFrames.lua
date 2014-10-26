@@ -57,14 +57,14 @@ local SCROLL_BAR_STEPS_PER_PAGE = 1;
 
 local SCROLL_BAR_WIDTH = 16;
 
--- The currently selected pet party frame.
-local pet_party_frame_selected = nil;
-
 -- The currently entered pet party frame.
 local pet_party_frame_entered = nil;
 
 -- The currently pressed pet party frame.
 local pet_party_frame_pressed = nil;
+
+-- The currently selected pet party frame.
+PetParty.pet_party_frame_selected = nil;
 
 -- Call to add a pet party frame.
 function PetParty.AddPetPartyFrame(name)
@@ -163,8 +163,8 @@ function PetParty.AddPetPartyFrame(name)
     PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = pet_party_frame;
     
     -- Select the new pet party frame.
-    local pet_party_frame_previously_selected = pet_party_frame_selected;
-    pet_party_frame_selected = pet_party_frame;
+    local pet_party_frame_previously_selected = PetParty.pet_party_frame_selected;
+    PetParty.pet_party_frame_selected = pet_party_frame;
     
     -- Update the previously selected frame. 
     if (pet_party_frame_previously_selected ~= nil) then
@@ -172,8 +172,8 @@ function PetParty.AddPetPartyFrame(name)
     end
     
     -- Update the selected frame.
-    if (pet_party_frame_selected ~= nil) then
-        PetParty.OnLeavePetPartyFrame(pet_party_frame_selected, false);
+    if (PetParty.pet_party_frame_selected ~= nil) then
+        PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
     end
     
     -- Update the frame count.
@@ -236,19 +236,19 @@ end
 
 -- Call to delete the currently selected pet party frame.
 function PetParty.DeletePetPartyFrame()
-    if (pet_party_frame_selected ~= nil) then
+    if (PetParty.pet_party_frame_selected ~= nil) then
         -- Remove the frame the scroll area.
-        pet_party_frame_selected:Hide();
-        pet_party_frame_selected:SetParent(nil);
+        PetParty.pet_party_frame_selected:Hide();
+        PetParty.pet_party_frame_selected:SetParent(nil);
         
         -- Get the previous frame.
         local frame_previous = nil;
-        if (pet_party_frame_selected.id - 1 >= 0) then
-            frame_previous = PetParty_PetPartyContentFrame.content.frames[pet_party_frame_selected.id - 1];
+        if (PetParty.pet_party_frame_selected.id - 1 >= 0) then
+            frame_previous = PetParty_PetPartyContentFrame.content.frames[PetParty.pet_party_frame_selected.id - 1];
         end
         
         -- Update the other frames.
-        for i = pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count - 1 do
+        for i = PetParty.pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count - 1 do
             -- Get the frame.
             local frame = PetParty_PetPartyContentFrame.content.frames[i];
             
@@ -270,10 +270,10 @@ function PetParty.DeletePetPartyFrame()
         end
         
         -- Cache the original ID of the selected frame.
-        local original_id = pet_party_frame_selected.id;
+        local original_id = PetParty.pet_party_frame_selected.id;
         
         -- Move the selected frame to the end of the array.
-        for i = pet_party_frame_selected.id, PetParty_PetPartyContentFrame.content.frame_count - 2 do
+        for i = PetParty.pet_party_frame_selected.id, PetParty_PetPartyContentFrame.content.frame_count - 2 do
             --  Swap the frames.
             PetParty_PetPartyContentFrame.content.frames[i], PetParty_PetPartyContentFrame.content.frames[i + 1] =
             PetParty_PetPartyContentFrame.content.frames[i + 1], PetParty_PetPartyContentFrame.content.frames[i];
@@ -288,20 +288,20 @@ function PetParty.DeletePetPartyFrame()
         
         -- Update the selected frame.
         if (PetParty_PetPartyContentFrame.content.frame_count > 0) and (original_id < PetParty_PetPartyContentFrame.content.frame_count) then
-            pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[original_id];
+            PetParty.pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[original_id];
         elseif (PetParty_PetPartyContentFrame.content.frame_count > 0) then
-            pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1];
+            PetParty.pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1];
         else
-            pet_party_frame_selected = nil;
+            PetParty.pet_party_frame_selected = nil;
         end
         
-        if (pet_party_frame_selected ~= nil) then
-            PetParty.OnLeavePetPartyFrame(pet_party_frame_selected, false);
+        if (PetParty.pet_party_frame_selected ~= nil) then
+            PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
             
             -- Update the pet frames.
-            PetParty.SetPetGUIDsPetInformationFrame(pet_party_frame_selected.pet_guids[1],
-                                                    pet_party_frame_selected.pet_guids[2],
-                                                    pet_party_frame_selected.pet_guids[3]);
+            PetParty.SetPetGUIDsPetInformationFrame(PetParty.pet_party_frame_selected.pet_guids[1],
+                                                    PetParty.pet_party_frame_selected.pet_guids[2],
+                                                    PetParty.pet_party_frame_selected.pet_guids[3]);
         end
     end
 end
@@ -326,7 +326,7 @@ function PetParty.OnLeavePetPartyFrame(self, motion)
         pet_party_frame_entered = nil;
     end
     
-    if (self ~= pet_party_frame_selected) then
+    if (self ~= PetParty.pet_party_frame_selected) then
         self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
                                             PET_PARTY_FRAME_TITLE_G,
                                             PET_PARTY_FRAME_TITLE_B,
@@ -348,13 +348,13 @@ end
 function PetParty.OnMouseUpPetPartyFrame(self, button)
     if (button == "LeftButton") and (pet_party_frame_entered == pet_party_frame_pressed) then
         -- Reset the old frame.
-        if (pet_party_frame_selected ~= nil) then
+        if (PetParty.pet_party_frame_selected ~= nil) then
             -- Cache the old frame.
-            local frame = pet_party_frame_selected;
-            pet_party_frame_selected = nil;
+            local frame = PetParty.pet_party_frame_selected;
+            PetParty.pet_party_frame_selected = nil;
             
             -- Store the new frame.
-            pet_party_frame_selected = self;
+            PetParty.pet_party_frame_selected = self;
             
             -- Reset the old frame.
             PetParty.OnLeavePetPartyFrame(frame, false);
@@ -366,7 +366,7 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
                                                 self.pet_guids[3]);
         
         -- Store the new frame.
-        pet_party_frame_selected = self;
+        PetParty.pet_party_frame_selected = self;
         
         -- Update the new frame.
         PetParty.OnEnterPetPartyFrame(self, false);

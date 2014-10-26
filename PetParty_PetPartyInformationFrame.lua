@@ -62,6 +62,12 @@ end
 
 -- Called when the pet party information frame's save button is clicked.
 function PetParty.OnClickPetPartyInformationFrameButtonSave()
+    -- Store the pets from the UI into the selected pet party frame.
+    if (PetParty.pet_party_frame_selected ~= nil) then
+        for i = 1, PetParty.PETS_PER_PARTY do
+            PetParty.pet_party_frame_selected.pet_guids[i] = PetParty_PetPartyInformationFrame.pet_frames[i].pet_guid;
+        end
+    end
 end
 
 -- Called when the pet party information frame receives an event.
