@@ -96,6 +96,7 @@ function PetParty.OnEventMinimapButton(event)
         if (PetPartyCharacterDB == nil) then
             PetPartyCharacterDB = {};
         end
+        
         PetPartyCharacterDB.icon_position = icon_position;
     end
 end

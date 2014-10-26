@@ -78,6 +78,10 @@ function PetParty.OnEventMainFrame(event)
     elseif (event == "PET_JOURNAL_LIST_UPDATE") then
         PetParty.CreateBattlePetFrames();
     elseif (event == "PLAYER_LOGOUT") then
+        if (PetPartyCharacterDB == nil) then
+            PetPartyCharacterDB = {};
+        end
+        
         PetPartyCharacterDB.main_frame_hidden = not PetParty_MainFrame:IsShown();
     end
 end
