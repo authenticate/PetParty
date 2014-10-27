@@ -27,6 +27,8 @@ PetParty = {};
 
 PetParty.ADDON_NAME = "PetParty";
 
+PetParty.ABILITY_GROUPS_PER_PET = 3;
+PetParty.ABILITIES_PER_ABILITY_GROUP = 2;
 PetParty.PETS_PER_PARTY = 3;
 
 PetParty.MAIN_FRAME_MAXIMUM_WIDTH = 0;

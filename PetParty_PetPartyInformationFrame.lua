@@ -24,6 +24,7 @@
 
 local PADDING = 2;
 
+local BUTTON_WIDTH = 22;
 local BUTTON_HEIGHT = 22;
 
 local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = (PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT - BUTTON_HEIGHT) /
@@ -152,14 +153,42 @@ function PetParty.OnLoadPetPartyInformationFrame()
                        PET_INFORMATION_PARTY_PET_INFORMATION_B,
                        PET_INFORMATION_PARTY_PET_INFORMATION_A);
     
+    pet_information_frame.pet_ability_buttons = {};
+    for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
+        for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+            local offset_x = (PADDING) +
+                             (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
+                             (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
+                             (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - j));
+            local offset_y = 0;
+            
+            local button = CreateFrame("Button", nil, pet_information_frame);
+            button:ClearAllPoints();
+            button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
+            button:SetWidth(BUTTON_WIDTH);
+            button:SetHeight(BUTTON_HEIGHT);
+            
+            button.ability_id = nil;
+            button.ability_group = i;
+            
+            button.icon = button:CreateTexture();
+            button.icon:SetAllPoints();
+            button.icon:SetTexture(0, 0, 0, 0);
+            
+            pet_information_frame.pet_ability_buttons[(i + (j * PetParty.ABILITY_GROUPS_PER_PET)) - PetParty.ABILITY_GROUPS_PER_PET] = button;
+        end
+    end
+    
     pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
     pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
     pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
                                                          PET_INFORMATION_TITLE_G,
                                                          PET_INFORMATION_TITLE_B,
                                                          PET_INFORMATION_TITLE_A);
+    pet_information_frame.font_string_title:SetJustifyH("LEFT");
     pet_information_frame.font_string_title:ClearAllPoints();
-    pet_information_frame.font_string_title:SetPoint("CENTER", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
     
     PetParty_PetPartyInformationFrame.pet_frames[1] = pet_information_frame;
     
@@ -197,14 +226,42 @@ function PetParty.OnLoadPetPartyInformationFrame()
                        PET_INFORMATION_PARTY_PET_INFORMATION_B,
                        PET_INFORMATION_PARTY_PET_INFORMATION_A);
     
+    pet_information_frame.pet_ability_buttons = {};
+    for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
+        for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+            local offset_x = (PADDING) +
+                             (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
+                             (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
+                             (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - j));
+            local offset_y = 0;
+            
+            local button = CreateFrame("Button", nil, pet_information_frame);
+            button:ClearAllPoints();
+            button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
+            button:SetWidth(BUTTON_WIDTH);
+            button:SetHeight(BUTTON_HEIGHT);
+            
+            button.ability_id = nil;
+            button.ability_group = i;
+            
+            button.icon = button:CreateTexture();
+            button.icon:SetAllPoints();
+            button.icon:SetTexture(0, 0, 0, 0);
+            
+            pet_information_frame.pet_ability_buttons[(i + (j * PetParty.ABILITY_GROUPS_PER_PET)) - PetParty.ABILITY_GROUPS_PER_PET] = button;
+        end
+    end
+    
     pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
     pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
     pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
                                                          PET_INFORMATION_TITLE_G,
                                                          PET_INFORMATION_TITLE_B,
                                                          PET_INFORMATION_TITLE_A);
+    pet_information_frame.font_string_title:SetJustifyH("LEFT");
     pet_information_frame.font_string_title:ClearAllPoints();
-    pet_information_frame.font_string_title:SetPoint("CENTER", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
     
     PetParty_PetPartyInformationFrame.pet_frames[2] = pet_information_frame;
     
@@ -238,14 +295,42 @@ function PetParty.OnLoadPetPartyInformationFrame()
                        PET_INFORMATION_PARTY_PET_INFORMATION_B,
                        PET_INFORMATION_PARTY_PET_INFORMATION_A);
     
+    pet_information_frame.pet_ability_buttons = {};
+    for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
+        for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+            local offset_x = (PADDING) +
+                             (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
+                             (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
+                             (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - j));
+            local offset_y = 0;
+            
+            local button = CreateFrame("Button", nil, pet_information_frame);
+            button:ClearAllPoints();
+            button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
+            button:SetWidth(BUTTON_WIDTH);
+            button:SetHeight(BUTTON_HEIGHT);
+            
+            button.ability_id = nil;
+            button.ability_group = i;
+            
+            button.icon = button:CreateTexture();
+            button.icon:SetAllPoints();
+            button.icon:SetTexture(0, 0, 0, 0);
+            
+            pet_information_frame.pet_ability_buttons[(i + (j * PetParty.ABILITY_GROUPS_PER_PET)) - PetParty.ABILITY_GROUPS_PER_PET] = button;
+        end
+    end
+    
     pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
     pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
     pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
                                                          PET_INFORMATION_TITLE_G,
                                                          PET_INFORMATION_TITLE_B,
                                                          PET_INFORMATION_TITLE_A);
+    pet_information_frame.font_string_title:SetJustifyH("LEFT");
     pet_information_frame.font_string_title:ClearAllPoints();
-    pet_information_frame.font_string_title:SetPoint("CENTER", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
     
     PetParty_PetPartyInformationFrame.pet_frames[3] = pet_information_frame;
     
@@ -366,7 +451,7 @@ function PetParty.UpdatePetInformationFrameLayout()
     local offset_x = (PetParty_PetPartyInformationFrame:GetWidth() - button_width ) / (PET_INFORMATION_PARTY_BUTTON_COUNT + 1);
     local offset_y = 0;
     
-    -- Update the position of the active pet information frame button.
+    -- Update the position of the activate pet information frame button.
     PetParty_PetPartyInformationFrame_Button_Activate:ClearAllPoints();
     PetParty_PetPartyInformationFrame_Button_Activate:SetPoint("TOPLEFT", offset_x, offset_y);
     
@@ -399,6 +484,20 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 pet_information_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
             else
                 pet_information_frame.font_string_title:SetText(speciesName);
+            end
+            
+            -- Get the pet's abilities.
+            local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
+            
+            -- For each of the pet's abilities...
+            local ability_count = PetParty.ABILITY_GROUPS_PER_PET * PetParty.ABILITIES_PER_ABILITY_GROUP;
+            for i = 1, ability_count do
+                -- Get the ability information.
+                local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
+                
+                -- Update the pet ability button.
+                pet_information_frame.pet_ability_buttons[i].ability_id = idTable[i];
+                pet_information_frame.pet_ability_buttons[i].icon:SetTexture(abilityIcon);
             end
         end
     end
