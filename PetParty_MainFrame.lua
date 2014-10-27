@@ -62,8 +62,12 @@ function PetParty.OnDragStopMainFrameButtonResize()
 end
 
 -- Called when the main frame receives an event.
-function PetParty.OnEventMainFrame(event)
-    if (event == "ADDON_LOADED") then
+function PetParty.OnEventMainFrame(self, event, arg1, ...)
+    if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
+        if (PetPartyDB ~= nil) then
+            PetParty.DeserializePetParties();
+        end
+    elseif (event == "PLAYER_ENTERING_WORLD") then
         if (PetPartyCharacterDB ~= nil) then
             if (PetPartyCharacterDB.main_frame_hidden ~= nil) then
                 if (PetPartyCharacterDB.main_frame_hidden) then
@@ -82,7 +86,11 @@ function PetParty.OnEventMainFrame(event)
             PetPartyCharacterDB = {};
         end
         
+        -- Serialize whether or not the main frame is hidden.
         PetPartyCharacterDB.main_frame_hidden = not PetParty_MainFrame:IsShown();
+        
+        -- Serialize the pet parties.
+        PetParty.SerializePetParties()
     end
 end
 
@@ -104,8 +112,12 @@ function PetParty.OnLoadMainFrame()
     -- Register the main frame for events.
     PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
     PetParty_MainFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
+    PetParty_MainFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
     PetParty_MainFrame:RegisterEvent("PLAYER_LOGOUT");
     PetParty_MainFrame:RegisterForDrag("LeftButton");
+    
+    -- Set the main frame's scripts.
+    PetParty_MainFrame:SetScript("OnEvent", PetParty.OnEventMainFrame);
     
     -- Register the main frame's resize button for events.
     PetParty_MainFrame_Button_Resize:RegisterForDrag("LeftButton");

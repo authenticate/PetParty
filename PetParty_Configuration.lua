@@ -25,6 +25,8 @@ PetParty = {};
 -- Constants.
 --
 
+PetParty.ADDON_NAME = "PetParty";
+
 PetParty.PETS_PER_PARTY = 3;
 
 PetParty.MAIN_FRAME_MAXIMUM_WIDTH = 0;

@@ -42,8 +42,6 @@ local TOOLTIP_DESCRIPTION_R = 1;
 local TOOLTIP_DESCRIPTION_G = 210 / 255;
 local TOOLTIP_DESCRIPTION_B = 0;
 
-local icon_position = ICON_POSITION;
-
 -- Called when the minimap button is clicked.
 function PetParty.OnClickMinimapButton(button, down)
     if (button == "LeftButton") and (not down) then
@@ -84,20 +82,15 @@ function PetParty.OnEnterMinimapButton()
 end
 
 -- Called when the minimap button receives an event.
-function PetParty.OnEventMinimapButton(event)
-    if (event == "ADDON_LOADED") then
+function PetParty.OnEventMinimapButton(self, event, arg1, ...)
+    if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
         if (PetPartyCharacterDB ~= nil) then
-            if (PetPartyCharacterDB.icon_position ~= nil) then
-                icon_position = PetPartyCharacterDB.icon_position;
-                PetParty.OnRepositionMinimapButton();
+            if (PetPartyCharacterDB.icon_position == nil) then
+                PetPartyCharacterDB.icon_position = ICON_POSITION;
             end
         end
-    elseif (event == "PLAYER_LOGOUT") then
-        if (PetPartyCharacterDB == nil) then
-            PetPartyCharacterDB = {};
-        end
-        
-        PetPartyCharacterDB.icon_position = icon_position;
+    elseif (event == "PLAYER_ENTERING_WORLD") then
+        PetParty.OnRepositionMinimapButton();
     end
 end
 
@@ -108,10 +101,14 @@ end
 
 -- Called when the minimap button is loaded.
 function PetParty.OnLoadMinimapButton()
+    -- Register the minimap button for events.
     PetParty_MinimapButton:RegisterEvent("ADDON_LOADED");
-    PetParty_MinimapButton:RegisterEvent("PLAYER_LOGOUT");
+    PetParty_MinimapButton:RegisterEvent("PLAYER_ENTERING_WORLD");
     PetParty_MinimapButton:RegisterForClicks("LeftButtonUp");
     PetParty_MinimapButton:RegisterForDrag("RightButton");
+    
+    -- Set the minimap button's scripts.
+    PetParty_MinimapButton:SetScript("OnEvent", PetParty.OnEventMinimapButton);
 end
 
 -- Repositions the minimap button.
@@ -119,8 +116,8 @@ function PetParty.OnRepositionMinimapButton()
     PetParty_MinimapButton:SetPoint("TOPLEFT",
                                     "Minimap",
                                     "TOPLEFT",
-                                    ICON_OFFSET_X - (ICON_OFFSET_Y * cos(icon_position)),
-                                    (ICON_OFFSET_Y * sin(icon_position)) - ICON_OFFSET_X);
+                                    ICON_OFFSET_X - (ICON_OFFSET_Y * cos(PetPartyCharacterDB.icon_position)),
+                                    (ICON_OFFSET_Y * sin(PetPartyCharacterDB.icon_position)) - ICON_OFFSET_X);
 end
 
 -- Called when the dragging frame is updated.
@@ -131,7 +128,7 @@ function PetParty.OnUpdateMinimapButtonDraggingFrame()
     x_pos = x_min - x_pos / UIParent:GetScale() + ICON_OFFSET;
     y_pos = y_pos / UIParent:GetScale() - y_min - ICON_OFFSET;
     
-    icon_position = math.deg(math.atan2(y_pos, x_pos));
+    PetPartyCharacterDB.icon_position = math.deg(math.atan2(y_pos, x_pos));
     
     PetParty.OnRepositionMinimapButton();
 end

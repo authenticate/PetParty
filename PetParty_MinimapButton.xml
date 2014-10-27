@@ -78,9 +78,6 @@
             <OnEnter>
                 PetParty.OnEnterMinimapButton();
             </OnEnter>
-            <OnEvent>
-                PetParty.OnEventMinimapButton(event);
-            </OnEvent>
             <OnLeave>
                 PetParty.OnLeaveMinimapButton();
             </OnLeave>

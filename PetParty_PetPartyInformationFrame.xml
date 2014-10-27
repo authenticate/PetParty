@@ -39,9 +39,6 @@
             </Button>
         </Frames>
         <Scripts>
-            <OnEvent>
-                PetParty.OnEventPetPartyInformationFrame(event);
-            </OnEvent>
             <OnLoad>
                 PetParty.OnLoadPetPartyInformationFrame();
             </OnLoad>

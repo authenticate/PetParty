@@ -67,11 +67,14 @@ function PetParty.OnClickPetPartyInformationFrameButtonSave()
         for i = 1, PetParty.PETS_PER_PARTY do
             PetParty.pet_party_frame_selected.pet_guids[i] = PetParty_PetPartyInformationFrame.pet_frames[i].pet_guid;
         end
+        
+        -- Store the pet parties.
+        PetParty.SerializePetParties();
     end
 end
 
 -- Called when the pet party information frame receives an event.
-function PetParty.OnEventPetPartyInformationFrame(event)
+function PetParty.OnEventPetPartyInformationFrame(self, event, arg1, ...)
     if (event == "PET_JOURNAL_LIST_UPDATE") then
         -- Load some initial pets into the pet frames.
         for i = 1, PetParty.PETS_PER_PARTY do
@@ -96,6 +99,9 @@ function PetParty.OnLoadPetPartyInformationFrame()
     
     -- Register the per party information frame for events.
     PetParty_PetPartyInformationFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
+    
+    -- Set the per party information frame's scripts.
+    PetParty_PetPartyInformationFrame:SetScript("OnEvent", PetParty.OnEventPetPartyInformationFrame);
     
     -- Configure the pet party information frame's background texture.
     local texture = PetParty_PetPartyInformationFrame:CreateTexture();

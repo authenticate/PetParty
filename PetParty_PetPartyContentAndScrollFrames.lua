@@ -81,7 +81,7 @@ function PetParty.AddPetPartyFrame(name)
     
     -- Reuse any old frames.
     if (PetParty_PetPartyContentFrame.content.frame_count_allocated > PetParty_PetPartyContentFrame.content.frame_count) then
-        pet_party_frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
+        pet_party_frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count + 1];
         pet_party_frame:SetParent(PetParty_PetPartyContentFrame);
         pet_party_frame:Show();
     else
@@ -136,7 +136,7 @@ function PetParty.AddPetPartyFrame(name)
         pet_party_frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
     else
         -- Anchor the frame to the previous frame.
-        pet_party_frame:SetPoint("BOTTOMLEFT", PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1], "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+        pet_party_frame:SetPoint("BOTTOMLEFT", PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count], "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
     end
     
     pet_party_frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
@@ -150,14 +150,17 @@ function PetParty.AddPetPartyFrame(name)
     pet_party_frame.font_string_title:ClearAllPoints();
     pet_party_frame.font_string_title:SetPoint("CENTER", pet_party_frame);
     
-    -- Update the pet party frame's index.
-    pet_party_frame.id = PetParty_PetPartyContentFrame.content.frame_count;
-    
     -- Update the pet party frame's pet information.
     pet_party_frame.pet_guids = {};
     pet_party_frame.pet_guids[1] = PetParty.GetPetGUIDPetInformationFrame(1);
     pet_party_frame.pet_guids[2] = PetParty.GetPetGUIDPetInformationFrame(2);
     pet_party_frame.pet_guids[3] = PetParty.GetPetGUIDPetInformationFrame(3);
+    
+    -- Update the frame count.
+    PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count + 1;
+    
+    -- Store the pet party frame's index.
+    pet_party_frame.id = PetParty_PetPartyContentFrame.content.frame_count;
     
     -- Store the pet party frame.
     PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = pet_party_frame;
@@ -176,11 +179,11 @@ function PetParty.AddPetPartyFrame(name)
         PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
     end
     
-    -- Update the frame count.
-    PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count + 1;
-    
     -- Update the scroll bar layout.
     PetParty.UpdatePetPartyScrollBarLayout();
+    
+    -- Store the pet parties.
+    PetParty.SerializePetParties();
 end
 
 -- Call to create the pet party content and scroll frames.
@@ -243,12 +246,12 @@ function PetParty.DeletePetPartyFrame()
         
         -- Get the previous frame.
         local frame_previous = nil;
-        if (PetParty.pet_party_frame_selected.id - 1 >= 0) then
+        if (PetParty.pet_party_frame_selected.id - 1 > 0) then
             frame_previous = PetParty_PetPartyContentFrame.content.frames[PetParty.pet_party_frame_selected.id - 1];
         end
         
         -- Update the other frames.
-        for i = PetParty.pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count - 1 do
+        for i = PetParty.pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count do
             -- Get the frame.
             local frame = PetParty_PetPartyContentFrame.content.frames[i];
             
@@ -273,7 +276,7 @@ function PetParty.DeletePetPartyFrame()
         local original_id = PetParty.pet_party_frame_selected.id;
         
         -- Move the selected frame to the end of the array.
-        for i = PetParty.pet_party_frame_selected.id, PetParty_PetPartyContentFrame.content.frame_count - 2 do
+        for i = PetParty.pet_party_frame_selected.id, PetParty_PetPartyContentFrame.content.frame_count - 1 do
             --  Swap the frames.
             PetParty_PetPartyContentFrame.content.frames[i], PetParty_PetPartyContentFrame.content.frames[i + 1] =
             PetParty_PetPartyContentFrame.content.frames[i + 1], PetParty_PetPartyContentFrame.content.frames[i];
@@ -290,7 +293,7 @@ function PetParty.DeletePetPartyFrame()
         if (PetParty_PetPartyContentFrame.content.frame_count > 0) and (original_id < PetParty_PetPartyContentFrame.content.frame_count) then
             PetParty.pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[original_id];
         elseif (PetParty_PetPartyContentFrame.content.frame_count > 0) then
-            PetParty.pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1];
+            PetParty.pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
         else
             PetParty.pet_party_frame_selected = nil;
         end
@@ -298,6 +301,46 @@ function PetParty.DeletePetPartyFrame()
         if (PetParty.pet_party_frame_selected ~= nil) then
             PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
             
+            -- Update the pet frames.
+            PetParty.SetPetGUIDsPetInformationFrame(PetParty.pet_party_frame_selected.pet_guids[1],
+                                                    PetParty.pet_party_frame_selected.pet_guids[2],
+                                                    PetParty.pet_party_frame_selected.pet_guids[3]);
+        end
+        
+        -- Store the pet parties.
+        PetParty.SerializePetParties();
+    end
+end
+
+-- Call to deserialize the pet parties.
+function PetParty.DeserializePetParties()
+    if (PetPartyDB ~= nil) and
+       (PetPartyDB.pet_party_count ~= nil) and
+       (PetPartyDB.pet_parties ~= nil) then
+        -- Cache the values.
+        local pet_party_count = PetPartyDB.pet_party_count;
+        local pet_parties = PetPartyDB.pet_parties;
+        
+        -- Delete any current pet parties.
+        while (PetParty.pet_party_frame_selected ~= nil) do
+            PetParty.DeletePetPartyFrame();
+        end
+        
+        -- For each pet party...
+        for i = 1, pet_party_count do
+            -- Get the pet party.
+            local pet_party = pet_parties[i];
+            
+            -- Create a pet party frame.
+            PetParty.AddPetPartyFrame(pet_party.name);
+            
+            -- Store the pet party's pet GUIDs.
+            for j = 1, PetParty.PETS_PER_PARTY do
+                PetParty.pet_party_frame_selected.pet_guids[j] = pet_party.pet_guids[j];
+            end
+        end
+        
+        if (PetParty.pet_party_frame_selected ~= nil) then
             -- Update the pet frames.
             PetParty.SetPetGUIDsPetInformationFrame(PetParty.pet_party_frame_selected.pet_guids[1],
                                                     PetParty.pet_party_frame_selected.pet_guids[2],
@@ -376,6 +419,40 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
     pet_party_frame_pressed = nil;
 end
 
+-- Call to serialize the pet parties.
+function PetParty.SerializePetParties()
+    if (PetPartyDB == nil) then
+        PetPartyDB = {};
+    end
+    
+    -- Clear any old data.
+    PetPartyDB.pet_party_count = 0;
+    PetPartyDB.pet_parties = {};
+    
+    -- For each pet party frame...
+    for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
+        -- Get the pet party frame.
+        local pet_party_frame = PetParty_PetPartyContentFrame.content.frames[i];
+        
+        -- Create a pet party storage variable.
+        local pet_party = {};
+        pet_party.pet_guids = {};
+        
+        -- Store the pet party's name.
+        pet_party.name = pet_party_frame.font_string_title:GetText();
+        
+        -- Store the pet party's pet GUIDs.
+        for j = 1, PetParty.PETS_PER_PARTY do
+            pet_party.pet_guids[j] = pet_party_frame.pet_guids[j];
+        end
+        
+        PetPartyDB.pet_parties[i] = pet_party;
+    end
+    
+    -- Store the number of pet parties.
+    PetPartyDB.pet_party_count = PetParty_PetPartyContentFrame.content.frame_count;
+end
+
 -- Call to update the pet party scroll bar layout.
 function PetParty.UpdatePetPartyScrollBarLayout()
     -- Update the anchors of the pet party scroll frame.
@@ -391,7 +468,7 @@ function PetParty.UpdatePetPartyScrollBarLayout()
     if (PetParty_PetPartyContentFrame.content ~= nil) then
         if (PetParty_PetPartyContentFrame.content.frame_count > 0) then
             -- Calculate the height of the content frame.
-            local frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count - 1];
+            local frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
             height_content_frame = frame.font_string_title:GetHeight() *
                                    PetParty_PetPartyContentFrame.content.frame_count;
         end
