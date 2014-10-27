@@ -84,10 +84,11 @@ end
 -- Called when the minimap button receives an event.
 function PetParty.OnEventMinimapButton(self, event, arg1, ...)
     if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
-        if (PetPartyCharacterDB ~= nil) then
-            if (PetPartyCharacterDB.icon_position == nil) then
-                PetPartyCharacterDB.icon_position = ICON_POSITION;
-            end
+        if (PetPartyCharacterDB == nil) then
+            PetPartyCharacterDB = {};
+            PetPartyCharacterDB.icon_position = ICON_POSITION;
+        elseif (PetPartyCharacterDB ~= nil) and (PetPartyCharacterDB.icon_position == nil) then
+            PetPartyCharacterDB.icon_position = ICON_POSITION;
         end
     elseif (event == "PLAYER_ENTERING_WORLD") then
         PetParty.OnRepositionMinimapButton();
