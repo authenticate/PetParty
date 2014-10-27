@@ -36,7 +36,6 @@ locales\PetParty_enUS.lua
 PetParty_Main.lua
 
 # The UI files.
-PetParty_BattlePetContentAndScrollFrames.lua
 PetParty_PetPartyContentAndScrollFrames.lua
 PetParty_MainFrame.xml
 PetParty_MainFrame.lua

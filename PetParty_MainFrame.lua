@@ -34,39 +34,24 @@ function PetParty.OnClickMainFrameButtonDeletePetParty()
     PetParty.DeletePetPartyFrame();
 end
 
--- Called when the main frame starts dragging.
-function PetParty.OnDragStartMainFrame()
-    PetParty_MainFrame:StartMoving();
-end
-
--- Called when the main frame stops dragging.
-function PetParty.OnDragStopMainFrame()
-    PetParty_MainFrame:StopMovingOrSizing();
-end
-
--- Called when the main frame's resize button starts dragging.
-function PetParty.OnDragStartMainFrameButtonResize()
-    PetParty_MainFrame.is_sizing = true;
-    PetParty_MainFrame:StartSizing();
-end
-
--- Called when the main frame's resize button stops dragging.
-function PetParty.OnDragStopMainFrameButtonResize()
-    PetParty_MainFrame:StopMovingOrSizing();
-    PetParty_MainFrame.is_sizing = false;
-    
-    PetParty.UpdateMainFrameLayout();
-    PetParty.UpdateBattlePetScrollBarLayout();
-    PetParty.UpdatePetPartyScrollBarLayout();
-    PetParty.UpdatePetInformationFrameLayout();
-end
-
 -- Called when the main frame receives an event.
 function PetParty.OnEventMainFrame(self, event, arg1, ...)
     if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
         if (PetPartyDB ~= nil) then
             PetParty.DeserializePetParties();
         end
+        
+        -- Load Blizzard's pet journal.
+        if not IsAddOnLoaded("Blizzard_PetJournal") then
+            LoadAddOn("Blizzard_PetJournal")
+        end
+    elseif (event == "ADDON_LOADED") and (arg1 == "Blizzard_PetJournal") then
+        -- Anchor the main frame to Blizzard's pet journal.
+        PetParty_MainFrame:SetParent(PetJournal);
+        PetParty_MainFrame:ClearAllPoints();
+        PetParty_MainFrame:SetPoint("TOPLEFT", PetJournal, "TOPRIGHT");
+        PetParty_MainFrame:SetPoint("BOTTOM", PetJournal);
+        PetParty_MainFrame:SetWidth(PetParty.MAIN_FRAME_WIDTH);
     elseif (event == "PLAYER_ENTERING_WORLD") then
         if (PetPartyCharacterDB ~= nil) then
             if (PetPartyCharacterDB.main_frame_hidden ~= nil) then
@@ -78,14 +63,7 @@ function PetParty.OnEventMainFrame(self, event, arg1, ...)
             end
         end
         
-        -- Load the blizzard pet journal.
-        if not IsAddOnLoaded("Blizzard_PetJournal") then
-            LoadAddOn("Blizzard_PetJournal")
-        end
-        
         PetParty.UpdateMainFrameLayout();
-    elseif (event == "PET_JOURNAL_LIST_UPDATE") then
-        PetParty.CreateBattlePetFrames();
     elseif (event == "PLAYER_LOGOUT") then
         if (PetPartyCharacterDB == nil) then
             PetPartyCharacterDB = {};
@@ -108,27 +86,16 @@ end
 function PetParty.OnLoadMainFrame()
     -- Configure the main frame.
     tinsert(UISpecialFrames, PetParty_MainFrame:GetName());
-    PetParty_MainFrame.is_sizing = false;
-    PetParty_MainFrame:SetClampedToScreen(true);
-    PetParty_MainFrame:SetUserPlaced(true);
-    PetParty_MainFrame:SetMaxResize(PetParty.MAIN_FRAME_MAXIMUM_WIDTH, PetParty.MAIN_FRAME_MAXIMUM_HEIGHT);
-    PetParty_MainFrame:SetMinResize(PetParty.MAIN_FRAME_MINIMUM_WIDTH, PetParty.MAIN_FRAME_MINIMUM_HEIGHT);
     
     -- Register the main frame for events.
     PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
-    PetParty_MainFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
     PetParty_MainFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
     PetParty_MainFrame:RegisterEvent("PLAYER_LOGOUT");
-    PetParty_MainFrame:RegisterForDrag("LeftButton");
     
     -- Set the main frame's scripts.
     PetParty_MainFrame:SetScript("OnEvent", PetParty.OnEventMainFrame);
     
-    -- Register the main frame's resize button for events.
-    PetParty_MainFrame_Button_Resize:RegisterForDrag("LeftButton");
-    
-    -- Create the main frame's scroll frames.
-    PetParty.CreateBattlePetContentAndScrollFrames();
+    -- Create the pet party scroll frame.
     PetParty.CreatePetPartyContentAndScrollFrames();
     
     -- Create the create pet party dialog box.
@@ -188,43 +155,29 @@ function PetParty.OnLoadMainFrame()
     PetParty_MainFrame_Button_Delete_Pet_Party:SetText(PetParty.L["Delete"]);
 end
 
--- Called when the main frame is updated.
-function PetParty.OnUpdateMainFrame()
-    if (PetParty_MainFrame.is_sizing) then
-        PetParty.UpdateMainFrameLayout();
-        PetParty.UpdateBattlePetScrollBarLayout();
-        PetParty.UpdatePetPartyScrollBarLayout();
-        PetParty.UpdatePetInformationFrameLayout();
-    end
-end
-
 -- Call to update the main frame layout.
 function PetParty.UpdateMainFrameLayout()
-    -- Calculate the main frame offsets.
-    local offset_main_frame_x = PetParty_MainFrame:GetWidth() / 2;
-    local offset_main_frame_y = PetParty.MAIN_FRAME_OFFSET_Y;
-    
     -- Calculate the width of all the pet party buttons.
     local button_width = PetParty_MainFrame_Button_Create_Pet_Party:GetWidth() +
                          PetParty_MainFrame_Button_Delete_Pet_Party:GetWidth();
     
-    -- Calculate the center offsets.
-    local offset_center_x = (offset_main_frame_x - button_width - PetParty.MAIN_FRAME_OFFSET_X) / (PET_PARTY_BUTTON_COUNT + 1);
-    local offset_center_y = 0;
+    -- Starting locations.
+    local start_x = PetParty.MAIN_FRAME_OFFSET_LEFT;
+    local start_y = PetParty.MAIN_FRAME_OFFSET_TOP;
     
-    -- Calculate the current offsets.
-    local offset_x = offset_main_frame_x + offset_center_x;
-    local offset_y = offset_main_frame_y + offset_center_y;
+    -- Calculate the offsets.
+    local offset_x = (PetParty_MainFrame:GetWidth() - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT - button_width ) /
+                     (PET_PARTY_BUTTON_COUNT + 1);
+    local offset_y = 0;
     
     -- Update the position of the create pet party button.
-    local width = PetParty_MainFrame_Button_Create_Pet_Party:GetWidth();
     PetParty_MainFrame_Button_Create_Pet_Party:ClearAllPoints();
-    PetParty_MainFrame_Button_Create_Pet_Party:SetPoint("TOPLEFT", offset_x, offset_y);
+    PetParty_MainFrame_Button_Create_Pet_Party:SetPoint("TOPLEFT", start_x + offset_x, start_y + offset_y);
     
     -- Update the current offsets.
-    offset_x = offset_x + width + offset_center_x;
+    offset_x = offset_x + PetParty_MainFrame_Button_Create_Pet_Party:GetWidth() + offset_x;
     
     -- Update the position of the delete pet party button.
     PetParty_MainFrame_Button_Delete_Pet_Party:ClearAllPoints();
-    PetParty_MainFrame_Button_Delete_Pet_Party:SetPoint("TOPLEFT", offset_x, offset_y);
+    PetParty_MainFrame_Button_Delete_Pet_Party:SetPoint("TOPLEFT", start_x + offset_x, start_y + offset_y);
 end

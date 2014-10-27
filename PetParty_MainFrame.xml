@@ -21,11 +21,7 @@
     
     <Script File="PetParty_MainFrame.lua"/>
     
-    <Frame name="PetParty_MainFrame" parent="UIParent" hidden="true" enableMouse="true" frameStrata="DIALOG" movable="true" resizable="true">
-        <Size x="480" y="640"/>
-        <Anchors>
-            <Anchor point="CENTER" relativePoint="CENTER" relativeTo="UIParent"/>
-        </Anchors>
+    <Frame name="PetParty_MainFrame" hidden="true" enableMouse="true">
         <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background"
                   edgeFile="Interface\DialogFrame\UI-DialogBox-Border"
                   tile="true">
@@ -95,44 +91,14 @@
                     </OnClick>
                 </Scripts>
             </Button>
-            <Button name="$parent_Button_Resize" inherits="OptionsButtonTemplate" hidden="false">
-                <Anchors>
-                    <Anchor point="BOTTOMRIGHT">
-                        <Offset x="-12" y="12"/>
-                    </Anchor> 
-                </Anchors>
-                <Size>
-                    <AbsDimension x="21" y="21"/>
-                </Size>
-                <Scripts>
-                    <OnDragStart>
-                        PetParty.OnDragStartMainFrameButtonResize();
-                    </OnDragStart>
-                    <OnDragStop>
-                        PetParty.OnDragStopMainFrameButtonResize();
-                    </OnDragStop>
-                </Scripts>
-                <NormalTexture file="Interface\Buttons\UI-Panel-SmallerButton-Up">
-                    <TexCoords left="1" right="0" top="0" bottom="1"/>
-                </NormalTexture>
-            </Button>
         </Frames>
         <Scripts>
-            <OnDragStart>
-                PetParty.OnDragStartMainFrame();
-            </OnDragStart>
-            <OnDragStop>
-                PetParty.OnDragStopMainFrame();
-            </OnDragStop>
             <OnHide>
                 PetParty.OnHideMainFrame();
             </OnHide>
             <OnLoad>
                 PetParty.OnLoadMainFrame();
             </OnLoad>
-            <OnUpdate>
-                PetParty.OnUpdateMainFrame();
-            </OnUpdate>
         </Scripts>
     </Frame>
     

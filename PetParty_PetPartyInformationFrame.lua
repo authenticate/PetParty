@@ -27,8 +27,7 @@ local PADDING = 2;
 local BUTTON_WIDTH = 22;
 local BUTTON_HEIGHT = 22;
 
-local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = (PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT - BUTTON_HEIGHT) /
-                                                     PetParty.PETS_PER_PARTY;
+local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT / PetParty.PETS_PER_PARTY;
 
 local PET_INFORMATION_PARTY_BUTTON_COUNT = 2;
 
@@ -93,10 +92,10 @@ end
 function PetParty.OnLoadPetPartyInformationFrame()
     -- Configure the pet party information frame.
     PetParty_PetPartyInformationFrame:ClearAllPoints();
-    PetParty_PetPartyInformationFrame:SetPoint("LEFT", PetParty_PetPartyScrollFrame, PADDING, 0);
-    PetParty_PetPartyInformationFrame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
+    PetParty_PetPartyInformationFrame:SetPoint("LEFT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_LEFT, 0);
+    PetParty_PetPartyInformationFrame:SetPoint("RIGHT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_RIGHT, 0);
     PetParty_PetPartyInformationFrame:SetPoint("TOP", PetParty_PetPartyScrollFrame, "BOTTOM", 0, -PADDING);
-    PetParty_PetPartyInformationFrame:SetPoint("BOTTOM", PetParty_MainFrame, "BOTTOM", 0, (-PetParty.MAIN_FRAME_OFFSET_Y) + PADDING);
+    PetParty_PetPartyInformationFrame:SetPoint("BOTTOM", PetParty_MainFrame, "BOTTOM", 0, PetParty.MAIN_FRAME_OFFSET_BOTTOM);
     
     -- Register the per party information frame for events.
     PetParty_PetPartyInformationFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");

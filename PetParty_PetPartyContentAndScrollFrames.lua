@@ -41,9 +41,8 @@ local PET_PARTY_FRAME_TITLE_SELECTED_G = 1;
 local PET_PARTY_FRAME_TITLE_SELECTED_B = 0;
 local PET_PARTY_FRAME_TITLE_SELECTED_A = 1;
 
-local SCROLL_FRAME_OFFSET_RIGHT = PetParty.MAIN_FRAME_OFFSET_X;
-local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_Y - 26;
-local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_Y + PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT;
+local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP - 26;
+local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_TOP + PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT;
 
 local SCROLL_BAR_ALPHA = 0.4;
 
@@ -190,10 +189,10 @@ end
 function PetParty.CreatePetPartyContentAndScrollFrames()
     -- Create the scroll frame.
     CreateFrame("ScrollFrame", "PetParty_PetPartyScrollFrame", PetParty_MainFrame);
-    PetParty_PetPartyScrollFrame:SetPoint("TOPLEFT", PetParty_PetPartyScrollFrame:GetParent():GetWidth() / 2, SCROLL_FRAME_OFFSET_TOP);
+    PetParty_PetPartyScrollFrame:SetPoint("TOPLEFT", PetParty.MAIN_FRAME_OFFSET_LEFT, SCROLL_FRAME_OFFSET_TOP);
     PetParty_PetPartyScrollFrame:SetPoint("BOTTOM", 0, SCROLL_FRAME_OFFSET_BOTTOM);
     PetParty_PetPartyScrollFrame:EnableMouseWheel(true);
-    PetParty_PetPartyScrollFrame:SetWidth((PetParty_PetPartyScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_RIGHT);
+    PetParty_PetPartyScrollFrame:SetWidth(PetParty_PetPartyScrollFrame:GetParent():GetWidth() - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT);
     
     local texture = PetParty_PetPartyScrollFrame:CreateTexture();
     texture:SetAllPoints();
@@ -456,11 +455,11 @@ end
 -- Call to update the pet party scroll bar layout.
 function PetParty.UpdatePetPartyScrollBarLayout()
     -- Update the anchors of the pet party scroll frame.
-    PetParty_PetPartyScrollFrame:SetPoint("TOPLEFT", PetParty_PetPartyScrollFrame:GetParent():GetWidth() / 2, SCROLL_FRAME_OFFSET_TOP);
+    PetParty_PetPartyScrollFrame:SetPoint("TOPLEFT", PetParty.MAIN_FRAME_OFFSET_LEFT, SCROLL_FRAME_OFFSET_TOP);
     PetParty_PetPartyScrollFrame:SetPoint("BOTTOM", 0, SCROLL_FRAME_OFFSET_BOTTOM);
     
     -- Update the width of the pet party scroll frame.
-    PetParty_PetPartyScrollFrame:SetWidth((PetParty_PetPartyScrollFrame:GetParent():GetWidth() / 2) - SCROLL_FRAME_OFFSET_RIGHT);
+    PetParty_PetPartyScrollFrame:SetWidth(PetParty_PetPartyScrollFrame:GetParent():GetWidth() - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT);
     
     -- The height of the content frame.
     local height_content_frame = 0;
@@ -469,8 +468,7 @@ function PetParty.UpdatePetPartyScrollBarLayout()
         if (PetParty_PetPartyContentFrame.content.frame_count > 0) then
             -- Calculate the height of the content frame.
             local frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
-            height_content_frame = frame.font_string_title:GetHeight() *
-                                   PetParty_PetPartyContentFrame.content.frame_count;
+            height_content_frame = frame.font_string_title:GetHeight() * PetParty_PetPartyContentFrame.content.frame_count;
         end
     end
     
