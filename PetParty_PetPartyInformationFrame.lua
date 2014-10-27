@@ -124,6 +124,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     local offset_y_s = { -BUTTON_HEIGHT, 0, 0 };
     
     for i = 1, PetParty.PETS_PER_PARTY do
+        -- Create a pet party information frame.
         local pet_information_frame = CreateFrame("Frame", nil, PetParty_PetPartyInformationFrame);
         pet_information_frame:ClearAllPoints();
         pet_information_frame:SetPoint("TOPLEFT", parents[i], anchors[i], 0, offset_y_s[i]);
@@ -157,6 +158,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
                            PET_INFORMATION_PARTY_PET_INFORMATION_B,
                            PET_INFORMATION_PARTY_PET_INFORMATION_A);
         
+        -- Create the pet party information ability buttons.
         pet_information_frame.pet_ability_buttons = {};
         for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
             for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
@@ -171,6 +173,28 @@ function PetParty.OnLoadPetPartyInformationFrame()
                 button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
                 button:SetWidth(BUTTON_WIDTH);
                 button:SetHeight(BUTTON_HEIGHT);
+                
+                -- Add a handler for when the mouse enters the pet party information ability button.
+                button:SetScript("OnEnter",
+                    function(self)
+                        -- Get the pet's information.
+                        local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+                              speciesName, icon, petType, companionID,
+                              tooltip, description, isWild, canBattle, isTradable,
+                              isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(self:GetParent().pet_guid);
+                        
+                        -- Show the tooltip.
+                        PetJournal_ShowAbilityTooltip(self, self.ability_id, speciesID, self:GetParent().pet_guid, nil);
+                    end
+                );
+                
+                -- Add a handler for when the mouse leaves the pet party information ability button.
+                button:SetScript("OnLeave",
+                    function(self)
+                        -- Hide the tooltip.
+                        PetJournalPrimaryAbilityTooltip:Hide();
+                    end
+                );
                 
                 button.ability_id = nil;
                 button.ability_group = j;

@@ -78,6 +78,11 @@ function PetParty.OnEventMainFrame(self, event, arg1, ...)
             end
         end
         
+        -- Load the blizzard pet journal.
+        if not IsAddOnLoaded("Blizzard_PetJournal") then
+            LoadAddOn("Blizzard_PetJournal")
+        end
+        
         PetParty.UpdateMainFrameLayout();
     elseif (event == "PET_JOURNAL_LIST_UPDATE") then
         PetParty.CreateBattlePetFrames();
