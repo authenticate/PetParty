@@ -119,220 +119,83 @@ function PetParty.OnLoadPetPartyInformationFrame()
     -- Configure the pet party information frame's pet frames.
     --
     
-    --
-    -- Pet frame one.
-    --
+    local parents = { PetParty_PetPartyInformationFrame };
+    local anchors = { "TOPLEFT", "BOTTOMLEFT", "BOTTOMLEFT" };
+    local offset_y_s = { -BUTTON_HEIGHT, 0, 0 };
     
-    local pet_information_frame = CreateFrame("Frame", nil, PetParty_PetPartyInformationFrame);
-    pet_information_frame:ClearAllPoints();
-    pet_information_frame:SetPoint("TOPLEFT", PetParty_PetPartyInformationFrame, 0, -BUTTON_HEIGHT);
-    pet_information_frame:SetPoint("RIGHT", PetParty_PetPartyInformationFrame);
-    pet_information_frame:SetHeight(PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT);
-    
-    -- Add a handler for when the mouse enters the pet information frame.
-    pet_information_frame:SetScript("OnEnter",
-        function(self)
-            PetParty.OnEnterPetInformationFrame(self);
+    for i = 1, PetParty.PETS_PER_PARTY do
+        local pet_information_frame = CreateFrame("Frame", nil, PetParty_PetPartyInformationFrame);
+        pet_information_frame:ClearAllPoints();
+        pet_information_frame:SetPoint("TOPLEFT", parents[i], anchors[i], 0, offset_y_s[i]);
+        pet_information_frame:SetPoint("RIGHT", PetParty_PetPartyInformationFrame);
+        pet_information_frame:SetHeight(PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT);
+        
+        -- Update the parent array.
+        parents[i + 1] = pet_information_frame;
+        
+        -- Add a handler for when the mouse enters the pet information frame.
+        pet_information_frame:SetScript("OnEnter",
+            function(self)
+                PetParty.OnEnterPetInformationFrame(self);
+            end
+        );
+        
+        -- Add a handler for when the mouse leaves the pet information frame.
+        pet_information_frame:SetScript("OnLeave",
+            function(self)
+                PetParty.OnLeavePetInformationFrame(self);
+            end
+        );
+        
+        pet_information_frame.id = i;
+        pet_information_frame.pet_guid = nil;
+        
+        texture = pet_information_frame:CreateTexture();
+        texture:SetAllPoints();
+        texture:SetTexture(PET_INFORMATION_PARTY_PET_INFORMATION_R,
+                           PET_INFORMATION_PARTY_PET_INFORMATION_G,
+                           PET_INFORMATION_PARTY_PET_INFORMATION_B,
+                           PET_INFORMATION_PARTY_PET_INFORMATION_A);
+        
+        pet_information_frame.pet_ability_buttons = {};
+        for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
+            for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+                local offset_x = (PADDING) +
+                                 (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
+                                 (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
+                                 (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - k));
+                local offset_y = 0;
+                
+                local button = CreateFrame("Button", nil, pet_information_frame);
+                button:ClearAllPoints();
+                button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
+                button:SetWidth(BUTTON_WIDTH);
+                button:SetHeight(BUTTON_HEIGHT);
+                
+                button.ability_id = nil;
+                button.ability_group = j;
+                
+                button.icon = button:CreateTexture();
+                button.icon:SetAllPoints();
+                button.icon:SetTexture(0, 0, 0, 0);
+                
+                pet_information_frame.pet_ability_buttons[(j + (k * PetParty.ABILITY_GROUPS_PER_PET)) - PetParty.ABILITY_GROUPS_PER_PET] = button;
+            end
         end
-    );
-    
-    -- Add a handler for when the mouse leaves the pet information frame.
-    pet_information_frame:SetScript("OnLeave",
-        function(self)
-            PetParty.OnLeavePetInformationFrame(self);
-        end
-    );
-    
-    pet_information_frame.id = 1;
-    pet_information_frame.pet_guid = nil;
-    
-    texture = pet_information_frame:CreateTexture();
-    texture:SetAllPoints();
-    texture:SetTexture(PET_INFORMATION_PARTY_PET_INFORMATION_R,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_G,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_B,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_A);
-    
-    pet_information_frame.pet_ability_buttons = {};
-    for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
-        for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
-            local offset_x = (PADDING) +
-                             (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
-                             (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
-                             (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - j));
-            local offset_y = 0;
-            
-            local button = CreateFrame("Button", nil, pet_information_frame);
-            button:ClearAllPoints();
-            button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
-            button:SetWidth(BUTTON_WIDTH);
-            button:SetHeight(BUTTON_HEIGHT);
-            
-            button.ability_id = nil;
-            button.ability_group = i;
-            
-            button.icon = button:CreateTexture();
-            button.icon:SetAllPoints();
-            button.icon:SetTexture(0, 0, 0, 0);
-            
-            pet_information_frame.pet_ability_buttons[(i + (j * PetParty.ABILITY_GROUPS_PER_PET)) - PetParty.ABILITY_GROUPS_PER_PET] = button;
-        end
+        
+        pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
+        pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
+        pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
+                                                             PET_INFORMATION_TITLE_G,
+                                                             PET_INFORMATION_TITLE_B,
+                                                             PET_INFORMATION_TITLE_A);
+        pet_information_frame.font_string_title:SetJustifyH("LEFT");
+        pet_information_frame.font_string_title:ClearAllPoints();
+        pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
+        pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
+        
+        PetParty_PetPartyInformationFrame.pet_frames[i] = pet_information_frame;
     end
-    
-    pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
-    pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
-    pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
-                                                         PET_INFORMATION_TITLE_G,
-                                                         PET_INFORMATION_TITLE_B,
-                                                         PET_INFORMATION_TITLE_A);
-    pet_information_frame.font_string_title:SetJustifyH("LEFT");
-    pet_information_frame.font_string_title:ClearAllPoints();
-    pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
-    pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
-    
-    PetParty_PetPartyInformationFrame.pet_frames[1] = pet_information_frame;
-    
-    --
-    -- Pet frame two.
-    --
-    
-    pet_information_frame = CreateFrame("Frame", nil, PetParty_PetPartyInformationFrame);
-    pet_information_frame:ClearAllPoints();
-    pet_information_frame:SetPoint("TOPLEFT", PetParty_PetPartyInformationFrame.pet_frames[1], "BOTTOMLEFT");
-    pet_information_frame:SetPoint("RIGHT", PetParty_PetPartyInformationFrame);
-    pet_information_frame:SetHeight(PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT);
-    
-    -- Add a handler for when the mouse enters the pet information frame.
-    pet_information_frame:SetScript("OnEnter",
-        function(self)
-            PetParty.OnEnterPetInformationFrame(self);
-        end
-    );
-    
-    -- Add a handler for when the mouse leaves the pet information frame.
-    pet_information_frame:SetScript("OnLeave",
-        function(self)
-            PetParty.OnLeavePetInformationFrame(self);
-        end
-    );
-    
-    pet_information_frame.id = 2;
-    pet_information_frame.pet_guid = nil;
-    
-    texture = pet_information_frame:CreateTexture();
-    texture:SetAllPoints();
-    texture:SetTexture(PET_INFORMATION_PARTY_PET_INFORMATION_R,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_G,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_B,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_A);
-    
-    pet_information_frame.pet_ability_buttons = {};
-    for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
-        for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
-            local offset_x = (PADDING) +
-                             (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
-                             (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
-                             (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - j));
-            local offset_y = 0;
-            
-            local button = CreateFrame("Button", nil, pet_information_frame);
-            button:ClearAllPoints();
-            button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
-            button:SetWidth(BUTTON_WIDTH);
-            button:SetHeight(BUTTON_HEIGHT);
-            
-            button.ability_id = nil;
-            button.ability_group = i;
-            
-            button.icon = button:CreateTexture();
-            button.icon:SetAllPoints();
-            button.icon:SetTexture(0, 0, 0, 0);
-            
-            pet_information_frame.pet_ability_buttons[(i + (j * PetParty.ABILITY_GROUPS_PER_PET)) - PetParty.ABILITY_GROUPS_PER_PET] = button;
-        end
-    end
-    
-    pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
-    pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
-    pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
-                                                         PET_INFORMATION_TITLE_G,
-                                                         PET_INFORMATION_TITLE_B,
-                                                         PET_INFORMATION_TITLE_A);
-    pet_information_frame.font_string_title:SetJustifyH("LEFT");
-    pet_information_frame.font_string_title:ClearAllPoints();
-    pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
-    pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
-    
-    PetParty_PetPartyInformationFrame.pet_frames[2] = pet_information_frame;
-    
-    -- Pet frame three.
-    pet_information_frame = CreateFrame("Frame", nil, PetParty_PetPartyInformationFrame);
-    pet_information_frame:ClearAllPoints();
-    pet_information_frame:SetPoint("TOPLEFT", PetParty_PetPartyInformationFrame.pet_frames[2], "BOTTOMLEFT");
-    pet_information_frame:SetPoint("BOTTOMRIGHT", PetParty_PetPartyInformationFrame);
-    
-    -- Add a handler for when the mouse enters the pet information frame.
-    pet_information_frame:SetScript("OnEnter",
-        function(self)
-            PetParty.OnEnterPetInformationFrame(self);
-        end
-    );
-    
-    -- Add a handler for when the mouse leaves the pet information frame.
-    pet_information_frame:SetScript("OnLeave",
-        function(self)
-            PetParty.OnLeavePetInformationFrame(self);
-        end
-    );
-    
-    pet_information_frame.id = 3;
-    pet_information_frame.pet_guid = nil;
-    
-    texture = pet_information_frame:CreateTexture();
-    texture:SetAllPoints();
-    texture:SetTexture(PET_INFORMATION_PARTY_PET_INFORMATION_R,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_G,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_B,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_A);
-    
-    pet_information_frame.pet_ability_buttons = {};
-    for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
-        for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
-            local offset_x = (PADDING) +
-                             (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
-                             (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - i)) +
-                             (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - j));
-            local offset_y = 0;
-            
-            local button = CreateFrame("Button", nil, pet_information_frame);
-            button:ClearAllPoints();
-            button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
-            button:SetWidth(BUTTON_WIDTH);
-            button:SetHeight(BUTTON_HEIGHT);
-            
-            button.ability_id = nil;
-            button.ability_group = i;
-            
-            button.icon = button:CreateTexture();
-            button.icon:SetAllPoints();
-            button.icon:SetTexture(0, 0, 0, 0);
-            
-            pet_information_frame.pet_ability_buttons[(i + (j * PetParty.ABILITY_GROUPS_PER_PET)) - PetParty.ABILITY_GROUPS_PER_PET] = button;
-        end
-    end
-    
-    pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
-    pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
-    pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
-                                                         PET_INFORMATION_TITLE_G,
-                                                         PET_INFORMATION_TITLE_B,
-                                                         PET_INFORMATION_TITLE_A);
-    pet_information_frame.font_string_title:SetJustifyH("LEFT");
-    pet_information_frame.font_string_title:ClearAllPoints();
-    pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
-    pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
-    
-    PetParty_PetPartyInformationFrame.pet_frames[3] = pet_information_frame;
     
     -- Localize the buttons.
     PetParty_PetPartyInformationFrame_Button_Activate:SetText(PetParty.L["Activate"]);
