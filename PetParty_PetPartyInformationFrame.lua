@@ -49,9 +49,6 @@ local PET_INFORMATION_TITLE_G = 1;
 local PET_INFORMATION_TITLE_B = 1;
 local PET_INFORMATION_TITLE_A = 1;
 
--- The hovered pet information frame.
-PetParty.pet_information_frame_hovered = nil;
-
 -- Called when the pet party information frame's activate button is clicked.
 function PetParty.OnClickPetPartyInformationFrameButtonActivate()
     -- Activate the pets from the UI.
@@ -125,6 +122,8 @@ function PetParty.OnLoadPetPartyInformationFrame()
     for i = 1, PetParty.PETS_PER_PARTY do
         -- Create a pet party information frame.
         local pet_information_frame = CreateFrame("Frame", nil, PetParty_PetPartyInformationFrame);
+        pet_information_frame:EnableMouse(true);
+        pet_information_frame:RegisterForDrag("LeftButton");
         pet_information_frame:ClearAllPoints();
         pet_information_frame:SetPoint("TOPLEFT", parents[i], anchors[i], 0, offset_y_s[i]);
         pet_information_frame:SetPoint("RIGHT", PetParty_PetPartyInformationFrame);
@@ -133,17 +132,14 @@ function PetParty.OnLoadPetPartyInformationFrame()
         -- Update the parent array.
         parents[i + 1] = pet_information_frame;
         
-        -- Add a handler for when the mouse enters the pet information frame.
-        pet_information_frame:SetScript("OnEnter",
-            function(self)
-                PetParty.OnEnterPetInformationFrame(self);
-            end
-        );
-        
-        -- Add a handler for when the mouse leaves the pet information frame.
-        pet_information_frame:SetScript("OnLeave",
-            function(self)
-                PetParty.OnLeavePetInformationFrame(self);
+        -- Add a handler for when the mouse is released on the pet information frame.
+        pet_information_frame:SetScript("OnMouseUp",
+            function(self, button)
+                local cursorType, petID = GetCursorInfo();
+                if cursorType == "battlepet" then
+                    PetParty.SetPetGUIDPetInformationFrame(self.id, petID);
+                    ClearCursor();
+                end
             end
         );
         
@@ -241,16 +237,6 @@ function PetParty.GetPetGUIDPetInformationFrame(slot_index)
     
     -- Return the result.
     return pet_guid;
-end
-
--- Called when the mouse enters a pet information frame.
-function PetParty.OnEnterPetInformationFrame(self)
-    PetParty.pet_information_frame_hovered = self;
-end
-
--- Called when the mouse leaves a pet information frame.
-function PetParty.OnLeavePetInformationFrame(self)
-    PetParty.pet_information_frame_hovered = nil;
 end
 
 -- Call to set a pet in the pet information frame.
