@@ -151,9 +151,11 @@ function PetParty.AddPetPartyFrame(name)
     
     -- Update the pet party frame's pet information.
     pet_party_frame.pet_guids = {};
-    pet_party_frame.pet_guids[1] = PetParty.GetPetGUIDPetInformationFrame(1);
-    pet_party_frame.pet_guids[2] = PetParty.GetPetGUIDPetInformationFrame(2);
-    pet_party_frame.pet_guids[3] = PetParty.GetPetGUIDPetInformationFrame(3);
+    pet_party_frame.ability_guids = {};
+    for i = 1, PetParty.PETS_PER_PARTY do
+        pet_party_frame.pet_guids[i] = PetParty.GetPetGUIDPetInformationFrame(i);
+        pet_party_frame.ability_guids[i] = PetParty.GetPetAbilityGUIDsPetInformationFrame(i);
+    end
     
     -- Update the frame count.
     PetParty_PetPartyContentFrame.content.frame_count = PetParty_PetPartyContentFrame.content.frame_count + 1;
@@ -300,10 +302,12 @@ function PetParty.DeletePetPartyFrame()
         if (PetParty.pet_party_frame_selected ~= nil) then
             PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
             
-            -- Update the pet frames.
-            PetParty.SetPetGUIDsPetInformationFrame(PetParty.pet_party_frame_selected.pet_guids[1],
-                                                    PetParty.pet_party_frame_selected.pet_guids[2],
-                                                    PetParty.pet_party_frame_selected.pet_guids[3]);
+            -- For each pet...
+            for i = 1, PetParty.PETS_PER_PARTY do
+                -- Update the pet frames.
+                PetParty.SetPetGUIDPetInformationFrame(i, PetParty.pet_party_frame_selected.pet_guids[i]);
+                PetParty.SetPetAbilityGUIDsPetInformationFrame(i, PetParty.pet_party_frame_selected.ability_guids[i]);
+            end
         end
         
         -- Store the pet parties.
@@ -333,17 +337,24 @@ function PetParty.DeserializePetParties()
             -- Create a pet party frame.
             PetParty.AddPetPartyFrame(pet_party.name);
             
-            -- Store the pet party's pet GUIDs.
+            -- For each pet...
             for j = 1, PetParty.PETS_PER_PARTY do
+                -- Store the pet party's pet GUIDs.
                 PetParty.pet_party_frame_selected.pet_guids[j] = pet_party.pet_guids[j];
+                
+                -- Store the pet party's ability GUIDs.
+                PetParty.pet_party_frame_selected.ability_guids[j] = pet_party.ability_guids[j];
             end
         end
         
+        -- Sanity.
         if (PetParty.pet_party_frame_selected ~= nil) then
-            -- Update the pet frames.
-            PetParty.SetPetGUIDsPetInformationFrame(PetParty.pet_party_frame_selected.pet_guids[1],
-                                                    PetParty.pet_party_frame_selected.pet_guids[2],
-                                                    PetParty.pet_party_frame_selected.pet_guids[3]);
+            -- For each pet...
+            for i = 1, PetParty.PETS_PER_PARTY do
+                -- Update the pet frames.
+                PetParty.SetPetGUIDPetInformationFrame(i, PetParty.pet_party_frame_selected.pet_guids[i]);
+                PetParty.SetPetAbilityGUIDsPetInformationFrame(i, PetParty.pet_party_frame_selected.ability_guids[i]);
+            end
         end
     end
 end
@@ -402,10 +413,12 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
             PetParty.OnLeavePetPartyFrame(frame, false);
         end
         
-        -- Update the pet frames.
-        PetParty.SetPetGUIDsPetInformationFrame(self.pet_guids[1],
-                                                self.pet_guids[2],
-                                                self.pet_guids[3]);
+        -- For each pet...
+        for i = 1, PetParty.PETS_PER_PARTY do
+            -- Update the pet frames.
+            PetParty.SetPetGUIDPetInformationFrame(i, self.pet_guids[i]);
+            PetParty.SetPetAbilityGUIDsPetInformationFrame(i, self.ability_guids[i]);
+        end
         
         -- Store the new frame.
         PetParty.pet_party_frame_selected = self;
@@ -436,13 +449,18 @@ function PetParty.SerializePetParties()
         -- Create a pet party storage variable.
         local pet_party = {};
         pet_party.pet_guids = {};
+        pet_party.ability_guids = {};
         
         -- Store the pet party's name.
         pet_party.name = pet_party_frame.font_string_title:GetText();
         
-        -- Store the pet party's pet GUIDs.
+        -- For each pet...
         for j = 1, PetParty.PETS_PER_PARTY do
+            -- Store the pet party's pet GUIDs.
             pet_party.pet_guids[j] = pet_party_frame.pet_guids[j];
+            
+            -- Store the pet party's pets' abilities GUIDs.
+            pet_party.ability_guids[j] = pet_party_frame.ability_guids[j];
         end
         
         PetPartyDB.pet_parties[i] = pet_party;

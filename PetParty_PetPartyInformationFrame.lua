@@ -27,6 +27,16 @@ local PADDING = 2;
 local BUTTON_WIDTH = 22;
 local BUTTON_HEIGHT = 22;
 
+local BUTTON_ICON_WIDTH = 4;
+local BUTTON_ICON_HEIGHT = 4;
+
+local BUTTON_ICON_R = 0;
+local BUTTON_ICON_G = 1;
+local BUTTON_ICON_B = 0;
+local BUTTON_ICON_A = 1;
+
+local BUTTON_OFFSET_Y = -BUTTON_ICON_HEIGHT;
+
 local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT / PetParty.PETS_PER_PARTY;
 
 local PET_INFORMATION_PARTY_BUTTON_COUNT = 2;
@@ -51,9 +61,37 @@ local PET_INFORMATION_TITLE_A = 1;
 
 -- Called when the pet party information frame's activate button is clicked.
 function PetParty.OnClickPetPartyInformationFrameButtonActivate()
-    -- Activate the pets from the UI.
+    -- For each pet...
     for i = 1, PetParty.PETS_PER_PARTY do
-        C_PetJournal.SetPetLoadOutInfo(i, PetParty_PetPartyInformationFrame.pet_frames[i].pet_guid);
+        -- Get the pet information frame.
+        local pet_information_frame = PetParty_PetPartyInformationFrame.pet_frames[i];
+        
+        -- Activate the pets from the UI.
+        C_PetJournal.SetPetLoadOutInfo(i, pet_information_frame.pet_guid);
+        
+        -- Get the ability GUIDs.
+        local ability_guids = {};
+        
+        for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
+            for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+                -- Calculate the index.
+                local index = ((j - 1) + ((k - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1;
+                
+                -- Get the pet ability button.
+                local ability_button = pet_information_frame.pet_ability_buttons[index];
+                
+                -- If the ability is active...
+                if (ability_button.ability_active) then
+                    -- Add the ability GUID to the array.
+                    table.insert(ability_guids, ability_button.ability_id);
+                end
+            end
+        end
+        
+        -- Active the pets' abilities from the UI.
+        for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
+            C_PetJournal.SetAbility(i, j, ability_guids[j]);
+        end
     end
 end
 
@@ -62,7 +100,31 @@ function PetParty.OnClickPetPartyInformationFrameButtonSave()
     -- Store the pets from the UI into the selected pet party frame.
     if (PetParty.pet_party_frame_selected ~= nil) then
         for i = 1, PetParty.PETS_PER_PARTY do
-            PetParty.pet_party_frame_selected.pet_guids[i] = PetParty_PetPartyInformationFrame.pet_frames[i].pet_guid;
+            -- Get the pet information frame.
+            local pet_information_frame = PetParty_PetPartyInformationFrame.pet_frames[i];
+            
+            -- Get the ability GUIDs.
+            local ability_guids = {};
+            
+            for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
+                for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+                    -- Calculate the index.
+                    local index = ((j - 1) + ((k - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1;
+                    
+                    -- Get the pet ability button.
+                    local ability_button = pet_information_frame.pet_ability_buttons[index];
+                    
+                    -- If the ability is active...
+                    if (ability_button.ability_active) then
+                        -- Add the ability GUID to the array.
+                        table.insert(ability_guids, ability_button.ability_id);
+                    end
+                end
+            end
+            
+            -- Store the data.
+            PetParty.pet_party_frame_selected.pet_guids[i] = pet_information_frame.pet_guid;
+            PetParty.pet_party_frame_selected.ability_guids[i] = ability_guids;
         end
         
         -- Store the pet parties.
@@ -79,6 +141,9 @@ function PetParty.OnEventPetPartyInformationFrame(self, event, arg1, ...)
                 local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(i);
                 if (not locked) and (petGUID ~= nil) then
                     PetParty.SetPetGUIDPetInformationFrame(i, petGUID);
+                    
+                    local ability_guids = { ability1, ability2, ability3 };
+                    PetParty.SetPetAbilityGUIDsPetInformationFrame(i, ability_guids)
                 end
             end
         end
@@ -137,7 +202,26 @@ function PetParty.OnLoadPetPartyInformationFrame()
             function(self, button)
                 local cursorType, petID = GetCursorInfo();
                 if cursorType == "battlepet" then
+                    -- Store the pet GUID.
                     PetParty.SetPetGUIDPetInformationFrame(self.id, petID);
+                    
+                    -- Cache the pet GUID of the pet currently loaded in slot one.
+                    local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
+                    
+                    -- Load the pet into slot one.
+                    C_PetJournal.SetPetLoadOutInfo(1, petID);
+                    
+                    -- Get the active abilities of the pet from slot one.
+                    local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(1);
+                    
+                    -- Reset slot one.
+                    C_PetJournal.SetPetLoadOutInfo(1, petGUID_cache);
+                    
+                    -- Store the pet's abilities' GUIDs.
+                    local ability_guids = { ability1, ability2, ability3 };
+                    PetParty.SetPetAbilityGUIDsPetInformationFrame(self.id, ability_guids)
+                    
+                    -- Reset the cursor.
                     ClearCursor();
                 end
             end
@@ -157,11 +241,12 @@ function PetParty.OnLoadPetPartyInformationFrame()
         pet_information_frame.pet_ability_buttons = {};
         for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
             for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+                -- Create the button.
                 local offset_x = (PADDING) +
                                  (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
                                  (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
                                  (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - k));
-                local offset_y = 0;
+                local offset_y = PADDING + BUTTON_OFFSET_Y;
                 
                 local button = CreateFrame("Button", nil, pet_information_frame);
                 button:ClearAllPoints();
@@ -169,7 +254,23 @@ function PetParty.OnLoadPetPartyInformationFrame()
                 button:SetWidth(BUTTON_WIDTH);
                 button:SetHeight(BUTTON_HEIGHT);
                 
-                -- Add a handler for when the mouse enters the pet party information ability button.
+                -- Add a handler for when the mouse clicks a pet party information ability button.
+                button:SetScript("OnClick",
+                    function(self)
+                        -- Activate this ability.
+                        self.ability_active = true;
+                        
+                        -- Deactivate its counterpart ability.
+                        local index_max = PetParty.ABILITIES_PER_ABILITY_GROUP * PetParty.ABILITY_GROUPS_PER_PET;
+                        local index_counterpart = ((self.ability_group - 1) + (self.ability_index * PetParty.ABILITY_GROUPS_PER_PET)) % index_max + 1;
+                        self:GetParent().pet_ability_buttons[index_counterpart].ability_active = false;
+                        
+                        -- Update the display.
+                        PetParty.UpdatePetInformationPetInformationFrame(self:GetParent().id);
+                    end
+                );
+                
+                -- Add a handler for when the mouse enters a pet party information ability button.
                 button:SetScript("OnEnter",
                     function(self)
                         -- Get the pet's information.
@@ -183,7 +284,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
                     end
                 );
                 
-                -- Add a handler for when the mouse leaves the pet party information ability button.
+                -- Add a handler for when the mouse leaves a pet party information ability button.
                 button:SetScript("OnLeave",
                     function(self)
                         -- Hide the tooltip.
@@ -191,14 +292,31 @@ function PetParty.OnLoadPetPartyInformationFrame()
                     end
                 );
                 
+                button.ability_active = false;
                 button.ability_id = nil;
                 button.ability_group = j;
+                button.ability_index = k;
                 
-                button.icon = button:CreateTexture();
-                button.icon:SetAllPoints();
-                button.icon:SetTexture(0, 0, 0, 0);
+                button.texture = button:CreateTexture();
+                button.texture:SetAllPoints();
+                button.texture:SetTexture(0, 0, 0, 0);
                 
-                pet_information_frame.pet_ability_buttons[(j + (k * PetParty.ABILITY_GROUPS_PER_PET)) - PetParty.ABILITY_GROUPS_PER_PET] = button;
+                -- Create the button icon.
+                local button_icon = CreateFrame("Frame", nil, button);
+                button_icon:ClearAllPoints();
+                button_icon:SetPoint("BOTTOM", button, "TOP", 0, -BUTTON_OFFSET_Y);
+                button_icon:SetWidth(BUTTON_ICON_WIDTH);
+                button_icon:SetHeight(BUTTON_ICON_HEIGHT);
+                
+                button_icon.texture = button_icon:CreateTexture();
+                button_icon.texture:SetAllPoints();
+                button_icon.texture:SetTexture(0, 0, 0, 0);
+                
+                -- Store the button icon.
+                button.icon = button_icon;
+                
+                -- Store the button.
+                pet_information_frame.pet_ability_buttons[((j - 1) + ((k - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1] = button;
             end
         end
         
@@ -237,6 +355,36 @@ function PetParty.GetPetGUIDPetInformationFrame(slot_index)
     
     -- Return the result.
     return pet_guid;
+end
+
+-- Call to get a pet's abilities' GUIDs from a pet information frame.
+function PetParty.GetPetAbilityGUIDsPetInformationFrame(slot_index)
+    -- The result.
+    local ability_guids = {};
+    
+    -- Get the pet frame.
+    local pet_information_frame = PetParty_PetPartyInformationFrame.pet_frames[slot_index];
+    if (pet_information_frame ~= nil) then
+        -- For each ability button...
+        for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
+            for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+                -- Calculate the index.
+                local index = ((i - 1) + ((j - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1;
+                
+                -- Get the ability button.
+                local ability_button = pet_information_frame.pet_ability_buttons[index];
+                
+                -- If the ability is active...
+                if (ability_button.ability_active) then
+                    -- Add the ability GUID to the result.
+                    table.insert(ability_guids, ability_button.ability_id);
+                end
+            end
+        end
+    end
+    
+    -- Return the result.
+    return ability_guids;
 end
 
 -- Call to set a pet in the pet information frame.
@@ -286,30 +434,42 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
     end
 end
 
--- Call to set the pets in the pet information frame.
-function PetParty.SetPetGUIDsPetInformationFrame(pet_guid_one, pet_guid_two, pet_guid_three)
+-- Call to set a pet's abilities in the pet information frame.
+function PetParty.SetPetAbilityGUIDsPetInformationFrame(slot_index, ability_guids)
     -- Sanity.
-    if (pet_guid_one ~= nil) then
-        -- Enforce uniqueness.
-        if (pet_guid_one ~= pet_guid_two) and (pet_guid_one ~= pet_guid_three) then
-            PetParty.SetPetGUIDPetInformationFrame(1, pet_guid_one);
+    if (slot_index > 0) and (slot_index < PetParty.PETS_PER_PARTY + 1) then
+        -- Get the pet information frame.
+        local pet_information_frame = PetParty_PetPartyInformationFrame.pet_frames[slot_index];
+        
+        -- For each ability button...
+        for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
+            for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+                -- Calculate the index.
+                local index = ((i - 1) + ((j - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1;
+                
+                -- Get the ability button.
+                local ability_button = pet_information_frame.pet_ability_buttons[index];
+                
+                -- Deactivate the ability.
+                ability_button.ability_active = false;
+                
+                -- For each ability GUID...
+                for k = 1, PetParty.ABILITY_GROUPS_PER_PET do
+                    -- Get the ability GUID.
+                    local ability_guid = ability_guids[k];
+                    
+                    -- If the ability GUID equals the ability button's ability GUID.
+                    if (ability_guid == ability_button.ability_id) then
+                        -- Activate the ability button.
+                        ability_button.ability_active = true;
+                        break;
+                    end
+                end
+            end
         end
-    end
-    
-    -- Sanity.
-    if (pet_guid_two ~= nil) then
-        -- Enforce uniqueness.
-        if (pet_guid_two ~= pet_guid_one) and (pet_guid_two ~= pet_guid_three) then
-            PetParty.SetPetGUIDPetInformationFrame(2, pet_guid_two);
-        end
-    end
-    
-    -- Sanity.
-    if (pet_guid_three ~= nil) then
-        -- Enforce uniqueness.
-        if (pet_guid_three ~= pet_guid_one) and (pet_guid_three ~= pet_guid_two) then
-            PetParty.SetPetGUIDPetInformationFrame(3, pet_guid_three);
-        end
+        
+        -- Update the pet frame's information.
+        PetParty.UpdatePetInformationPetInformationFrame(slot_index);
     end
 end
 
@@ -369,7 +529,19 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 
                 -- Update the pet ability button.
                 pet_information_frame.pet_ability_buttons[i].ability_id = idTable[i];
-                pet_information_frame.pet_ability_buttons[i].icon:SetTexture(abilityIcon);
+                pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
+                
+                -- If this ability is activated...
+                if (pet_information_frame.pet_ability_buttons[i].ability_active) then
+                    -- Update the pet ability button icon.
+                    pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(BUTTON_ICON_R,
+                                                                                         BUTTON_ICON_G,
+                                                                                         BUTTON_ICON_B,
+                                                                                         BUTTON_ICON_A);
+                else
+                    -- Update the pet ability button icon.
+                    pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+                end
             end
         end
     end
