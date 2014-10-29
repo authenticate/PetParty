@@ -22,8 +22,8 @@
 -- Constants.
 --
 
-local BUTTON_OFFSET_X = -70;
-local BUTTON_OFFSET_Y = 4;
+local BUTTON_OFFSET_X = -49;
+local BUTTON_OFFSET_Y = 2;
 
 -- TODO: This color is inconsistent with Blizzard's default tooltips.  Does anyone know the correct color?
 local TOOLTIP_BACKGROUND_R = 0;

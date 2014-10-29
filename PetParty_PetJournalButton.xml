@@ -23,18 +23,18 @@
     
     <Button name="PetParty_PetJournalButton" enableMouse="true" hidden="false">
         <Size>
-            <AbsDimension x="33" y="33"/>
+            <AbsDimension x="26" y="26"/>
         </Size>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture name="$parent_Icon" file="Interface\Icons\INV_MISC_PETMOONKINTA">
                     <Size>
-                        <AbsDimension x="21" y="21"/>
+                        <AbsDimension x="18" y="18"/>
                     </Size>
                     <Anchors>
                         <Anchor point="TOPLEFT">
                             <Offset>
-                                <AbsDimension x="7" y="-6"/>
+                                <AbsDimension x="4" y="-4"/>
                             </Offset>
                         </Anchor>
                     </Anchors>
@@ -43,7 +43,7 @@
             <Layer level="OVERLAY">
                 <Texture file="Interface\Minimap\MiniMap-TrackingBorder">
                     <Size>
-                        <AbsDimension x="56" y="56"/>
+                        <AbsDimension x="44" y="44"/>
                     </Size>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
