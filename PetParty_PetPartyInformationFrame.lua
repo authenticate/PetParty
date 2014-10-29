@@ -60,9 +60,9 @@ local PET_INFORMATION_TITLE_B = 1;
 local PET_INFORMATION_TITLE_A = 1;
 
 -- Call to create a pet information frame.
-function PetParty.CreatePetInformationFrame(parent)
+function PetParty.CreatePetInformationFrame(parent, name)
     -- Create a pet party information frame.
-    local pet_information_frame = CreateFrame("Frame", nil, parent);
+    local pet_information_frame = CreateFrame("Frame", name, parent);
     pet_information_frame:EnableMouse(true);
     pet_information_frame:RegisterForDrag("LeftButton");
     
@@ -105,6 +105,14 @@ function PetParty.CreatePetInformationFrame(parent)
                        PET_INFORMATION_PARTY_PET_INFORMATION_G,
                        PET_INFORMATION_PARTY_PET_INFORMATION_B,
                        PET_INFORMATION_PARTY_PET_INFORMATION_A);
+    
+    -- Create the pet party pet button.
+    local pet_button = CreateFrame("Button", name .. "_pet_button_" .. tostring(i), pet_information_frame, "PetParty_PetInformationButtonTemplate");
+    pet_button:ClearAllPoints();
+    pet_button:SetPoint("LEFT", pet_information_frame);
+    
+    -- Store the pet party pet button.
+    pet_information_frame.pet_button = pet_button;
     
     -- Create the pet party information ability buttons.
     pet_information_frame.pet_ability_buttons = {};
@@ -200,7 +208,8 @@ function PetParty.CreatePetInformationFrame(parent)
                                                          PET_INFORMATION_TITLE_A);
     pet_information_frame.font_string_title:SetJustifyH("LEFT");
     pet_information_frame.font_string_title:ClearAllPoints();
-    pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("TOP", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT");
     pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
     
     -- Return the pet information frame.
@@ -338,7 +347,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     -- For each pet...
     for i = 1, PetParty.PETS_PER_PARTY do
         -- Create a pet information frame.
-        local pet_information_frame = PetParty.CreatePetInformationFrame(PetParty_PetPartyInformationFrame);
+        local pet_information_frame = PetParty.CreatePetInformationFrame(PetParty_PetPartyInformationFrame, "PetParty_PetInformationFrame_" .. tostring(i));
         
         -- Configure the pet information frame.
         pet_information_frame:ClearAllPoints();
@@ -532,12 +541,24 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                   tooltip, description, isWild, canBattle, isTradable,
                   isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_information_frame.pet_guid);
             
+            -- Get the pet's statistics.
+            local health, maxHealth, attack, speed, rarity = C_PetJournal.GetPetStats(pet_information_frame.pet_guid);
+            
             -- If this pet has a custom name...
             if (customName ~= nil) and (customName ~= "") then
                 pet_information_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
             else
                 pet_information_frame.font_string_title:SetText(speciesName);
             end
+            
+            -- Update the pet button's icon.
+            pet_information_frame.pet_button.icon:SetTexture(icon);
+            pet_information_frame.pet_button.level:SetShown(canBattle);
+            pet_information_frame.pet_button.level:SetText(level);
+            pet_information_frame.pet_button.iconBorder:Show();
+            pet_information_frame.pet_button.iconBorder:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
+                                                                       ITEM_QUALITY_COLORS[rarity - 1].g,
+                                                                       ITEM_QUALITY_COLORS[rarity - 1].b);
             
             -- Get the pet's abilities.
             local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
