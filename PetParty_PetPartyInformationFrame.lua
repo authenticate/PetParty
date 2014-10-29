@@ -93,6 +93,9 @@ function PetParty.OnClickPetPartyInformationFrameButtonActivate()
             C_PetJournal.SetAbility(i, j, ability_guids[j]);
         end
     end
+    
+    -- Update Blizzard's pet journal.
+    PetJournal_UpdatePetLoadOut();
 end
 
 -- Called when the pet party information frame's save button is clicked.
