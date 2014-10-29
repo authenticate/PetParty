@@ -32,6 +32,9 @@ local TRAINING_PET_G = 0;
 local TRAINING_PET_B = 0;
 local TRAINING_PET_A = 0;
 
+-- A flag if the training pet has been deserialized.
+local is_deserialized = false;
+
 -- Call to deserialize the training pet.
 function PetParty.DeserializeTrainingPet()
     if (PetPartyDB ~= nil) and
@@ -52,11 +55,7 @@ end
 
 -- Called when the training pet information frame receives an event.
 function PetParty.OnEventTrainingPetInformationFrame(self, event, arg1, ...)
-    if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
-        PetParty.DeserializeTrainingPet();
-    elseif (event == "ADDON_LOADED") and (arg1 == "Blizzard_PetJournal") then
-        PetParty.UpdateTrainingPetInformationFrame();
-    elseif (event == "PLAYER_LOGOUT") then
+    if (event == "PLAYER_LOGOUT") then
         PetParty.SerializeTrainingPet()
     end
 end
@@ -64,7 +63,6 @@ end
 -- Called when the training pet information frame is loaded.
 function PetParty.OnLoadTrainingPetInformationFrame()
     -- Register the training pet information frame for events.
-    PetParty_TrainingPetInformationFrame:RegisterEvent("ADDON_LOADED");
     PetParty_TrainingPetInformationFrame:RegisterEvent("PLAYER_LOGOUT");
     
     -- Set the training pet information frame's scripts.
@@ -169,6 +167,21 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 end
             );
         end
+    end
+end
+
+-- Called when the training pet information frame is shown.
+function PetParty.OnShowTrainingPetInformationFrame()
+    -- If the training pet has not been deserialized.
+    if (not is_deserialized) then
+        -- Update the flag.
+        is_deserialized = true;
+        
+        -- Deserialize the training pet.
+        PetParty.DeserializeTrainingPet();
+        
+        -- Update the pet frame's information.
+        PetParty.UpdateTrainingPetInformationFrame();
     end
 end
 

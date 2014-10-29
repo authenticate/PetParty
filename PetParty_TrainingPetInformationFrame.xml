@@ -26,6 +26,9 @@
             <OnLoad>
                 PetParty.OnLoadTrainingPetInformationFrame();
             </OnLoad>
+            <OnShow>
+                PetParty.OnShowTrainingPetInformationFrame();
+            </OnShow>
         </Scripts>
     </Frame>
     
