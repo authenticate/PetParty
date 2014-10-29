@@ -84,9 +84,6 @@ end
 
 -- Called when the main frame is loaded.
 function PetParty.OnLoadMainFrame()
-    -- Configure the main frame.
-    tinsert(UISpecialFrames, PetParty_MainFrame:GetName());
-    
     -- Register the main frame for events.
     PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
     PetParty_MainFrame:RegisterEvent("PLAYER_ENTERING_WORLD");

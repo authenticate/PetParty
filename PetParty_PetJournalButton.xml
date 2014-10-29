@@ -19,15 +19,12 @@
 
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ../FrameXML/UI.xsd">
     
-    <Script File="PetParty_MinimapButton.lua"/>
+    <Script File="PetParty_PetJournalButton.lua"/>
     
-    <Button name="PetParty_MinimapButton" parent="Minimap" enableMouse="true" movable="true" hidden="false">
+    <Button name="PetParty_PetJournalButton" enableMouse="true" hidden="false">
         <Size>
             <AbsDimension x="33" y="33"/>
         </Size>
-        <Anchors>
-            <Anchor point="TOPLEFT"/>
-        </Anchors>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture name="$parent_Icon" file="Interface\Icons\INV_MISC_PETMOONKINTA">
@@ -55,34 +52,18 @@
             </Layer>
         </Layers>
         <Frames>
-            <Frame name="$parent_DraggingFrame" hidden="true">
-                <Scripts>
-                    <OnUpdate>
-                        PetParty.OnUpdateMinimapButtonDraggingFrame();
-                    </OnUpdate>
-                </Scripts>
-            </Frame>
             <GameTooltip name="$parent_Tooltip" inherits="GameTooltipTemplate"/>
         </Frames>
         <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
         <Scripts>
             <OnClick>
-                PetParty.OnClickMinimapButton(button, down);
+                PetParty.OnClickPetJournalButton(button, down);
             </OnClick>
-            <OnDragStart>
-                PetParty.OnDragStartMinimapButton();
-            </OnDragStart>
-            <OnDragStop>
-                PetParty.OnDragStopMinimapButton();
-            </OnDragStop>
-            <OnEnter>
-                PetParty.OnEnterMinimapButton();
-            </OnEnter>
             <OnLeave>
-                PetParty.OnLeaveMinimapButton();
+                PetParty.OnLeavePetJournalButton();
             </OnLeave>
             <OnLoad>
-                PetParty.OnLoadMinimapButton();
+                PetParty.OnLoadPetJournalButton();
             </OnLoad>
         </Scripts>
     </Button>

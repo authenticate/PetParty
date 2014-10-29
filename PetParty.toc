@@ -41,5 +41,5 @@ PetParty_MainFrame.xml
 PetParty_MainFrame.lua
 PetParty_PetPartyInformationFrame.xml
 PetParty_PetPartyInformationFrame.lua
-PetParty_MinimapButton.xml
-PetParty_MinimapButton.lua
+PetParty_PetJournalButton.xml
+PetParty_PetJournalButton.lua
