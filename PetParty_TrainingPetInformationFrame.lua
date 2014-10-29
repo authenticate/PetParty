@@ -130,12 +130,7 @@ function PetParty.OnLoadTrainingPetInformationFrame()
             button:SetScript("OnClick",
                 function(self)
                     -- Activate this ability.
-                    self.ability_active = true;
-                    
-                    -- Deactivate its counterpart ability.
-                    local index_max = PetParty.ABILITIES_PER_ABILITY_GROUP * PetParty.ABILITY_GROUPS_PER_PET;
-                    local index_counterpart = ((self.ability_group - 1) + (self.ability_index * PetParty.ABILITY_GROUPS_PER_PET)) % index_max + 1;
-                    self:GetParent().pet_ability_buttons[index_counterpart].ability_active = false;
+                    self:GetParent().pet_ability_buttons_active[self.ability_group] = self;
                     
                     -- Update the display.
                     PetParty.UpdateTrainingPetInformationFrame();
@@ -204,20 +199,13 @@ function PetParty.GetPetAbilityGUIDsTrainingPetFrame()
     
     -- Get the pet information frame.
     local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
-    -- For each ability button...
-    for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
-        for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
-            -- Calculate the index.
-            local index = ((i - 1) + ((j - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1;
+    if (pet_information_frame ~= nil) then
+        for i = 1, #pet_information_frame.pet_ability_buttons_active do
+            -- Get the pet ability button.
+            local ability_button = pet_information_frame.pet_ability_buttons_active[i];
             
-            -- Get the ability button.
-            local ability_button = pet_information_frame.pet_ability_buttons[index];
-            
-            -- If the ability is active...
-            if (ability_button.ability_active) then
-                -- Add the ability GUID to the result.
-                table.insert(ability_guids, ability_button.ability_id);
-            end
+            -- Add the ability GUID to the array.
+            table.insert(ability_guids, ability_button.ability_id);
         end
     end
     
@@ -258,29 +246,20 @@ function PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids)
     -- Get the pet information frame.
     local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
     
-    -- For each ability button...
-    for i = 1, PetParty.ABILITY_GROUPS_PER_PET do
-        for j = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
-            -- Calculate the index.
-            local index = ((i - 1) + ((j - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1;
+    -- Reset the ability GUIDs.
+    pet_information_frame.pet_ability_buttons_active = {};
+    
+    -- For each ability GUID...
+    for i = 1, #ability_guids do
+        -- For each ability button...
+        for j = 1, #pet_information_frame.pet_ability_buttons do
+            -- Get the ability GUID.
+            local ability_guid = ability_guids[i];
             
             -- Get the ability button.
-            local ability_button = pet_information_frame.pet_ability_buttons[index];
-            
-            -- Deactivate the ability.
-            ability_button.ability_active = false;
-            
-            -- For each ability GUID...
-            for k = 1, PetParty.ABILITY_GROUPS_PER_PET do
-                -- Get the ability GUID.
-                local ability_guid = ability_guids[k];
-                
-                -- If the ability GUID equals the ability button's ability GUID.
-                if (ability_guid == ability_button.ability_id) then
-                    -- Activate the ability button.
-                    ability_button.ability_active = true;
-                    break;
-                end
+            local ability_button = pet_information_frame.pet_ability_buttons[j];
+            if (ability_button.ability_id == ability_guid) then
+                table.insert(pet_information_frame.pet_ability_buttons_active, ability_button);
             end
         end
     end
@@ -334,17 +313,19 @@ function PetParty.UpdateTrainingPetInformationFrame()
             pet_information_frame.pet_ability_buttons[i].ability_id = idTable[i];
             pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
             
-            -- If this ability is activated...
-            if (pet_information_frame.pet_ability_buttons[i].ability_active) then
-                -- Update the pet ability button icon.
-                pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(BUTTON_ICON_R,
-                                                                                     BUTTON_ICON_G,
-                                                                                     BUTTON_ICON_B,
-                                                                                     BUTTON_ICON_A);
-            else
-                -- Update the pet ability button icon.
-                pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
-            end
+            pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+        end
+        
+        -- For each activated pet ability.
+        for i = 1, #pet_information_frame.pet_ability_buttons_active do
+            -- Get the ability button.
+            local ability_button = pet_information_frame.pet_ability_buttons_active[i];
+            
+            -- Update the pet ability button icon.
+            ability_button.icon.texture:SetTexture(BUTTON_ICON_R,
+                                                   BUTTON_ICON_G,
+                                                   BUTTON_ICON_B,
+                                                   BUTTON_ICON_A);
         end
     -- If there is not a training pet...
     else
