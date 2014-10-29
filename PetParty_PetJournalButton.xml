@@ -59,6 +59,9 @@
             <OnClick>
                 PetParty.OnClickPetJournalButton(button, down);
             </OnClick>
+            <OnEnter>
+                PetParty.OnEnterPetJournalButton();
+            </OnEnter>
             <OnLeave>
                 PetParty.OnLeavePetJournalButton();
             </OnLeave>

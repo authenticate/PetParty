@@ -53,7 +53,7 @@ end
 -- Called when the mouse enters the pet journal button.
 function PetParty.OnEnterPetJournalButton()
     PetParty_PetJournalButton_Tooltip:ClearLines();
-    PetParty_PetJournalButton_Tooltip:SetOwner(PetParty_PetJournalButton_Tooltip:GetParent(), "ANCHOR_LEFT");
+    PetParty_PetJournalButton_Tooltip:SetOwner(PetParty_PetJournalButton_Tooltip:GetParent(), "ANCHOR_RIGHT");
     PetParty_PetJournalButton_Tooltip:SetBackdropColor(TOOLTIP_BACKGROUND_R, TOOLTIP_BACKGROUND_G, TOOLTIP_BACKGROUND_B);
     PetParty_PetJournalButton_Tooltip:AddLine(PetParty.L["Pet Party"],
                                               TOOLTIP_TITLE_R,
