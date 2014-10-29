@@ -107,7 +107,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
                        PET_INFORMATION_PARTY_PET_INFORMATION_A);
     
     -- Create the pet party pet button.
-    local pet_button = CreateFrame("Button", name .. "_pet_button_" .. tostring(i), pet_information_frame, "PetParty_PetInformationButtonTemplate");
+    local pet_button = CreateFrame("Button", name .. "_PetButton", pet_information_frame, "PetParty_PetInformationButtonTemplate");
     pet_button:ClearAllPoints();
     pet_button:SetPoint("LEFT", pet_information_frame);
     
