@@ -116,6 +116,9 @@ function PetParty.AddPetPartyFrame(name)
             end
         );
         
+        pet_party_frame.time = 0;
+        pet_party_frame.time_start = false;
+        
         pet_party_frame.texture_background = pet_party_frame:CreateTexture();
         pet_party_frame.texture_background:SetAllPoints();
         pet_party_frame.texture_background:SetTexture(0, 0, 0, 0);
@@ -425,6 +428,24 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
         
         -- Update the new frame.
         PetParty.OnEnterPetPartyFrame(self, false);
+        
+        --
+        -- Double click functionality.
+        --
+        
+        if (self.time) < time() then
+            self.time_start = false;
+        end
+        
+        if (self.time == time()) and (self.time_start) then
+            self.time_start = false
+            
+            -- Activate the pet party on a double click.
+            PetParty.OnClickPetPartyInformationFrameButtonActivate();
+        else
+            self.time_start = true
+            self.time = time()
+        end
     end
     
     -- Reset the pressed frame.
