@@ -59,6 +59,151 @@ local PET_INFORMATION_TITLE_G = 1;
 local PET_INFORMATION_TITLE_B = 1;
 local PET_INFORMATION_TITLE_A = 1;
 
+-- Call to create a pet information frame.
+function PetParty.CreatePetInformationFrame(parent)
+    -- Create a pet party information frame.
+    local pet_information_frame = CreateFrame("Frame", nil, parent);
+    pet_information_frame:EnableMouse(true);
+    pet_information_frame:RegisterForDrag("LeftButton");
+    
+    -- Add a handler for when the mouse is released on the pet information frame.
+    pet_information_frame:SetScript("OnMouseUp",
+        function(self, button)
+            local cursorType, petID = GetCursorInfo();
+            if cursorType == "battlepet" then
+                -- Store the pet GUID.
+                PetParty.SetPetGUIDPetInformationFrame(self.id, petID);
+                
+                -- Cache the pet GUID of the pet currently loaded in slot one.
+                local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
+                
+                -- Load the pet into slot one.
+                C_PetJournal.SetPetLoadOutInfo(1, petID);
+                
+                -- Get the active abilities of the pet from slot one.
+                local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(1);
+                
+                -- Reset slot one.
+                C_PetJournal.SetPetLoadOutInfo(1, petGUID_cache);
+                
+                -- Store the pet's abilities' GUIDs.
+                local ability_guids = { ability1, ability2, ability3 };
+                PetParty.SetPetAbilityGUIDsPetInformationFrame(self.id, ability_guids)
+                
+                -- Reset the cursor.
+                ClearCursor();
+            end
+        end
+    );
+    
+    pet_information_frame.id = 0;
+    pet_information_frame.pet_guid = nil;
+    
+    texture = pet_information_frame:CreateTexture();
+    texture:SetAllPoints();
+    texture:SetTexture(PET_INFORMATION_PARTY_PET_INFORMATION_R,
+                       PET_INFORMATION_PARTY_PET_INFORMATION_G,
+                       PET_INFORMATION_PARTY_PET_INFORMATION_B,
+                       PET_INFORMATION_PARTY_PET_INFORMATION_A);
+    
+    -- Create the pet party information ability buttons.
+    pet_information_frame.pet_ability_buttons = {};
+    for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
+        for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
+            -- Create the button.
+            local offset_x = (PADDING) +
+                             (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
+                             (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
+                             (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - k));
+            local offset_y = PADDING + BUTTON_OFFSET_Y;
+            
+            local button = CreateFrame("Button", nil, pet_information_frame);
+            button:ClearAllPoints();
+            button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
+            button:SetWidth(BUTTON_WIDTH);
+            button:SetHeight(BUTTON_HEIGHT);
+            
+            -- Add a handler for when the mouse clicks a pet party information ability button.
+            button:SetScript("OnClick",
+                function(self)
+                    -- Activate this ability.
+                    self.ability_active = true;
+                    
+                    -- Deactivate its counterpart ability.
+                    local index_max = PetParty.ABILITIES_PER_ABILITY_GROUP * PetParty.ABILITY_GROUPS_PER_PET;
+                    local index_counterpart = ((self.ability_group - 1) + (self.ability_index * PetParty.ABILITY_GROUPS_PER_PET)) % index_max + 1;
+                    self:GetParent().pet_ability_buttons[index_counterpart].ability_active = false;
+                    
+                    -- Update the display.
+                    PetParty.UpdatePetInformationPetInformationFrame(self:GetParent().id);
+                end
+            );
+            
+            -- Add a handler for when the mouse enters a pet party information ability button.
+            button:SetScript("OnEnter",
+                function(self)
+                    -- Get the pet's information.
+                    local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+                          speciesName, icon, petType, companionID,
+                          tooltip, description, isWild, canBattle, isTradable,
+                          isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(self:GetParent().pet_guid);
+                    
+                    -- Show the tooltip.
+                    PetJournal_ShowAbilityTooltip(self, self.ability_id, speciesID, self:GetParent().pet_guid, nil);
+                end
+            );
+            
+            -- Add a handler for when the mouse leaves a pet party information ability button.
+            button:SetScript("OnLeave",
+                function(self)
+                    -- Hide the tooltip.
+                    PetJournalPrimaryAbilityTooltip:Hide();
+                end
+            );
+            
+            button.ability_active = false;
+            button.ability_id = nil;
+            button.ability_group = j;
+            button.ability_index = k;
+            
+            button.texture = button:CreateTexture();
+            button.texture:SetAllPoints();
+            button.texture:SetTexture(0, 0, 0, 0);
+            
+            -- Create the button icon.
+            local button_icon = CreateFrame("Frame", nil, button);
+            button_icon:ClearAllPoints();
+            button_icon:SetPoint("BOTTOM", button, "TOP", 0, -BUTTON_OFFSET_Y);
+            button_icon:SetWidth(BUTTON_ICON_WIDTH);
+            button_icon:SetHeight(BUTTON_ICON_HEIGHT);
+            
+            button_icon.texture = button_icon:CreateTexture();
+            button_icon.texture:SetAllPoints();
+            button_icon.texture:SetTexture(0, 0, 0, 0);
+            
+            -- Store the button icon.
+            button.icon = button_icon;
+            
+            -- Store the button.
+            pet_information_frame.pet_ability_buttons[((j - 1) + ((k - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1] = button;
+        end
+    end
+    
+    pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
+    pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
+    pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
+                                                         PET_INFORMATION_TITLE_G,
+                                                         PET_INFORMATION_TITLE_B,
+                                                         PET_INFORMATION_TITLE_A);
+    pet_information_frame.font_string_title:SetJustifyH("LEFT");
+    pet_information_frame.font_string_title:ClearAllPoints();
+    pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
+    pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
+    
+    -- Return the pet information frame.
+    return pet_information_frame;
+end
+
 -- Called when the pet party information frame's activate button is clicked.
 function PetParty.OnClickPetPartyInformationFrameButtonActivate()
     -- For each pet...
@@ -187,153 +332,23 @@ function PetParty.OnLoadPetPartyInformationFrame()
     local anchors = { "TOPLEFT", "BOTTOMLEFT", "BOTTOMLEFT" };
     local offset_y_s = { -BUTTON_HEIGHT, 0, 0 };
     
+    -- For each pet...
     for i = 1, PetParty.PETS_PER_PARTY do
-        -- Create a pet party information frame.
-        local pet_information_frame = CreateFrame("Frame", nil, PetParty_PetPartyInformationFrame);
-        pet_information_frame:EnableMouse(true);
-        pet_information_frame:RegisterForDrag("LeftButton");
+        -- Create a pet information frame.
+        local pet_information_frame = PetParty.CreatePetInformationFrame(PetParty_PetPartyInformationFrame);
+        
+        -- Configure the pet information frame.
         pet_information_frame:ClearAllPoints();
         pet_information_frame:SetPoint("TOPLEFT", parents[i], anchors[i], 0, offset_y_s[i]);
         pet_information_frame:SetPoint("RIGHT", PetParty_PetPartyInformationFrame);
         pet_information_frame:SetHeight(PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT);
         
+        pet_information_frame.id = i;
+        
         -- Update the parent array.
         parents[i + 1] = pet_information_frame;
         
-        -- Add a handler for when the mouse is released on the pet information frame.
-        pet_information_frame:SetScript("OnMouseUp",
-            function(self, button)
-                local cursorType, petID = GetCursorInfo();
-                if cursorType == "battlepet" then
-                    -- Store the pet GUID.
-                    PetParty.SetPetGUIDPetInformationFrame(self.id, petID);
-                    
-                    -- Cache the pet GUID of the pet currently loaded in slot one.
-                    local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
-                    
-                    -- Load the pet into slot one.
-                    C_PetJournal.SetPetLoadOutInfo(1, petID);
-                    
-                    -- Get the active abilities of the pet from slot one.
-                    local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(1);
-                    
-                    -- Reset slot one.
-                    C_PetJournal.SetPetLoadOutInfo(1, petGUID_cache);
-                    
-                    -- Store the pet's abilities' GUIDs.
-                    local ability_guids = { ability1, ability2, ability3 };
-                    PetParty.SetPetAbilityGUIDsPetInformationFrame(self.id, ability_guids)
-                    
-                    -- Reset the cursor.
-                    ClearCursor();
-                end
-            end
-        );
-        
-        pet_information_frame.id = i;
-        pet_information_frame.pet_guid = nil;
-        
-        texture = pet_information_frame:CreateTexture();
-        texture:SetAllPoints();
-        texture:SetTexture(PET_INFORMATION_PARTY_PET_INFORMATION_R,
-                           PET_INFORMATION_PARTY_PET_INFORMATION_G,
-                           PET_INFORMATION_PARTY_PET_INFORMATION_B,
-                           PET_INFORMATION_PARTY_PET_INFORMATION_A);
-        
-        -- Create the pet party information ability buttons.
-        pet_information_frame.pet_ability_buttons = {};
-        for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
-            for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
-                -- Create the button.
-                local offset_x = (PADDING) +
-                                 (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
-                                 (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
-                                 (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - k));
-                local offset_y = PADDING + BUTTON_OFFSET_Y;
-                
-                local button = CreateFrame("Button", nil, pet_information_frame);
-                button:ClearAllPoints();
-                button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
-                button:SetWidth(BUTTON_WIDTH);
-                button:SetHeight(BUTTON_HEIGHT);
-                
-                -- Add a handler for when the mouse clicks a pet party information ability button.
-                button:SetScript("OnClick",
-                    function(self)
-                        -- Activate this ability.
-                        self.ability_active = true;
-                        
-                        -- Deactivate its counterpart ability.
-                        local index_max = PetParty.ABILITIES_PER_ABILITY_GROUP * PetParty.ABILITY_GROUPS_PER_PET;
-                        local index_counterpart = ((self.ability_group - 1) + (self.ability_index * PetParty.ABILITY_GROUPS_PER_PET)) % index_max + 1;
-                        self:GetParent().pet_ability_buttons[index_counterpart].ability_active = false;
-                        
-                        -- Update the display.
-                        PetParty.UpdatePetInformationPetInformationFrame(self:GetParent().id);
-                    end
-                );
-                
-                -- Add a handler for when the mouse enters a pet party information ability button.
-                button:SetScript("OnEnter",
-                    function(self)
-                        -- Get the pet's information.
-                        local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-                              speciesName, icon, petType, companionID,
-                              tooltip, description, isWild, canBattle, isTradable,
-                              isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(self:GetParent().pet_guid);
-                        
-                        -- Show the tooltip.
-                        PetJournal_ShowAbilityTooltip(self, self.ability_id, speciesID, self:GetParent().pet_guid, nil);
-                    end
-                );
-                
-                -- Add a handler for when the mouse leaves a pet party information ability button.
-                button:SetScript("OnLeave",
-                    function(self)
-                        -- Hide the tooltip.
-                        PetJournalPrimaryAbilityTooltip:Hide();
-                    end
-                );
-                
-                button.ability_active = false;
-                button.ability_id = nil;
-                button.ability_group = j;
-                button.ability_index = k;
-                
-                button.texture = button:CreateTexture();
-                button.texture:SetAllPoints();
-                button.texture:SetTexture(0, 0, 0, 0);
-                
-                -- Create the button icon.
-                local button_icon = CreateFrame("Frame", nil, button);
-                button_icon:ClearAllPoints();
-                button_icon:SetPoint("BOTTOM", button, "TOP", 0, -BUTTON_OFFSET_Y);
-                button_icon:SetWidth(BUTTON_ICON_WIDTH);
-                button_icon:SetHeight(BUTTON_ICON_HEIGHT);
-                
-                button_icon.texture = button_icon:CreateTexture();
-                button_icon.texture:SetAllPoints();
-                button_icon.texture:SetTexture(0, 0, 0, 0);
-                
-                -- Store the button icon.
-                button.icon = button_icon;
-                
-                -- Store the button.
-                pet_information_frame.pet_ability_buttons[((j - 1) + ((k - 1) * PetParty.ABILITY_GROUPS_PER_PET)) + 1] = button;
-            end
-        end
-        
-        pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
-        pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
-        pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
-                                                             PET_INFORMATION_TITLE_G,
-                                                             PET_INFORMATION_TITLE_B,
-                                                             PET_INFORMATION_TITLE_A);
-        pet_information_frame.font_string_title:SetJustifyH("LEFT");
-        pet_information_frame.font_string_title:ClearAllPoints();
-        pet_information_frame.font_string_title:SetPoint("TOPLEFT", pet_information_frame);
-        pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
-        
+        -- Store the pet information frame.
         PetParty_PetPartyInformationFrame.pet_frames[i] = pet_information_frame;
     end
     
