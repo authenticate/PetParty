@@ -46,10 +46,10 @@ local PET_INFORMATION_PARTY_G = 0;
 local PET_INFORMATION_PARTY_B = 0;
 local PET_INFORMATION_PARTY_A = 0;
 
-local PET_INFORMATION_PARTY_PET_INFORMATION_R = 0.0;
-local PET_INFORMATION_PARTY_PET_INFORMATION_G = 0.0;
-local PET_INFORMATION_PARTY_PET_INFORMATION_B = 0.0;
-local PET_INFORMATION_PARTY_PET_INFORMATION_A = 0.0;
+local PET_INFORMATION_PARTY_PET_INFORMATION_R = 0;
+local PET_INFORMATION_PARTY_PET_INFORMATION_G = 0;
+local PET_INFORMATION_PARTY_PET_INFORMATION_B = 0;
+local PET_INFORMATION_PARTY_PET_INFORMATION_A = 0;
 
 local PET_INFORMATION_FONT = "Fonts\\FRIZQT__.TTF";
 local PET_INFORMATION_FONT_SIZE = 18;
@@ -142,14 +142,17 @@ function PetParty.CreatePetInformationFrame(parent)
             -- Add a handler for when the mouse enters a pet party information ability button.
             button:SetScript("OnEnter",
                 function(self)
-                    -- Get the pet's information.
-                    local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-                          speciesName, icon, petType, companionID,
-                          tooltip, description, isWild, canBattle, isTradable,
-                          isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(self:GetParent().pet_guid);
-                    
-                    -- Show the tooltip.
-                    PetJournal_ShowAbilityTooltip(self, self.ability_id, speciesID, self:GetParent().pet_guid, nil);
+                    -- Sanity.
+                    if (self:GetParent().pet_guid ~= nil) then
+                        -- Get the pet's information.
+                        local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+                            speciesName, icon, petType, companionID,
+                            tooltip, description, isWild, canBattle, isTradable,
+                            isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(self:GetParent().pet_guid);
+                        
+                        -- Show the tooltip.
+                        PetJournal_ShowAbilityTooltip(self, self.ability_id, speciesID, self:GetParent().pet_guid, nil);
+                    end
                 end
             );
             

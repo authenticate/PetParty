@@ -160,7 +160,7 @@ function PetParty.UpdateMainFrameLayout()
     
     -- Starting locations.
     local start_x = PetParty.MAIN_FRAME_OFFSET_LEFT;
-    local start_y = PetParty.MAIN_FRAME_OFFSET_TOP;
+    local start_y = PetParty.MAIN_FRAME_OFFSET_TOP - PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT;
     
     -- Calculate the offsets.
     local offset_x = (PetParty_MainFrame:GetWidth() - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT - button_width ) /
