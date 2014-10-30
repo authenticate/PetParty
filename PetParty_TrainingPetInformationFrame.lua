@@ -35,6 +35,9 @@ local TRAINING_PET_A = 0;
 -- A flag if the training pet has been deserialized.
 local is_deserialized = false;
 
+-- A flag if the training pet is the cursor.
+PetParty.training_pet_cursor = false;
+
 -- Call to deserialize the training pet.
 function PetParty.DeserializeTrainingPet()
     if (PetPartyDB ~= nil) and
@@ -116,6 +119,9 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 
                 -- Reset the cursor.
                 ClearCursor();
+                
+                -- Reset the training pet cursor flag.
+                PetParty.training_pet_cursor = false;
             end
         end
     );
@@ -146,8 +152,15 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 
                 -- Reset the cursor.
                 ClearCursor();
+                
+                -- Reset the training pet cursor flag.
+                PetParty.training_pet_cursor = false;
             elseif (button == "LeftButton") and (self:GetParent().pet_guid ~= nil) then
+                -- Pick up the training pet.
                 C_PetJournal.PickupPet(self:GetParent().pet_guid);
+                
+                -- Update the training pet cursor flag.
+                PetParty.training_pet_cursor = true;
             end
         end
     );
@@ -365,7 +378,7 @@ function PetParty.UpdateTrainingPetInformationFrame()
         pet_information_frame.font_string_title:SetText(PetParty.L["Training Pet"]);
         
         -- Update the pet button.
-        pet_information_frame.pet_button.icon:SetTexture(nil);
+        pet_information_frame.pet_button.icon:SetTexture("INTERFACE\\ICONS\\Ability_ambush");
         pet_information_frame.pet_button.level:Hide();
         pet_information_frame.pet_button.iconBorder:Hide();
         

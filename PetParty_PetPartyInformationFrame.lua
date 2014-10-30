@@ -90,6 +90,20 @@ function PetParty.CreatePetInformationFrame(parent, name)
                 local ability_guids = { ability1, ability2, ability3 };
                 PetParty.SetPetAbilityGUIDsPetInformationFrame(self.id, ability_guids);
                 
+                -- If this is the training pet...
+                if (PetParty.training_pet_cursor) then
+                    -- Update the training pet frame.
+                    self:GetParent().traing_pet_frame = self;
+                    
+                    -- Update the flag.
+                    PetParty.training_pet_cursor = false;
+                end
+                
+                -- Update all pet frames' information.
+                for i = 0, PetParty.PETS_PER_PARTY do
+                    PetParty.UpdatePetInformationPetInformationFrame(i);
+                end
+                
                 -- Reset the cursor.
                 ClearCursor();
             end
@@ -296,6 +310,9 @@ function PetParty.OnLoadPetPartyInformationFrame()
                        PET_INFORMATION_PARTY_B,
                        PET_INFORMATION_PARTY_A);
     
+    -- Initialize the pet party information frame's training pet frame variable.
+    PetParty_PetPartyInformationFrame.traing_pet_frame = nil;
+    
     -- Initialize the pet party information frame's pet frames variable.
     PetParty_PetPartyInformationFrame.pet_frames = {};
     
@@ -394,26 +411,42 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
             if (pet_guid ~= nil) then
                 -- This pet is already set in slot "a".
                 if (not locked_a) and (pet_frame_a.pet_guid ~= nil) and (pet_guid == pet_frame_a.pet_guid) then
+                    -- If a slot "a" is the training pet...
+                    if (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_frame_a) then
+                        -- Swap the training pet.
+                        PetParty_PetPartyInformationFrame.traing_pet_frame = pet_information_frame;
+                    -- If the slot index is the training pet...
+                    elseif (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_information_frame) then
+                        -- Swap the training pet.
+                        PetParty_PetPartyInformationFrame.traing_pet_frame = pet_frame_a;
+                    end
+                    
                     -- Swap the pet information frames.
                     pet_information_frame.pet_guid, pet_frame_a.pet_guid = pet_frame_a.pet_guid, pet_information_frame.pet_guid;
-                    
-                    -- Update pet frame "a"'s information.
-                    PetParty.UpdatePetInformationPetInformationFrame(pet_frame_a.id);
                 -- This pet is already set in slot "b".
                 elseif (not locked_b) and (pet_frame_b.pet_guid ~= nil) and (pet_guid == pet_frame_b.pet_guid) then
+                    -- If slot "b" is the training pet...
+                    if (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_frame_b) then
+                        -- Swap the training pet.
+                        PetParty_PetPartyInformationFrame.traing_pet_frame = pet_information_frame;
+                    -- If the slot index is the training pet...
+                    elseif (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_information_frame) then
+                        -- Swap the training pet.
+                        PetParty_PetPartyInformationFrame.traing_pet_frame = pet_frame_b;
+                    end
+                    
                     -- Swap the pet information frames.
                     pet_information_frame.pet_guid, pet_frame_b.pet_guid = pet_frame_b.pet_guid, pet_information_frame.pet_guid;
-                    
-                    -- Update pet frame "b"'s information.
-                    PetParty.UpdatePetInformationPetInformationFrame(pet_frame_b.id);
                 -- The normal case.
                 else
                     pet_information_frame.pet_guid = pet_guid;
                 end
             end
             
-            -- Update the pet frame's information.
-            PetParty.UpdatePetInformationPetInformationFrame(pet_information_frame.id);
+            -- Update all pet frames' information.
+            for i = 0, PetParty.PETS_PER_PARTY do
+                PetParty.UpdatePetInformationPetInformationFrame(i);
+            end
         end
     end
 end
@@ -480,55 +513,69 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
             -- Get the pet information frame.
             local pet_information_frame = PetParty_PetPartyInformationFrame.pet_frames[slot_index];
             
-            -- Get the pet's information.
-            local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-                  speciesName, icon, petType, companionID,
-                  tooltip, description, isWild, canBattle, isTradable,
-                  isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_information_frame.pet_guid);
-            
-            -- Get the pet's statistics.
-            local health, maxHealth, attack, speed, rarity = C_PetJournal.GetPetStats(pet_information_frame.pet_guid);
-            
-            -- If this pet has a custom name...
-            if (customName ~= nil) and (customName ~= "") then
-                pet_information_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
-            else
-                pet_information_frame.font_string_title:SetText(speciesName);
-            end
-            
-            -- Update the pet button's icon.
-            pet_information_frame.pet_button.icon:SetTexture(icon);
-            pet_information_frame.pet_button.level:SetShown(canBattle);
-            pet_information_frame.pet_button.level:SetText(level);
-            pet_information_frame.pet_button.iconBorder:Show();
-            pet_information_frame.pet_button.iconBorder:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
-                                                                       ITEM_QUALITY_COLORS[rarity - 1].g,
-                                                                       ITEM_QUALITY_COLORS[rarity - 1].b);
-            
-            -- Get the pet's abilities.
-            local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
-            
-            -- For each of the pet's abilities...
-            local ability_count = PetParty.ABILITY_GROUPS_PER_PET * PetParty.ABILITIES_PER_ABILITY_GROUP;
-            for i = 1, ability_count do
-                -- Get the ability information.
-                local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
+            -- Sanity.
+            if (pet_information_frame.pet_guid ~= nil) then
+                -- Get the pet's information.
+                local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+                    speciesName, icon, petType, companionID,
+                    tooltip, description, isWild, canBattle, isTradable,
+                    isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_information_frame.pet_guid);
                 
-                -- Update the pet ability button.
-                pet_information_frame.pet_ability_buttons[i].ability_id = idTable[i];
-                pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
+                -- Get the pet's statistics.
+                local health, maxHealth, attack, speed, rarity = C_PetJournal.GetPetStats(pet_information_frame.pet_guid);
                 
-                -- Update the pet ability button icon.
-                pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
-            end
-            
-            -- For each activated pet ability.
-            for i = 1, #pet_information_frame.pet_ability_buttons_active do
-                -- Update the pet ability button icon.
-                pet_information_frame.pet_ability_buttons_active[i].icon.texture:SetTexture(BUTTON_ICON_R,
-                                                                                            BUTTON_ICON_G,
-                                                                                            BUTTON_ICON_B,
-                                                                                            BUTTON_ICON_A);
+                -- Update the title.
+                local title = ""
+                
+                -- If this pet has a custom name...
+                if (customName ~= nil) and (customName ~= "") then
+                    title = customName .. " (" .. speciesName .. ")";
+                else
+                    title = speciesName;
+                end
+                
+                -- If this frame is the training pet frame.
+                if (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_information_frame) then
+                    title = title .. " - T"
+                end
+                
+                -- Set the title.
+                pet_information_frame.font_string_title:SetText(title);
+                
+                -- Update the pet button's icon.
+                pet_information_frame.pet_button.icon:SetTexture(icon);
+                pet_information_frame.pet_button.level:SetShown(canBattle);
+                pet_information_frame.pet_button.level:SetText(level);
+                pet_information_frame.pet_button.iconBorder:Show();
+                pet_information_frame.pet_button.iconBorder:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
+                                                                        ITEM_QUALITY_COLORS[rarity - 1].g,
+                                                                        ITEM_QUALITY_COLORS[rarity - 1].b);
+                
+                -- Get the pet's abilities.
+                local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
+                
+                -- For each of the pet's abilities...
+                local ability_count = PetParty.ABILITY_GROUPS_PER_PET * PetParty.ABILITIES_PER_ABILITY_GROUP;
+                for i = 1, ability_count do
+                    -- Get the ability information.
+                    local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
+                    
+                    -- Update the pet ability button.
+                    pet_information_frame.pet_ability_buttons[i].ability_id = idTable[i];
+                    pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
+                    
+                    -- Update the pet ability button icon.
+                    pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+                end
+                
+                -- For each activated pet ability.
+                for i = 1, #pet_information_frame.pet_ability_buttons_active do
+                    -- Update the pet ability button icon.
+                    pet_information_frame.pet_ability_buttons_active[i].icon.texture:SetTexture(BUTTON_ICON_R,
+                                                                                                BUTTON_ICON_G,
+                                                                                                BUTTON_ICON_B,
+                                                                                                BUTTON_ICON_A);
+                end
             end
         end
     end

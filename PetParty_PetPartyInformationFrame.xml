@@ -81,6 +81,20 @@
                     local ability_guids = { ability1, ability2, ability3 };
                     PetParty.SetPetAbilityGUIDsPetInformationFrame(self:GetParent().id, ability_guids);
                     
+                    -- If this is the training pet...
+                    if (PetParty.training_pet_cursor) then
+                        -- Update the training pet frame.
+                        self:GetParent():GetParent().traing_pet_frame = self:GetParent();
+                        
+                        -- Update the flag.
+                        PetParty.training_pet_cursor = false;
+                    end
+                    
+                    -- Update all pet frames' information.
+                    for i = 0, PetParty.PETS_PER_PARTY do
+                        PetParty.UpdatePetInformationPetInformationFrame(i);
+                    end
+                    
                     -- Reset the cursor.
                     ClearCursor();
                 elseif (button == "LeftButton") and (self:GetParent().pet_guid ~= nil) then
