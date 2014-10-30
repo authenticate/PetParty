@@ -56,6 +56,39 @@ function PetParty.DeserializeTrainingPet()
     end
 end
 
+-- Call to get a pet's GUID from a training pet frame.
+function PetParty.GetPetGUIDTrainingPetFrame()
+    -- The result.
+    local pet_guid = nil;
+    
+    -- Get the pet information frame.
+    local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
+    
+    -- Return the result.
+    return pet_information_frame.pet_guid;
+end
+
+-- Call to get a pet's abilities' GUIDs from the training pet information frame.
+function PetParty.GetPetAbilityGUIDsTrainingPetFrame()
+    -- The result.
+    local ability_guids = {};
+    
+    -- Get the pet information frame.
+    local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
+    if (pet_information_frame ~= nil) then
+        for i = 1, #pet_information_frame.pet_ability_buttons_active do
+            -- Get the pet ability button.
+            local ability_button = pet_information_frame.pet_ability_buttons_active[i];
+            
+            -- Add the ability GUID to the array.
+            table.insert(ability_guids, ability_button.ability_id);
+        end
+    end
+    
+    -- Return the result.
+    return ability_guids;
+end
+
 -- Called when the training pet information frame receives an event.
 function PetParty.OnEventTrainingPetInformationFrame(self, event, arg1, ...)
     if (event == "PLAYER_LOGOUT") then
@@ -120,7 +153,8 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 -- Reset the cursor.
                 ClearCursor();
                 
-                -- Reset the training pet cursor flag.
+                -- Update the flags.
+                PetParty.pet_information_frame_cursor = nil;
                 PetParty.training_pet_cursor = false;
                 
                 -- Signal the training pet has changed.
@@ -156,7 +190,8 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 -- Reset the cursor.
                 ClearCursor();
                 
-                -- Reset the training pet cursor flag.
+                -- Update the flags.
+                PetParty.pet_information_frame_cursor = nil;
                 PetParty.training_pet_cursor = false;
                 
                 -- Signal the training pet has changed.
@@ -229,39 +264,6 @@ function PetParty.OnShowTrainingPetInformationFrame()
         -- Update the pet frame's information.
         PetParty.UpdateTrainingPetInformationFrame();
     end
-end
-
--- Call to get a pet's GUID from a training pet frame.
-function PetParty.GetPetGUIDTrainingPetFrame()
-    -- The result.
-    local pet_guid = nil;
-    
-    -- Get the pet information frame.
-    local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
-    
-    -- Return the result.
-    return pet_information_frame.pet_guid;
-end
-
--- Call to get a pet's abilities' GUIDs from the training pet information frame.
-function PetParty.GetPetAbilityGUIDsTrainingPetFrame()
-    -- The result.
-    local ability_guids = {};
-    
-    -- Get the pet information frame.
-    local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
-    if (pet_information_frame ~= nil) then
-        for i = 1, #pet_information_frame.pet_ability_buttons_active do
-            -- Get the pet ability button.
-            local ability_button = pet_information_frame.pet_ability_buttons_active[i];
-            
-            -- Add the ability GUID to the array.
-            table.insert(ability_guids, ability_button.ability_id);
-        end
-    end
-    
-    -- Return the result.
-    return ability_guids;
 end
 
 -- Call to serialize the training pet.
