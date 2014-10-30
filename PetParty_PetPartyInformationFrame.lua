@@ -180,6 +180,12 @@ function PetParty.CreatePetInformationFrame(parent, name)
                     -- Activate this ability.
                     self:GetParent().pet_ability_buttons_active[self.ability_group] = self;
                     
+                    -- If this is the training pet...
+                    if (self:GetParent() == PetParty_PetPartyInformationFrame.training_pet_frame) then
+                        -- Clear the training pet frame.
+                        PetParty_PetPartyInformationFrame.training_pet_frame = nil;
+                    end
+                    
                     -- Update the display.
                     PetParty.UpdatePetInformationPetInformationFrame(self:GetParent().id);
                 end
