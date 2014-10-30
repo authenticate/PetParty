@@ -260,6 +260,9 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                     -- Activate this ability.
                     self:GetParent().pet_ability_buttons_active[self.ability_group] = self;
                     
+                    -- Signal the training pet has changed.
+                    PetParty.OnTrainingPetChangedPetPartyInformationFrame();
+                    
                     -- Update the display.
                     PetParty.UpdateTrainingPetInformationFrame();
                 end
