@@ -50,9 +50,6 @@ function PetParty.DeserializeTrainingPet()
         
         -- Store the training pet's ability GUIDs.
         PetParty.SetPetAbilityGUIDsTrainingPetFrame(training_pet.ability_guids)
-        
-        -- Update the pet frame's information.
-        PetParty.UpdateTrainingPetInformationFrame();
     end
 end
 
@@ -308,6 +305,9 @@ function PetParty.OnShowTrainingPetInformationFrame()
         
         -- Update the pet frame's information.
         PetParty.UpdateTrainingPetInformationFrame();
+        
+        -- Signal the training pet has changed.
+        PetParty.OnTrainingPetChangedPetPartyInformationFrame();
     end
 end
 

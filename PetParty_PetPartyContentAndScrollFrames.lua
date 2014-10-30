@@ -153,8 +153,10 @@ function PetParty.AddPetPartyFrame(name)
     pet_party_frame.font_string_title:SetPoint("CENTER", pet_party_frame);
     
     -- Update the pet party frame's pet information.
+    pet_party_frame.pet_training_frame_id = nil;
     pet_party_frame.pet_guids = {};
     pet_party_frame.ability_guids = {};
+    
     for i = 1, PetParty.PETS_PER_PARTY do
         pet_party_frame.pet_guids[i] = PetParty.GetPetGUIDPetInformationFrame(i);
         pet_party_frame.ability_guids[i] = PetParty.GetPetAbilityGUIDsPetInformationFrame(i);
@@ -340,6 +342,9 @@ function PetParty.DeserializePetParties()
             -- Create a pet party frame.
             PetParty.AddPetPartyFrame(pet_party.name);
             
+            -- Get the pet party's training pet's ID.
+            PetParty.pet_party_frame_selected.pet_training_frame_id = pet_party.pet_training_frame_id;
+            
             -- For each pet...
             for j = 1, PetParty.PETS_PER_PARTY do
                 -- Store the pet party's pet GUIDs.
@@ -352,12 +357,18 @@ function PetParty.DeserializePetParties()
         
         -- Sanity.
         if (PetParty.pet_party_frame_selected ~= nil) then
-            -- For each pet...
-            for i = 1, PetParty.PETS_PER_PARTY do
-                -- Update the pet frames.
-                PetParty.SetPetGUIDPetInformationFrame(i, PetParty.pet_party_frame_selected.pet_guids[i]);
-                PetParty.SetPetAbilityGUIDsPetInformationFrame(i, PetParty.pet_party_frame_selected.ability_guids[i]);
-            end
+            --
+            -- Select an initial pet party.
+            --
+            
+            pet_party_frame_entered = PetParty.pet_party_frame_selected;
+            pet_party_frame_pressed = PetParty.pet_party_frame_selected;
+            
+            PetParty.OnMouseUpPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
+            PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected);
+            
+            pet_party_frame_entered = nil;
+            pet_party_frame_pressed = nil;
         end
     end
 end
@@ -423,6 +434,15 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
             PetParty.SetPetAbilityGUIDsPetInformationFrame(i, self.ability_guids[i]);
         end
         
+        -- If there's a training pet frame ID.
+        if (self.pet_training_frame_id ~= nil) then
+            -- Update the training pet frame.
+            PetParty_PetPartyInformationFrame.training_pet_frame = PetParty_PetPartyInformationFrame.pet_frames[self.pet_training_frame_id];
+            
+            -- Signal the training pet has changed.
+            PetParty.OnTrainingPetChangedPetPartyInformationFrame();
+        end
+        
         -- Store the new frame.
         PetParty.pet_party_frame_selected = self;
         
@@ -474,6 +494,9 @@ function PetParty.SerializePetParties()
         
         -- Store the pet party's name.
         pet_party.name = pet_party_frame.font_string_title:GetText();
+        
+        -- Store the pet party's training pet's GUID.
+        pet_party.pet_training_frame_id = pet_party_frame.pet_training_frame_id;
         
         -- For each pet...
         for j = 1, PetParty.PETS_PER_PARTY do

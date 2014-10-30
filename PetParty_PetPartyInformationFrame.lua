@@ -322,6 +322,16 @@ end
 function PetParty.OnClickPetPartyInformationFrameButtonSave()
     -- Store the pets from the UI into the selected pet party frame.
     if (PetParty.pet_party_frame_selected ~= nil) then
+        -- If there's a training pet...
+        if (PetParty_PetPartyInformationFrame.training_pet_frame ~= nil) then
+            -- Store the training pet's GUID.
+            PetParty.pet_party_frame_selected.pet_training_frame_id = PetParty_PetPartyInformationFrame.training_pet_frame.id;
+        else
+            -- Reset the training pet's GUID.
+            PetParty.pet_party_frame_selected.pet_training_frame_id = nil;
+        end
+        
+        -- For each pet...
         for i = 1, PetParty.PETS_PER_PARTY do
             -- Get the pet information frame.
             local pet_information_frame = PetParty_PetPartyInformationFrame.pet_frames[i];
