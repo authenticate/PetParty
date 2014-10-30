@@ -70,7 +70,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
     pet_information_frame:SetScript("OnMouseUp",
         function(self, button)
             local cursorType, petID = GetCursorInfo();
-            if cursorType == "battlepet" then
+            if (cursorType == "battlepet") then
                 -- Store the pet GUID.
                 PetParty.SetPetGUIDPetInformationFrame(self.id, petID);
                 
@@ -88,7 +88,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
                 
                 -- Store the pet's abilities' GUIDs.
                 local ability_guids = { ability1, ability2, ability3 };
-                PetParty.SetPetAbilityGUIDsPetInformationFrame(self.id, ability_guids)
+                PetParty.SetPetAbilityGUIDsPetInformationFrame(self.id, ability_guids);
                 
                 -- Reset the cursor.
                 ClearCursor();

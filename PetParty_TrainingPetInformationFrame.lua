@@ -112,10 +112,42 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 
                 -- Store the pet's abilities' GUIDs.
                 local ability_guids = { ability1, ability2, ability3 };
-                PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids)
+                PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
                 
                 -- Reset the cursor.
                 ClearCursor();
+            end
+        end
+    );
+    
+    -- Update the pet button on click handler.
+    PetParty_TrainingPetInformationFrame.pet_frame.pet_button:SetScript("OnClick",
+        function (self, button, down)
+            local cursorType, petID = GetCursorInfo();
+            if (cursorType == "battlepet") then
+                -- Store the pet GUID.
+                PetParty.SetPetGUIDTrainingPetFrame(petID);
+                
+                -- Cache the pet GUID of the pet currently loaded in slot one.
+                local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
+                
+                -- Load the pet into slot one.
+                C_PetJournal.SetPetLoadOutInfo(1, petID);
+                
+                -- Get the active abilities of the pet from slot one.
+                local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(1);
+                
+                -- Reset slot one.
+                C_PetJournal.SetPetLoadOutInfo(1, petGUID_cache);
+                
+                -- Store the pet's abilities' GUIDs.
+                local ability_guids = { ability1, ability2, ability3 };
+                PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                
+                -- Reset the cursor.
+                ClearCursor();
+            elseif (button == "LeftButton") and (self:GetParent().pet_guid ~= nil) then
+                C_PetJournal.PickupPet(self:GetParent().pet_guid);
             end
         end
     );
