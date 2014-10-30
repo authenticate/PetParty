@@ -420,8 +420,9 @@ end
 function PetParty.OnTrainingPetChangedPetPartyInformationFrame()
     -- If there is a training pet in the active pet party...
     if (PetParty_PetPartyInformationFrame.training_pet_frame ~= nil) then
-        -- Get the training pet's GUID.
+        -- Get the training pet's information.
         local pet_guid = PetParty.GetPetGUIDTrainingPetFrame();
+        local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
         
         -- Cache the training pet frame.
         local training_pet_frame = PetParty_PetPartyInformationFrame.training_pet_frame;
@@ -429,8 +430,12 @@ function PetParty.OnTrainingPetChangedPetPartyInformationFrame()
         -- Clear the training pet frame.
         PetParty_PetPartyInformationFrame.training_pet_frame = nil;
         
-        -- Update the train pet frame's pet GUID.
+        -- Update the training pet frame's pet GUID.
         PetParty.SetPetGUIDPetInformationFrame(training_pet_frame.id, pet_guid);
+        PetParty.UpdatePetInformationPetInformationFrame(training_pet_frame.id);
+        
+        -- Update the training pet frame's pet's abilities GUIDs.
+        PetParty.SetPetAbilityGUIDsPetInformationFrame(training_pet_frame.id, ability_guids);
         
         -- Reset the training pet frame.
         PetParty_PetPartyInformationFrame.training_pet_frame = training_pet_frame;
