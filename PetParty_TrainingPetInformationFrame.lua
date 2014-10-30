@@ -78,7 +78,7 @@ function PetParty.GetPetAbilityGUIDsTrainingPetFrame()
             local ability_button = pet_information_frame.pet_ability_buttons_active[i];
             
             -- Add the ability GUID to the array.
-            table.insert(ability_guids, ability_button.ability_id);
+            table.insert(ability_guids, ability_button.ability_guid);
         end
     end
     
@@ -277,7 +277,7 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                             isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(self:GetParent().pet_guid);
                         
                         -- Show the tooltip.
-                        PetJournal_ShowAbilityTooltip(self, self.ability_id, speciesID, self:GetParent().pet_guid, nil);
+                        PetJournal_ShowAbilityTooltip(self, self.ability_guid, speciesID, self:GetParent().pet_guid, nil);
                     end
                 end
             );
@@ -356,7 +356,7 @@ function PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids)
             
             -- Get the ability button.
             local ability_button = pet_information_frame.pet_ability_buttons[j];
-            if (ability_button.ability_id == ability_guid) then
+            if (ability_button.ability_guid == ability_guid) then
                 table.insert(pet_information_frame.pet_ability_buttons_active, ability_button);
             end
         end
@@ -408,7 +408,7 @@ function PetParty.UpdateTrainingPetInformationFrame()
             local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
             
             -- Update the pet ability button.
-            pet_information_frame.pet_ability_buttons[i].ability_id = idTable[i];
+            pet_information_frame.pet_ability_buttons[i].ability_guid = idTable[i];
             pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
             
             pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
@@ -439,7 +439,7 @@ function PetParty.UpdateTrainingPetInformationFrame()
         local ability_count = PetParty.ABILITY_GROUPS_PER_PET * PetParty.ABILITIES_PER_ABILITY_GROUP;
         for i = 1, ability_count do
             -- Update the pet ability button.
-            pet_information_frame.pet_ability_buttons[i].ability_id = nil;
+            pet_information_frame.pet_ability_buttons[i].ability_guid = nil;
             pet_information_frame.pet_ability_buttons[i].texture:SetTexture(nil);
             
             -- Update the pet ability button icon.
