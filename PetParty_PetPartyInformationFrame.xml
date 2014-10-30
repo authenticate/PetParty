@@ -84,7 +84,7 @@
                     -- If this is the training pet...
                     if (PetParty.training_pet_cursor) then
                         -- Update the training pet frame.
-                        self:GetParent():GetParent().traing_pet_frame = self:GetParent();
+                        self:GetParent():GetParent().training_pet_frame = self:GetParent();
                         
                         -- Update the flag.
                         PetParty.training_pet_cursor = false;

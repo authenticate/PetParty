@@ -93,7 +93,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
                 -- If this is the training pet...
                 if (PetParty.training_pet_cursor) then
                     -- Update the training pet frame.
-                    self:GetParent().traing_pet_frame = self;
+                    self:GetParent().training_pet_frame = self;
                     
                     -- Update the flag.
                     PetParty.training_pet_cursor = false;
@@ -311,7 +311,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
                        PET_INFORMATION_PARTY_A);
     
     -- Initialize the pet party information frame's training pet frame variable.
-    PetParty_PetPartyInformationFrame.traing_pet_frame = nil;
+    PetParty_PetPartyInformationFrame.training_pet_frame = nil;
     
     -- Initialize the pet party information frame's pet frames variable.
     PetParty_PetPartyInformationFrame.pet_frames = {};
@@ -350,6 +350,32 @@ function PetParty.OnLoadPetPartyInformationFrame()
     
     -- Update pet information frame layout.
     PetParty.UpdatePetInformationFrameLayout();
+end
+
+-- Called when the training pet changes.
+function PetParty.OnTrainingPetChangedPetPartyInformationFrame()
+    -- If there is a training pet in the active pet party...
+    if (PetParty_PetPartyInformationFrame.training_pet_frame ~= nil) then
+        -- Get the training pet's GUID.
+        local pet_guid = PetParty.GetPetGUIDTrainingPetFrame();
+        
+        -- Cache the training pet frame.
+        local training_pet_frame = PetParty_PetPartyInformationFrame.training_pet_frame;
+        
+        -- Clear the training pet frame.
+        PetParty_PetPartyInformationFrame.training_pet_frame = nil;
+        
+        -- Update the train pet frame's pet GUID.
+        PetParty.SetPetGUIDPetInformationFrame(training_pet_frame.id, pet_guid);
+        
+        -- Reset the training pet frame.
+        PetParty_PetPartyInformationFrame.training_pet_frame = training_pet_frame;
+        
+        -- Update the UI.
+        for i = 0, PetParty.PETS_PER_PARTY do
+            PetParty.UpdatePetInformationPetInformationFrame(i);
+        end
+    end
 end
 
 -- Call to get a pet's GUID from a pet information frame.
@@ -412,13 +438,13 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
                 -- This pet is already set in slot "a".
                 if (not locked_a) and (pet_frame_a.pet_guid ~= nil) and (pet_guid == pet_frame_a.pet_guid) then
                     -- If a slot "a" is the training pet...
-                    if (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_frame_a) then
+                    if (PetParty_PetPartyInformationFrame.training_pet_frame == pet_frame_a) then
                         -- Swap the training pet.
-                        PetParty_PetPartyInformationFrame.traing_pet_frame = pet_information_frame;
+                        PetParty_PetPartyInformationFrame.training_pet_frame = pet_information_frame;
                     -- If the slot index is the training pet...
-                    elseif (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_information_frame) then
+                    elseif (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
                         -- Swap the training pet.
-                        PetParty_PetPartyInformationFrame.traing_pet_frame = pet_frame_a;
+                        PetParty_PetPartyInformationFrame.training_pet_frame = pet_frame_a;
                     end
                     
                     -- Swap the pet information frames.
@@ -426,13 +452,13 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
                 -- This pet is already set in slot "b".
                 elseif (not locked_b) and (pet_frame_b.pet_guid ~= nil) and (pet_guid == pet_frame_b.pet_guid) then
                     -- If slot "b" is the training pet...
-                    if (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_frame_b) then
+                    if (PetParty_PetPartyInformationFrame.training_pet_frame == pet_frame_b) then
                         -- Swap the training pet.
-                        PetParty_PetPartyInformationFrame.traing_pet_frame = pet_information_frame;
+                        PetParty_PetPartyInformationFrame.training_pet_frame = pet_information_frame;
                     -- If the slot index is the training pet...
-                    elseif (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_information_frame) then
+                    elseif (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
                         -- Swap the training pet.
-                        PetParty_PetPartyInformationFrame.traing_pet_frame = pet_frame_b;
+                        PetParty_PetPartyInformationFrame.training_pet_frame = pet_frame_b;
                     end
                     
                     -- Swap the pet information frames.
@@ -535,7 +561,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 end
                 
                 -- If this frame is the training pet frame.
-                if (PetParty_PetPartyInformationFrame.traing_pet_frame == pet_information_frame) then
+                if (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
                     title = title .. " - T"
                 end
                 

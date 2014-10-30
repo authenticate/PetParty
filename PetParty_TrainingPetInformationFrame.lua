@@ -122,6 +122,9 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 
                 -- Reset the training pet cursor flag.
                 PetParty.training_pet_cursor = false;
+                
+                -- Signal the training pet has changed.
+                PetParty.OnTrainingPetChangedPetPartyInformationFrame();
             end
         end
     );
@@ -155,6 +158,9 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 
                 -- Reset the training pet cursor flag.
                 PetParty.training_pet_cursor = false;
+                
+                -- Signal the training pet has changed.
+                PetParty.OnTrainingPetChangedPetPartyInformationFrame();
             elseif (button == "LeftButton") and (self:GetParent().pet_guid ~= nil) then
                 -- Pick up the training pet.
                 C_PetJournal.PickupPet(self:GetParent().pet_guid);
