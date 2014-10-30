@@ -95,8 +95,14 @@ function PetParty.CreatePetInformationFrame(parent, name)
                     
                     -- Update the pet's abilities' GUIDs.
                     PetParty.SetPetAbilityGUIDsPetInformationFrame(self.id, ability_guids);
-                -- If this is a pet from Blizzard's UI.
+                -- If this is a pet from Blizzard's UI...
                 else
+                    -- If this is the training pet frame...
+                    if (PetParty_PetPartyInformationFrame.training_pet_frame == self) then
+                        -- Clear the training pet frame.
+                        PetParty_PetPartyInformationFrame.training_pet_frame = nil;
+                    end
+                    
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDPetInformationFrame(self.id, petID);
                     

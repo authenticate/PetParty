@@ -73,6 +73,7 @@
                         -- Store the pet's abilities' GUIDs.
                         local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
                         PetParty.SetPetAbilityGUIDsPetInformationFrame(self:GetParent().id, ability_guids);
+                    -- If this is an information pet...
                     elseif (PetParty.pet_information_frame_cursor ~= nil) then
                         -- Store the pet's abilities' GUIDs.
                         local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
@@ -82,7 +83,14 @@
                         
                         -- Update the pet's abilities' GUIDs.
                         PetParty.SetPetAbilityGUIDsPetInformationFrame(self:GetParent().id, ability_guids);
+                    -- If this is a pet from Blizzard's UI...
                     else
+                        -- If this is the training pet frame...
+                        if (PetParty_PetPartyInformationFrame.training_pet_frame == self:GetParent()) then
+                            -- Clear the training pet frame.
+                            PetParty_PetPartyInformationFrame.training_pet_frame = nil;
+                        end
+                        
                         -- Store the pet GUID.
                         PetParty.SetPetGUIDPetInformationFrame(self:GetParent().id, petID);
                         
