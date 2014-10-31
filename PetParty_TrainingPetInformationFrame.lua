@@ -50,6 +50,9 @@ function PetParty.DeserializeTrainingPet()
         -- Store the training pet's GUID.
         PetParty.SetPetGUIDTrainingPetFrame(training_pet.guid);
         
+        -- Update the display.
+        PetParty.UpdateTrainingPetInformationFrame();
+        
         -- Store the training pet's ability GUIDs.
         PetParty.SetPetAbilityGUIDsTrainingPetFrame(training_pet.ability_guids)
     end
@@ -135,6 +138,9 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
                     
+                    -- Update the display.
+                    PetParty.UpdateTrainingPetInformationFrame();
+                    
                     -- Store the pet's abilities' GUIDs.
                     local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
                     PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
@@ -146,12 +152,18 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
                     
+                    -- Update the display.
+                    PetParty.UpdateTrainingPetInformationFrame();
+                    
                     -- Update the pet's abilities' GUIDs.
                     PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
                 -- If this is a pet from Blizzard's UI...
                 else
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
+                    
+                    -- Update the display.
+                    PetParty.UpdateTrainingPetInformationFrame();
                     
                     -- Cache the pet GUID of the pet currently loaded in slot one.
                     local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
@@ -176,6 +188,9 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 -- Update the flags.
                 PetParty.pet_information_frame_cursor = nil;
                 PetParty.training_pet_cursor = false;
+                
+                -- Update the display.
+                PetParty.UpdateTrainingPetInformationFrame();
                 
                 -- Signal the training pet has changed.
                 PetParty.OnTrainingPetChangedPetPartyInformationFrame();
@@ -193,6 +208,9 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
                     
+                    -- Update the display.
+                    PetParty.UpdateTrainingPetInformationFrame();
+                    
                     -- Store the pet's abilities' GUIDs.
                     local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
                     PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
@@ -204,12 +222,18 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
                     
+                    -- Update the display.
+                    PetParty.UpdateTrainingPetInformationFrame();
+                    
                     -- Update the pet's abilities' GUIDs.
                     PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
                 -- If this is a pet from Blizzard's UI...
                 else
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
+                    
+                    -- Update the display.
+                    PetParty.UpdateTrainingPetInformationFrame();
                     
                     -- Cache the pet GUID of the pet currently loaded in slot one.
                     local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
@@ -234,6 +258,9 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                 -- Update the flags.
                 PetParty.pet_information_frame_cursor = nil;
                 PetParty.training_pet_cursor = false;
+                
+                -- Update the display.
+                PetParty.UpdateTrainingPetInformationFrame();
                 
                 -- Signal the training pet has changed.
                 PetParty.OnTrainingPetChangedPetPartyInformationFrame();
@@ -259,11 +286,11 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                     -- Activate this ability.
                     self:GetParent().pet_ability_buttons_active[self.ability_group] = self;
                     
-                    -- Signal the training pet has changed.
-                    PetParty.OnTrainingPetChangedPetPartyInformationFrame();
-                    
                     -- Update the display.
                     PetParty.UpdateTrainingPetInformationFrame();
+                    
+                    -- Signal the training pet has changed.
+                    PetParty.OnTrainingPetChangedPetPartyInformationFrame();
                 end
             );
             
@@ -338,7 +365,7 @@ function PetParty.SetPetGUIDTrainingPetFrame(pet_guid)
     pet_information_frame.pet_guid = pet_guid;
     
     -- Update the pet frame's information.
-    PetParty.UpdateTrainingPetInformationFrame();
+    --PetParty.UpdateTrainingPetInformationFrame();
 end
 
 -- Call to set a pet's abilities in the training pet information frame.
@@ -365,7 +392,7 @@ function PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids)
     end
     
     -- Update the pet frame's information.
-    PetParty.UpdateTrainingPetInformationFrame();
+    --PetParty.UpdateTrainingPetInformationFrame();
 end
 
 -- Call to update the pet information in a pet information frame.

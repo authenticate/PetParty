@@ -567,9 +567,6 @@ function PetParty.SetPetAbilityGUIDsPetInformationFrame(slot_index, ability_guid
                 end
             end
         end
-        
-        -- Update the pet frame's information.
-        PetParty.UpdatePetInformationPetInformationFrame(slot_index);
     end
 end
 
