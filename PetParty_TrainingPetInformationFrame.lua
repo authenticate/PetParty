@@ -390,13 +390,15 @@ function PetParty.UpdateTrainingPetInformationFrame()
         local health, maxHealth, attack, speed, rarity = C_PetJournal.GetPetStats(pet_information_frame.pet_guid);
         
         -- Update the pet button.
+        pet_information_frame.pet_button.background:Show();
         pet_information_frame.pet_button.icon:SetTexture(icon);
         pet_information_frame.pet_button.level:SetShown(canBattle);
         pet_information_frame.pet_button.level:SetText(level);
-        pet_information_frame.pet_button.iconBorder:Show();
-        pet_information_frame.pet_button.iconBorder:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
-                                                                   ITEM_QUALITY_COLORS[rarity - 1].g,
-                                                                   ITEM_QUALITY_COLORS[rarity - 1].b);
+        pet_information_frame.pet_button.level_background:Show();
+        pet_information_frame.pet_button.icon_border:Show();
+        pet_information_frame.pet_button.icon_border:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
+                                                                    ITEM_QUALITY_COLORS[rarity - 1].g,
+                                                                    ITEM_QUALITY_COLORS[rarity - 1].b);
         
         -- Get the pet's abilities.
         local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
@@ -428,12 +430,14 @@ function PetParty.UpdateTrainingPetInformationFrame()
     -- If there is not a training pet...
     else
         -- Update the title.
-        pet_information_frame.font_string_title:SetText(PetParty.L["Training Pet"]);
+        pet_information_frame.font_string_title:SetText(PetParty.L["Drag a battle pet to train here."]);
         
         -- Update the pet button.
-        pet_information_frame.pet_button.icon:SetTexture("INTERFACE\\ICONS\\Ability_ambush");
+        pet_information_frame.pet_button.background:Hide();
+        pet_information_frame.pet_button.icon:SetTexture(nil);
         pet_information_frame.pet_button.level:Hide();
-        pet_information_frame.pet_button.iconBorder:Hide();
+        pet_information_frame.pet_button.level_background:Hide();
+        pet_information_frame.pet_button.icon_border:Hide();
         
         -- For each potential pet ability...
         local ability_count = PetParty.ABILITY_GROUPS_PER_PET * PetParty.ABILITIES_PER_ABILITY_GROUP;

@@ -25,7 +25,7 @@
         <Size x="38" y="38"/>
         <Layers>
             <Layer level="BACKGROUND">
-                <Texture atlas="PetList-ButtonBackground"/>   
+                <Texture atlas="PetList-ButtonBackground" parentKey="background"/>   
             </Layer>
             <Layer level="BORDER">
                 <Texture name="$parentIcon" parentKey="icon">
@@ -36,7 +36,7 @@
                 </Texture>
             </Layer>
             <Layer level="ARTWORK" textureSubLevel="-1">
-                <Texture name="$parentIconBorder" parentKey="iconBorder" file="Interface\Common\WhiteIconFrame" hidden="true">
+                <Texture name="$parentIconBorder" parentKey="icon_border" file="Interface\Common\WhiteIconFrame" hidden="true">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.icon"/>
                         <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.icon"/>
@@ -44,7 +44,7 @@
                 </Texture>
             </Layer>
             <Layer level="OVERLAY" textureSubLevel="1">
-                <Texture name="$parentLevelBG" atlas="PetJournal-LevelBubble" useAtlasSize="true" parentKey="levelBG">
+                <Texture name="$parentLevelBG" atlas="PetJournal-LevelBubble" useAtlasSize="true" parentKey="level_background">
                     <Anchors>
                         <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentIcon" x="3" y="-3"/>
                     </Anchors>

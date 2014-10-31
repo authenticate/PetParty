@@ -630,10 +630,9 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 pet_information_frame.pet_button.icon:SetTexture(icon);
                 pet_information_frame.pet_button.level:SetShown(canBattle);
                 pet_information_frame.pet_button.level:SetText(level);
-                pet_information_frame.pet_button.iconBorder:Show();
-                pet_information_frame.pet_button.iconBorder:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
-                                                                        ITEM_QUALITY_COLORS[rarity - 1].g,
-                                                                        ITEM_QUALITY_COLORS[rarity - 1].b);
+                pet_information_frame.pet_button.icon_border:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
+                                                                            ITEM_QUALITY_COLORS[rarity - 1].g,
+                                                                            ITEM_QUALITY_COLORS[rarity - 1].b);
                 
                 -- Get the pet's abilities.
                 local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
