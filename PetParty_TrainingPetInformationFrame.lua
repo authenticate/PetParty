@@ -363,9 +363,6 @@ function PetParty.SetPetGUIDTrainingPetFrame(pet_guid)
     
     -- Store the new pet.
     pet_information_frame.pet_guid = pet_guid;
-    
-    -- Update the pet frame's information.
-    --PetParty.UpdateTrainingPetInformationFrame();
 end
 
 -- Call to set a pet's abilities in the training pet information frame.
@@ -390,9 +387,6 @@ function PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids)
             end
         end
     end
-    
-    -- Update the pet frame's information.
-    --PetParty.UpdateTrainingPetInformationFrame();
 end
 
 -- Call to update the pet information in a pet information frame.
