@@ -36,7 +36,7 @@
                 </Texture>
             </Layer>
             <Layer level="ARTWORK" textureSubLevel="-1">
-                <Texture name="$parentIconBorder" parentKey="icon_border" file="Interface\Common\WhiteIconFrame" hidden="true">
+                <Texture name="$parentIconBorder" parentKey="icon_border" file="Interface\Common\WhiteIconFrame" hidden="false">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.icon"/>
                         <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.icon"/>
