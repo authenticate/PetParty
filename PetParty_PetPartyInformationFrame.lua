@@ -448,25 +448,28 @@ function PetParty.OnTrainingPetChangedPetPartyInformationFrame()
         local pet_guid = PetParty.GetPetGUIDTrainingPetFrame();
         local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
         
-        -- Cache the training pet frame.
-        local training_pet_frame = PetParty_PetPartyInformationFrame.training_pet_frame;
-        
-        -- Clear the training pet frame.
-        PetParty_PetPartyInformationFrame.training_pet_frame = nil;
-        
-        -- Update the training pet frame's pet GUID.
-        PetParty.SetPetGUIDPetInformationFrame(training_pet_frame.id, pet_guid);
-        PetParty.UpdatePetInformationPetInformationFrame(training_pet_frame.id);
-        
-        -- Update the training pet frame's pet's abilities GUIDs.
-        PetParty.SetPetAbilityGUIDsPetInformationFrame(training_pet_frame.id, ability_guids);
-        
-        -- Reset the training pet frame.
-        PetParty_PetPartyInformationFrame.training_pet_frame = training_pet_frame;
-        
-        -- Update the UI.
-        for i = 1, PetParty.PETS_PER_PARTY do
-            PetParty.UpdatePetInformationPetInformationFrame(i);
+        -- Sanity.
+        if (pet_guid ~= nil) and (pet_guid ~= "") then
+            -- Cache the training pet frame.
+            local training_pet_frame = PetParty_PetPartyInformationFrame.training_pet_frame;
+            
+            -- Clear the training pet frame.
+            PetParty_PetPartyInformationFrame.training_pet_frame = nil;
+            
+            -- Update the training pet frame's pet GUID.
+            PetParty.SetPetGUIDPetInformationFrame(training_pet_frame.id, pet_guid);
+            PetParty.UpdatePetInformationPetInformationFrame(training_pet_frame.id);
+            
+            -- Update the training pet frame's pet's abilities GUIDs.
+            PetParty.SetPetAbilityGUIDsPetInformationFrame(training_pet_frame.id, ability_guids);
+            
+            -- Reset the training pet frame.
+            PetParty_PetPartyInformationFrame.training_pet_frame = training_pet_frame;
+            
+            -- Update the UI.
+            for i = 1, PetParty.PETS_PER_PARTY do
+                PetParty.UpdatePetInformationPetInformationFrame(i);
+            end
         end
     end
 end
@@ -491,6 +494,33 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
             local petGUID_b, ability1_b, ability2_b, ability3_b, locked_b = C_PetJournal.GetPetLoadOutInfo(index_b);
             local pet_frame_b = PetParty_PetPartyInformationFrame.pet_frames[index_b];
             
+            -- Create a helper function.
+            local SetPetAbilityGUIDsPetInformationFrameButtons =
+                function (frame)
+                    -- Get the pet's information.
+                    local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+                          speciesName, icon, petType, companionID,
+                          tooltip, description, isWild, canBattle, isTradable,
+                          isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(frame.pet_guid);
+                    
+                    -- Get the pet's abilities.
+                    local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
+                    
+                    -- For each of the pet's abilities...
+                    for i = 1, #frame.pet_ability_buttons do
+                        -- Get the ability information.
+                        local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
+                        
+                        -- Update the pet ability button.
+                        frame.pet_ability_buttons[i].ability_guid = idTable[i];
+                        frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
+                        
+                        -- Update the pet ability button icon.
+                        frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+                    end
+                end
+            ;
+            
             -- Sanity.
             if (pet_guid ~= nil) then
                 -- This pet is already set in slot "a".
@@ -508,8 +538,10 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
                     -- Swap the pet information frames.
                     pet_information_frame.pet_guid, pet_frame_a.pet_guid = pet_frame_a.pet_guid, pet_information_frame.pet_guid;
                     
+                    -- Update the ability buttons.
+                    SetPetAbilityGUIDsPetInformationFrameButtons(pet_frame_a);
+                    
                     -- Update the ability GUIDs.
-                    PetParty.UpdatePetInformationPetInformationFrame(index_a);
                     PetParty.SetPetAbilityGUIDsPetInformationFrame(index_a, ability_guids);
                 -- This pet is already set in slot "b".
                 elseif (not locked_b) and (pet_frame_b.pet_guid ~= nil) and (pet_guid == pet_frame_b.pet_guid) then
@@ -526,8 +558,10 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
                     -- Swap the pet information frames.
                     pet_information_frame.pet_guid, pet_frame_b.pet_guid = pet_frame_b.pet_guid, pet_information_frame.pet_guid;
                     
+                    -- Update the ability buttons.
+                    SetPetAbilityGUIDsPetInformationFrameButtons(pet_frame_b);
+                    
                     -- Update the ability GUIDs.
-                    PetParty.UpdatePetInformationPetInformationFrame(index_b);
                     PetParty.SetPetAbilityGUIDsPetInformationFrame(index_b, ability_guids);
                 -- The normal case.
                 else
@@ -535,10 +569,8 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
                 end
             end
             
-            -- Update all pet frames' information.
-            for i = 1, PetParty.PETS_PER_PARTY do
-                PetParty.UpdatePetInformationPetInformationFrame(i);
-            end
+            -- Update the ability buttons.
+            SetPetAbilityGUIDsPetInformationFrameButtons(pet_information_frame);
         end
     end
 end
@@ -676,24 +708,13 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                                                                             ITEM_QUALITY_COLORS[rarity - 1].g,
                                                                             ITEM_QUALITY_COLORS[rarity - 1].b);
                 
-                -- Get the pet's abilities.
-                local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
-                
-                -- For each of the pet's abilities...
-                local ability_count = PetParty.ABILITY_GROUPS_PER_PET * PetParty.ABILITIES_PER_ABILITY_GROUP;
-                for i = 1, ability_count do
-                    -- Get the ability information.
-                    local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
-                    
-                    -- Update the pet ability button.
-                    pet_information_frame.pet_ability_buttons[i].ability_guid = idTable[i];
-                    pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
-                    
+                -- For each pet ability button...
+                for i = 1, #pet_information_frame.pet_ability_buttons do
                     -- Update the pet ability button icon.
                     pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
                 end
                 
-                -- For each activated pet ability.
+                -- For each active pet ability button...
                 for i = 1, #pet_information_frame.pet_ability_buttons_active do
                     -- Update the pet ability button icon.
                     pet_information_frame.pet_ability_buttons_active[i].icon.texture:SetTexture(BUTTON_ICON_R,

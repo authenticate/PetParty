@@ -24,6 +24,9 @@
 
 local PET_PARTY_BUTTON_COUNT = 2;
 
+-- A flag if the pet parties have been deserialized.
+local is_deserialized = false;
+
 -- Called when the main frame's create pet party button is clicked.
 function PetParty.OnClickMainFrameButtonCreatePetParty()
     StaticPopup_Show("PetParty_CreatePetPartyDialog");
@@ -37,10 +40,6 @@ end
 -- Called when the main frame receives an event.
 function PetParty.OnEventMainFrame(self, event, arg1, ...)
     if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
-        if (PetPartyDB ~= nil) then
-            PetParty.DeserializePetParties();
-        end
-        
         -- Load Blizzard's pet journal.
         if not IsAddOnLoaded("Blizzard_PetJournal") then
             LoadAddOn("Blizzard_PetJournal")
@@ -150,6 +149,24 @@ function PetParty.OnLoadMainFrame()
     PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
     PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L["Create"]);
     PetParty_MainFrame_Button_Delete_Pet_Party:SetText(PetParty.L["Delete"]);
+end
+
+-- Called when the main frame is shown.
+function PetParty.OnShowMainFrame()
+    if (not is_deserialized) then
+        if (PetPartyDB ~= nil) then
+            -- Deserialize the pet parties.
+            PetParty.DeserializePetParties();
+            
+            -- Update all pet frames' information.
+            for i = 1, PetParty.PETS_PER_PARTY do
+                PetParty.UpdatePetInformationPetInformationFrame(i);
+            end
+        end
+        
+        -- Update the flag.
+        is_deserialized = true;
+    end
 end
 
 -- Call to update the main frame layout.

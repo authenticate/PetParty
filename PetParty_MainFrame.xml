@@ -99,6 +99,9 @@
             <OnLoad>
                 PetParty.OnLoadMainFrame();
             </OnLoad>
+            <OnShow>
+                PetParty.OnShowMainFrame();
+            </OnShow>
         </Scripts>
     </Frame>
     

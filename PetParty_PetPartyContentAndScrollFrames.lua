@@ -432,12 +432,16 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
             -- Update the pet frames.
             PetParty.SetPetGUIDPetInformationFrame(i, self.pet_guids[i]);
             PetParty.SetPetAbilityGUIDsPetInformationFrame(i, self.ability_guids[i]);
+            PetParty.UpdatePetInformationPetInformationFrame(i);
         end
         
         -- If there's a training pet frame ID.
         if (self.pet_training_frame_id ~= nil) then
             -- Update the training pet frame.
             PetParty_PetPartyInformationFrame.training_pet_frame = PetParty_PetPartyInformationFrame.pet_frames[self.pet_training_frame_id];
+            
+            -- Update the display.
+            PetParty.UpdateTrainingPetInformationFrame();
             
             -- Signal the training pet has changed.
             PetParty.OnTrainingPetChangedPetPartyInformationFrame();
