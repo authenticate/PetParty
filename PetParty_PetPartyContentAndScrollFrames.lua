@@ -146,9 +146,9 @@ function PetParty.AddPetPartyFrame(name)
     pet_party_frame.font_string_name:SetFont(PET_PARTY_FRAME_FONT, PET_PARTY_FRAME_FONT_SIZE);
     pet_party_frame.font_string_name:SetText(name);
     pet_party_frame.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_R,
-                                                   PET_PARTY_FRAME_TITLE_G,
-                                                   PET_PARTY_FRAME_TITLE_B,
-                                                   PET_PARTY_FRAME_TITLE_A);
+                                                  PET_PARTY_FRAME_TITLE_G,
+                                                  PET_PARTY_FRAME_TITLE_B,
+                                                  PET_PARTY_FRAME_TITLE_A);
     pet_party_frame.font_string_name:ClearAllPoints();
     pet_party_frame.font_string_name:SetPoint("CENTER", pet_party_frame);
     
@@ -381,9 +381,9 @@ function PetParty.OnEnterPetPartyFrame(self, motion)
     end
     
     self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_HIGHLIGHT_R,
-                                        PET_PARTY_FRAME_TITLE_HIGHLIGHT_G,
-                                        PET_PARTY_FRAME_TITLE_HIGHLIGHT_B,
-                                        PET_PARTY_FRAME_TITLE_HIGHLIGHT_A);
+                                       PET_PARTY_FRAME_TITLE_HIGHLIGHT_G,
+                                       PET_PARTY_FRAME_TITLE_HIGHLIGHT_B,
+                                       PET_PARTY_FRAME_TITLE_HIGHLIGHT_A);
 end
 
 -- Called when the mouse leaves a pet party frame.
@@ -395,14 +395,14 @@ function PetParty.OnLeavePetPartyFrame(self, motion)
     
     if (self ~= PetParty.pet_party_frame_selected) then
         self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_R,
-                                            PET_PARTY_FRAME_TITLE_G,
-                                            PET_PARTY_FRAME_TITLE_B,
-                                            PET_PARTY_FRAME_TITLE_A);
+                                           PET_PARTY_FRAME_TITLE_G,
+                                           PET_PARTY_FRAME_TITLE_B,
+                                           PET_PARTY_FRAME_TITLE_A);
     else
         self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_SELECTED_R,
-                                            PET_PARTY_FRAME_TITLE_SELECTED_G,
-                                            PET_PARTY_FRAME_TITLE_SELECTED_B,
-                                            PET_PARTY_FRAME_TITLE_SELECTED_A);
+                                           PET_PARTY_FRAME_TITLE_SELECTED_G,
+                                           PET_PARTY_FRAME_TITLE_SELECTED_B,
+                                           PET_PARTY_FRAME_TITLE_SELECTED_A);
     end
 end
 
