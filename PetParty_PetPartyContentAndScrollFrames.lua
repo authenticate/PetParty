@@ -124,7 +124,7 @@ function PetParty.AddPetPartyFrame(name)
         pet_party_frame.texture_background:SetTexture(0, 0, 0, 0);
         
         -- Create the pet party title frame.
-        pet_party_frame.font_string_title = pet_party_frame:CreateFontString();
+        pet_party_frame.font_string_name = pet_party_frame:CreateFontString();
         
         -- Update the allocated frame count.
         PetParty_PetPartyContentFrame.content.frame_count_allocated = PetParty_PetPartyContentFrame.content.frame_count_allocated + 1;
@@ -143,14 +143,14 @@ function PetParty.AddPetPartyFrame(name)
     
     pet_party_frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
     
-    pet_party_frame.font_string_title:SetFont(PET_PARTY_FRAME_FONT, PET_PARTY_FRAME_FONT_SIZE);
-    pet_party_frame.font_string_title:SetText(name);
-    pet_party_frame.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
+    pet_party_frame.font_string_name:SetFont(PET_PARTY_FRAME_FONT, PET_PARTY_FRAME_FONT_SIZE);
+    pet_party_frame.font_string_name:SetText(name);
+    pet_party_frame.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_R,
                                                    PET_PARTY_FRAME_TITLE_G,
                                                    PET_PARTY_FRAME_TITLE_B,
                                                    PET_PARTY_FRAME_TITLE_A);
-    pet_party_frame.font_string_title:ClearAllPoints();
-    pet_party_frame.font_string_title:SetPoint("CENTER", pet_party_frame);
+    pet_party_frame.font_string_name:ClearAllPoints();
+    pet_party_frame.font_string_name:SetPoint("CENTER", pet_party_frame);
     
     -- Update the pet party frame's pet information.
     pet_party_frame.pet_training_frame_id = nil;
@@ -380,7 +380,7 @@ function PetParty.OnEnterPetPartyFrame(self, motion)
         pet_party_frame_entered = self;
     end
     
-    self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_HIGHLIGHT_R,
+    self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_HIGHLIGHT_R,
                                         PET_PARTY_FRAME_TITLE_HIGHLIGHT_G,
                                         PET_PARTY_FRAME_TITLE_HIGHLIGHT_B,
                                         PET_PARTY_FRAME_TITLE_HIGHLIGHT_A);
@@ -394,12 +394,12 @@ function PetParty.OnLeavePetPartyFrame(self, motion)
     end
     
     if (self ~= PetParty.pet_party_frame_selected) then
-        self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_R,
+        self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_R,
                                             PET_PARTY_FRAME_TITLE_G,
                                             PET_PARTY_FRAME_TITLE_B,
                                             PET_PARTY_FRAME_TITLE_A);
     else
-        self.font_string_title:SetTextColor(PET_PARTY_FRAME_TITLE_SELECTED_R,
+        self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_SELECTED_R,
                                             PET_PARTY_FRAME_TITLE_SELECTED_G,
                                             PET_PARTY_FRAME_TITLE_SELECTED_B,
                                             PET_PARTY_FRAME_TITLE_SELECTED_A);
@@ -493,7 +493,7 @@ function PetParty.SerializePetParties()
         pet_party.ability_guids = {};
         
         -- Store the pet party's name.
-        pet_party.name = pet_party_frame.font_string_title:GetText();
+        pet_party.name = pet_party_frame.font_string_name:GetText();
         
         -- Store the pet party's training pet's GUID.
         pet_party.pet_training_frame_id = pet_party_frame.pet_training_frame_id;
@@ -530,7 +530,7 @@ function PetParty.UpdatePetPartyScrollBarLayout()
         if (PetParty_PetPartyContentFrame.content.frame_count > 0) then
             -- Calculate the height of the content frame.
             local frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
-            height_content_frame = frame.font_string_title:GetHeight() * PetParty_PetPartyContentFrame.content.frame_count;
+            height_content_frame = frame.font_string_name:GetHeight() * PetParty_PetPartyContentFrame.content.frame_count;
         end
     end
     

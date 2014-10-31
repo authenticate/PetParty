@@ -32,6 +32,8 @@ local TRAINING_PET_G = 0;
 local TRAINING_PET_B = 0;
 local TRAINING_PET_A = 0;
 
+local PET_INFORMATION_STRING_OFFSET_Y = 12;
+
 -- A flag if the training pet has been deserialized.
 local is_deserialized = false;
 
@@ -381,9 +383,29 @@ function PetParty.UpdateTrainingPetInformationFrame()
         
         -- If this pet has a custom name...
         if (customName ~= nil) and (customName ~= "") then
-            pet_information_frame.font_string_title:SetText(customName .. " (" .. speciesName .. ")");
+            -- Update the name.
+            pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PET_INFORMATION_STRING_OFFSET_Y * 2);
+            pet_information_frame.font_string_name:SetText(speciesName);
+            
+            -- Update the subname.
+            pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP", 0);
+            pet_information_frame.font_string_subname:SetText(customName);
+            
+            -- Update the training pet.
+            pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PET_INFORMATION_STRING_OFFSET_Y * 2);
+            pet_information_frame.font_string_training_pet:Show();
         else
-            pet_information_frame.font_string_title:SetText(speciesName);
+            -- Update the name.
+            pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PET_INFORMATION_STRING_OFFSET_Y);
+            pet_information_frame.font_string_name:SetText(speciesName);
+            
+            -- Update the subname.
+            pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP");
+            pet_information_frame.font_string_subname:SetText("");
+            
+            -- Update the training pet.
+            pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PET_INFORMATION_STRING_OFFSET_Y);
+            pet_information_frame.font_string_training_pet:Show();
         end
         
         -- Get the pet's statistics.
@@ -429,8 +451,13 @@ function PetParty.UpdateTrainingPetInformationFrame()
         end
     -- If there is not a training pet...
     else
-        -- Update the title.
-        pet_information_frame.font_string_title:SetText(PetParty.L["Drag a battle pet to train here."]);
+        -- Update the strings.
+        pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP");
+        pet_information_frame.font_string_name:SetText("");
+        pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP");
+        pet_information_frame.font_string_subname:SetText(PetParty.L["Drag a battle pet to train here."]);
+        pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP");
+        pet_information_frame.font_string_training_pet:Hide();
         
         -- Update the pet button.
         pet_information_frame.pet_button.background:Hide();

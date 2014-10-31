@@ -51,13 +51,7 @@ local PET_INFORMATION_PARTY_PET_INFORMATION_G = 0;
 local PET_INFORMATION_PARTY_PET_INFORMATION_B = 0;
 local PET_INFORMATION_PARTY_PET_INFORMATION_A = 0;
 
-local PET_INFORMATION_FONT = "Fonts\\FRIZQT__.TTF";
-local PET_INFORMATION_FONT_SIZE = 18;
-
-local PET_INFORMATION_TITLE_R = 1;
-local PET_INFORMATION_TITLE_G = 1;
-local PET_INFORMATION_TITLE_B = 1;
-local PET_INFORMATION_TITLE_A = 1;
+local PET_INFORMATION_STRING_OFFSET_Y = 12;
 
 -- A flag if a pet information frame is the cursor.
 PetParty.pet_information_frame_cursor = nil;
@@ -243,17 +237,31 @@ function PetParty.CreatePetInformationFrame(parent, name)
         end
     end
     
-    pet_information_frame.font_string_title = pet_information_frame:CreateFontString();
-    pet_information_frame.font_string_title:SetFont(PET_INFORMATION_FONT, PET_INFORMATION_FONT_SIZE);
-    pet_information_frame.font_string_title:SetTextColor(PET_INFORMATION_TITLE_R,
-                                                         PET_INFORMATION_TITLE_G,
-                                                         PET_INFORMATION_TITLE_B,
-                                                         PET_INFORMATION_TITLE_A);
-    pet_information_frame.font_string_title:SetJustifyH("LEFT");
-    pet_information_frame.font_string_title:ClearAllPoints();
-    pet_information_frame.font_string_title:SetPoint("TOP", pet_information_frame);
-    pet_information_frame.font_string_title:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT");
-    pet_information_frame.font_string_title:SetPoint("BOTTOMRIGHT", pet_information_frame);
+    pet_information_frame.font_string_name = pet_information_frame:CreateFontString();
+    pet_information_frame.font_string_name:SetFontObject("GameFontNormal");
+    pet_information_frame.font_string_name:SetJustifyH("LEFT");
+    pet_information_frame.font_string_name:ClearAllPoints();
+    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame);
+    pet_information_frame.font_string_name:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PADDING, 0);
+    pet_information_frame.font_string_name:SetPoint("BOTTOMRIGHT", pet_information_frame);
+    
+    pet_information_frame.font_string_subname = pet_information_frame:CreateFontString();
+    pet_information_frame.font_string_subname:SetFontObject("GameFontWhite");
+    pet_information_frame.font_string_subname:SetJustifyH("LEFT");
+    pet_information_frame.font_string_subname:ClearAllPoints();
+    pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame);
+    pet_information_frame.font_string_subname:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PADDING, 0);
+    pet_information_frame.font_string_subname:SetPoint("BOTTOMRIGHT", pet_information_frame);
+    
+    pet_information_frame.font_string_training_pet = pet_information_frame:CreateFontString();
+    pet_information_frame.font_string_training_pet:SetFontObject("GameFontWhite");
+    pet_information_frame.font_string_training_pet:SetJustifyH("LEFT");
+    pet_information_frame.font_string_training_pet:ClearAllPoints();
+    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame);
+    pet_information_frame.font_string_training_pet:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PADDING, 0);
+    pet_information_frame.font_string_training_pet:SetPoint("BOTTOMRIGHT", pet_information_frame);
+    pet_information_frame.font_string_training_pet:SetText(PetParty.L["(Training Pet)"]);
+    pet_information_frame.font_string_training_pet:Hide();
     
     -- Return the pet information frame.
     return pet_information_frame;
@@ -608,23 +616,60 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 -- Get the pet's statistics.
                 local health, maxHealth, attack, speed, rarity = C_PetJournal.GetPetStats(pet_information_frame.pet_guid);
                 
-                -- Update the title.
-                local title = ""
-                
+                -- If this pet has a custom name and is the training pet...
+                if (customName ~= nil) and (customName ~= "") and
+                   (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
+                    -- Update the name.
+                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PET_INFORMATION_STRING_OFFSET_Y * 2);
+                    pet_information_frame.font_string_name:SetText(speciesName);
+                    
+                    -- Update the subname.
+                    pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP", 0);
+                    pet_information_frame.font_string_subname:SetText(customName);
+                    
+                    -- Update the training pet.
+                    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PET_INFORMATION_STRING_OFFSET_Y * 2);
+                    pet_information_frame.font_string_training_pet:Show();
                 -- If this pet has a custom name...
-                if (customName ~= nil) and (customName ~= "") then
-                    title = customName .. " (" .. speciesName .. ")";
+                elseif (customName ~= nil) and (customName ~= "") then
+                    -- Update the name.
+                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PET_INFORMATION_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_name:SetText(speciesName);
+                    
+                    -- Update the subname.
+                    pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP", 0, -PET_INFORMATION_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_subname:SetText(customName);
+                    
+                    -- Update the training pet.
+                    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame);
+                    pet_information_frame.font_string_training_pet:Hide();
+                -- If this pet is the training pet...
+                elseif (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
+                    -- Update the name.
+                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PET_INFORMATION_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_name:SetText(speciesName);
+                    
+                    -- Update the subname.
+                    pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP");
+                    pet_information_frame.font_string_subname:SetText("");
+                    
+                    -- Update the training pet.
+                    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PET_INFORMATION_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_training_pet:Show();
+                -- The normal case...
                 else
-                    title = speciesName;
+                    -- Update the name.
+                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame);
+                    pet_information_frame.font_string_name:SetText(speciesName);
+                    
+                    -- Update the subname.
+                    pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame);
+                    pet_information_frame.font_string_subname:SetText("");
+                    
+                    -- Update the training pet.
+                    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame);
+                    pet_information_frame.font_string_training_pet:Hide();
                 end
-                
-                -- If this frame is the training pet frame.
-                if (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
-                    title = title .. " - T"
-                end
-                
-                -- Set the title.
-                pet_information_frame.font_string_title:SetText(title);
                 
                 -- Update the pet button's icon.
                 pet_information_frame.pet_button.icon:SetTexture(icon);
