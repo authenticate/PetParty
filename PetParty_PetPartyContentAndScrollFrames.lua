@@ -140,9 +140,20 @@ function PetParty.AddPetPartyFrame(name)
     pet_party_frame.pet_guids = {};
     pet_party_frame.ability_guids = {};
     
+    -- Initialize the current pets into the pet party.
     for i = 1, PetParty.PETS_PER_PARTY do
         pet_party_frame.pet_guids[i] = PetParty.GetPetGUIDPetInformationFrame(i);
         pet_party_frame.ability_guids[i] = PetParty.GetPetAbilityGUIDsPetInformationFrame(i);
+    end
+    
+    --
+    -- Initialize the current training pet into the pet party.
+    --
+    
+    -- If there is a training pet frame...
+    if (PetParty_PetPartyInformationFrame.training_pet_frame ~= nil) then
+        -- Set the training pet frame's ID to the new pet party frame.
+        pet_party_frame.pet_training_frame_id = PetParty_PetPartyInformationFrame.training_pet_frame.id;
     end
     
     -- Update the frame count.

@@ -34,7 +34,14 @@ end
 
 -- Called when the main frame's delete pet party button is clicked.
 function PetParty.OnClickMainFrameButtonDeletePetParty()
+    -- Delete the selected pet party frame.
     PetParty.DeletePetPartyFrame();
+    
+    -- If there's a selected pet party frame...
+    if (PetParty.pet_party_frame_selected) then
+        -- Simulate the selected pet party frame being selected.
+        PetParty.OnMouseUpPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
+    end
 end
 
 -- Called when the main frame receives an event.
@@ -103,6 +110,7 @@ function PetParty.OnLoadMainFrame()
             function (self)
                 local text = self.editBox:GetText();
                 if (text ~= nil) and (text ~= "") then
+                    -- Create a pet party frame.
                     PetParty.AddPetPartyFrame(text);
                 end
             end
