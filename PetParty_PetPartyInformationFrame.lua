@@ -701,9 +701,13 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 end
                 
                 -- Update the pet button's icon.
+                pet_information_frame.pet_button:Show();
+                pet_information_frame.pet_button.background:Show();
                 pet_information_frame.pet_button.icon:SetTexture(icon);
                 pet_information_frame.pet_button.level:SetShown(canBattle);
                 pet_information_frame.pet_button.level:SetText(level);
+                pet_information_frame.pet_button.level_background:Show();
+                pet_information_frame.pet_button.icon_border:Show();
                 pet_information_frame.pet_button.icon_border:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
                                                                             ITEM_QUALITY_COLORS[rarity - 1].g,
                                                                             ITEM_QUALITY_COLORS[rarity - 1].b);
@@ -721,6 +725,31 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                                                                                                 BUTTON_ICON_G,
                                                                                                 BUTTON_ICON_B,
                                                                                                 BUTTON_ICON_A);
+                end
+            else
+                -- Update the strings.
+                pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP");
+                pet_information_frame.font_string_name:SetText("");
+                pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP");
+                pet_information_frame.font_string_subname:SetText("");
+                pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP");
+                pet_information_frame.font_string_training_pet:Hide();
+                
+                -- Update the pet button.
+                pet_information_frame.pet_button:Hide();
+                pet_information_frame.pet_button.background:Hide();
+                pet_information_frame.pet_button.icon:SetTexture(nil);
+                pet_information_frame.pet_button.level:Hide();
+                pet_information_frame.pet_button.level_background:Hide();
+                pet_information_frame.pet_button.icon_border:Hide();
+                
+                -- For each potential pet ability...
+                for i = 1, #pet_information_frame.pet_ability_buttons do
+                    -- Update the pet ability button.
+                    pet_information_frame.pet_ability_buttons[i].texture:SetTexture(nil);
+                    
+                    -- Update the pet ability button icon.
+                    pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
                 end
             end
         end
