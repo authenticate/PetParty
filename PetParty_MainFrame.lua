@@ -157,15 +157,15 @@ function PetParty.OnShowMainFrame()
         if (PetPartyDB ~= nil) then
             -- Deserialize the pet parties.
             PetParty.DeserializePetParties();
-            
-            -- Update all pet frames' information.
-            for i = 1, PetParty.PETS_PER_PARTY do
-                PetParty.UpdatePetInformationPetInformationFrame(i);
-            end
         end
         
         -- Update the flag.
         is_deserialized = true;
+        
+        -- Update all pet frames' information.
+        for i = 1, PetParty.PETS_PER_PARTY do
+            PetParty.UpdatePetInformationPetInformationFrame(i);
+        end
     end
 end
 
