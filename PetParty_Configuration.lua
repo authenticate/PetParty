@@ -18,7 +18,7 @@
 -- along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 --
 
--- Pet Party namespace.
+-- Pet Party table.
 PetParty = {};
 
 --
