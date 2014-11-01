@@ -22,24 +22,11 @@
 -- Constants.
 --
 
-local PET_PARTY_FRAME_FONT = "Fonts\\FRIZQT__.TTF";
-local PET_PARTY_FRAME_FONT_SIZE = 18;
+local PET_PARTY_FRAME_FONT = "GameFontNormal";
+local PET_PARTY_FRAME_FONT_HIGHLIGHT = "GameFontHighlight";
+local PET_PARTY_FRAME_FONT_SELECTED = "GameFontGreen";
+
 local PET_PARTY_FRAME_SIZE = 22;
-
-local PET_PARTY_FRAME_TITLE_R = 1;
-local PET_PARTY_FRAME_TITLE_G = 1;
-local PET_PARTY_FRAME_TITLE_B = 1;
-local PET_PARTY_FRAME_TITLE_A = 1;
-
-local PET_PARTY_FRAME_TITLE_HIGHLIGHT_R = 0;
-local PET_PARTY_FRAME_TITLE_HIGHLIGHT_G = 0;
-local PET_PARTY_FRAME_TITLE_HIGHLIGHT_B = 1;
-local PET_PARTY_FRAME_TITLE_HIGHLIGHT_A = 1;
-
-local PET_PARTY_FRAME_TITLE_SELECTED_R = 0;
-local PET_PARTY_FRAME_TITLE_SELECTED_G = 1;
-local PET_PARTY_FRAME_TITLE_SELECTED_B = 0;
-local PET_PARTY_FRAME_TITLE_SELECTED_A = 1;
 
 local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP - PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT - 26;
 local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_TOP + PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT;
@@ -143,12 +130,8 @@ function PetParty.AddPetPartyFrame(name)
     
     pet_party_frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
     
-    pet_party_frame.font_string_name:SetFont(PET_PARTY_FRAME_FONT, PET_PARTY_FRAME_FONT_SIZE);
+    pet_party_frame.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT);
     pet_party_frame.font_string_name:SetText(name);
-    pet_party_frame.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_R,
-                                                  PET_PARTY_FRAME_TITLE_G,
-                                                  PET_PARTY_FRAME_TITLE_B,
-                                                  PET_PARTY_FRAME_TITLE_A);
     pet_party_frame.font_string_name:ClearAllPoints();
     pet_party_frame.font_string_name:SetPoint("CENTER", pet_party_frame);
     
@@ -380,10 +363,7 @@ function PetParty.OnEnterPetPartyFrame(self, motion)
         pet_party_frame_entered = self;
     end
     
-    self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_HIGHLIGHT_R,
-                                       PET_PARTY_FRAME_TITLE_HIGHLIGHT_G,
-                                       PET_PARTY_FRAME_TITLE_HIGHLIGHT_B,
-                                       PET_PARTY_FRAME_TITLE_HIGHLIGHT_A);
+    self.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT_HIGHLIGHT);
 end
 
 -- Called when the mouse leaves a pet party frame.
@@ -394,15 +374,9 @@ function PetParty.OnLeavePetPartyFrame(self, motion)
     end
     
     if (self ~= PetParty.pet_party_frame_selected) then
-        self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_R,
-                                           PET_PARTY_FRAME_TITLE_G,
-                                           PET_PARTY_FRAME_TITLE_B,
-                                           PET_PARTY_FRAME_TITLE_A);
+        self.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT);
     else
-        self.font_string_name:SetTextColor(PET_PARTY_FRAME_TITLE_SELECTED_R,
-                                           PET_PARTY_FRAME_TITLE_SELECTED_G,
-                                           PET_PARTY_FRAME_TITLE_SELECTED_B,
-                                           PET_PARTY_FRAME_TITLE_SELECTED_A);
+        self.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT_SELECTED);
     end
 end
 
