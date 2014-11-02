@@ -505,26 +505,35 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
             -- Create a helper function.
             local SetPetAbilityGUIDsPetInformationFrameButtons =
                 function (frame)
-                    -- Get the pet's information.
-                    local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-                          speciesName, icon, petType, companionID,
-                          tooltip, description, isWild, canBattle, isTradable,
-                          isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(frame.pet_guid);
-                    
-                    -- Get the pet's abilities.
-                    local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
-                    
-                    -- For each of the pet's abilities...
-                    for i = 1, #frame.pet_ability_buttons do
-                        -- Get the ability information.
-                        local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
+                    -- Sanity.
+                    if (frame.pet_guid ~= nil) and (frame.pet_guid ~= "") then
+                        -- Get the pet's information.
+                        local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
+                              speciesName, icon, petType, companionID,
+                              tooltip, description, isWild, canBattle, isTradable,
+                              isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(frame.pet_guid);
                         
-                        -- Update the pet ability button.
-                        frame.pet_ability_buttons[i].ability_guid = idTable[i];
-                        frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
+                        -- Get the pet's abilities.
+                        local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
                         
-                        -- Update the pet ability button icon.
-                        frame.pet_ability_buttons[i].icon:Hide();
+                        -- For each of the pet's abilities...
+                        for i = 1, #frame.pet_ability_buttons do
+                            -- Get the ability information.
+                            local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
+                            
+                            -- Update the pet ability button.
+                            frame.pet_ability_buttons[i].ability_guid = idTable[i];
+                            frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
+                            frame.pet_ability_buttons[i].icon:Hide();
+                        end
+                    else
+                        -- For each of the pet's abilities...
+                        for i = 1, #frame.pet_ability_buttons do
+                            -- Update the pet ability button.
+                            frame.pet_ability_buttons[i].ability_guid = nil;
+                            frame.pet_ability_buttons[i].texture:SetTexture(nil);
+                            frame.pet_ability_buttons[i].icon:Hide();
+                        end
                     end
                 end
             ;
