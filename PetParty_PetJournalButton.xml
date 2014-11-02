@@ -51,19 +51,29 @@
                 </Texture>
             </Layer>
         </Layers>
-        <Frames>
-            <GameTooltip name="$parent_Tooltip" inherits="GameTooltipTemplate"/>
-        </Frames>
         <HighlightTexture alphaMode="ADD" file="Interface\Minimap\UI-Minimap-ZoomButton-Highlight"/>
         <Scripts>
             <OnClick>
                 PetParty.OnClickPetJournalButton(button, down);
             </OnClick>
             <OnEnter>
-                PetParty.OnEnterPetJournalButton();
+                PetParty_Tooltip:ClearLines();
+                PetParty_Tooltip:SetOwner(self, "ANCHOR_RIGHT");
+                PetParty_Tooltip:SetBackdropColor(PetParty.TOOLTIP_BACKGROUND_R,
+                                                  PetParty.TOOLTIP_BACKGROUND_G,
+                                                  PetParty.TOOLTIP_BACKGROUND_B);
+                PetParty_Tooltip:AddLine(PetParty.L["Pet Party"],
+                                                    PetParty.TOOLTIP_TITLE_R,
+                                                    PetParty.TOOLTIP_TITLE_G,
+                                                    PetParty.TOOLTIP_TITLE_B);
+                PetParty_Tooltip:AddLine(PetParty.L["Creates groups of pets for the pet battle system."],
+                                                    PetParty.TOOLTIP_DESCRIPTION_R,
+                                                    PetParty.TOOLTIP_DESCRIPTION_G,
+                                                    PetParty.TOOLTIP_DESCRIPTION_B);
+                PetParty_Tooltip:Show();
             </OnEnter>
             <OnLeave>
-                PetParty.OnLeavePetJournalButton();
+                PetParty_Tooltip:Hide();
             </OnLeave>
             <OnLoad>
                 PetParty.OnLoadPetJournalButton();

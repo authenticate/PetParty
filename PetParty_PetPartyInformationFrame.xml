@@ -144,6 +144,21 @@
                     <OnClick>
                         PetParty.OnClickPetPartyInformationFrameButtonActivate();
                     </OnClick>
+                    <OnEnter>
+                        PetParty_Tooltip:ClearLines();
+                        PetParty_Tooltip:SetOwner(self, "ANCHOR_RIGHT");
+                        PetParty_Tooltip:SetBackdropColor(PetParty.TOOLTIP_BACKGROUND_R,
+                                                          PetParty.TOOLTIP_BACKGROUND_G,
+                                                          PetParty.TOOLTIP_BACKGROUND_B);
+                        PetParty_Tooltip:AddLine(PetParty.L["Loads the configuration into the Battle Pet Slots."],
+                                                            PetParty.TOOLTIP_TITLE_R,
+                                                            PetParty.TOOLTIP_TITLE_G,
+                                                            PetParty.TOOLTIP_TITLE_B);
+                        PetParty_Tooltip:Show();
+                    </OnEnter>
+                    <OnLeave>
+                        PetParty_Tooltip:Hide();
+                    </OnLeave>
                 </Scripts>
             </Button>
             <Button name="$parent_Button_Save" inherits="OptionsButtonTemplate" hidden="false">
@@ -151,6 +166,21 @@
                     <OnClick>
                         PetParty.OnClickPetPartyInformationFrameButtonSave();
                     </OnClick>
+                    <OnEnter>
+                        PetParty_Tooltip:ClearLines();
+                        PetParty_Tooltip:SetOwner(self, "ANCHOR_RIGHT");
+                        PetParty_Tooltip:SetBackdropColor(PetParty.TOOLTIP_BACKGROUND_R,
+                                                          PetParty.TOOLTIP_BACKGROUND_G,
+                                                          PetParty.TOOLTIP_BACKGROUND_B);
+                        PetParty_Tooltip:AddLine(PetParty.L["Stores the configuration into the currently selected Pet Party."],
+                                                            PetParty.TOOLTIP_TITLE_R,
+                                                            PetParty.TOOLTIP_TITLE_G,
+                                                            PetParty.TOOLTIP_TITLE_B);
+                        PetParty_Tooltip:Show();
+                    </OnEnter>
+                    <OnLeave>
+                        PetParty_Tooltip:Hide();
+                    </OnLeave>
                 </Scripts>
             </Button>
         </Frames>
