@@ -368,7 +368,9 @@ function PetParty.OnEventPetPartyInformationFrame(self, event, arg1, ...)
     if (event == "PET_JOURNAL_LIST_UPDATE") then
         -- Load some initial pets into the pet frames.
         for i = 1, PetParty.PETS_PER_PARTY do
+            -- If the frame does not have a pet...
             if (PetParty_PetPartyInformationFrame.pet_frames[i].pet_guid == nil) then
+                -- Load the pet in the corresponding pet load out into the frame.
                 local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(i);
                 if (not locked) and (petGUID ~= nil) then
                     PetParty.SetPetGUIDPetInformationFrame(i, petGUID);
