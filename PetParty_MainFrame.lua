@@ -58,6 +58,14 @@ function PetParty.OnEventMainFrame(self, event, arg1, ...)
         PetParty_MainFrame:SetPoint("TOPLEFT", PetJournal, "TOPRIGHT");
         PetParty_MainFrame:SetPoint("BOTTOM", PetJournal);
         PetParty_MainFrame:SetWidth(PetParty.MAIN_FRAME_WIDTH);
+    elseif (event == "PET_JOURNAL_LIST_UPDATE") then
+        -- Update the training pet frame's information.
+        PetParty.UpdateTrainingPetInformationFrame();
+        
+        -- Update all pet frames' information.
+        for i = 1, PetParty.PETS_PER_PARTY do
+            PetParty.UpdatePetInformationPetInformationFrame(i);
+        end
     elseif (event == "PLAYER_ENTERING_WORLD") then
         if (PetPartyCharacterDB ~= nil) then
             if (PetPartyCharacterDB.main_frame_hidden ~= nil) then
@@ -92,6 +100,7 @@ end
 function PetParty.OnLoadMainFrame()
     -- Register the main frame for events.
     PetParty_MainFrame:RegisterEvent("ADDON_LOADED");
+    PetParty_MainFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
     PetParty_MainFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
     PetParty_MainFrame:RegisterEvent("PLAYER_LOGOUT");
     
