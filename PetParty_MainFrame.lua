@@ -154,7 +154,8 @@ function PetParty.OnLoadMainFrame()
     };
     
     -- Localize the UI.
-    PetParty_MainFrame_Title_Font_String:SetText(PetParty.L["Pet Party"]);
+    PetParty_MainFrame_Font_String_Title:SetText(PetParty.L["Pet Party"]);
+    PetParty_MainFrame_Font_String_Pet_Parties:SetText(PetParty.L["Pet Parties"]);
     PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L["Create"]);
     PetParty_MainFrame_Button_Delete_Pet_Party:SetText(PetParty.L["Delete"]);
 end
@@ -187,10 +188,16 @@ function PetParty.UpdateMainFrameLayout()
     local start_x = PetParty.MAIN_FRAME_OFFSET_LEFT;
     local start_y = PetParty.MAIN_FRAME_OFFSET_TOP - PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT;
     
+    -- Update the position of the pet parties label.
+    PetParty_MainFrame_Font_String_Pet_Parties:ClearAllPoints();
+    PetParty_MainFrame_Font_String_Pet_Parties:SetPoint("TOPLEFT", start_x, start_y);
+    PetParty_MainFrame_Font_String_Pet_Parties:SetPoint("RIGHT", PetParty.MAIN_FRAME_OFFSET_RIGHT, 0);
+    PetParty_MainFrame_Font_String_Pet_Parties:SetHeight(PetParty.FONT_STRING_HEIGHT);
+    
     -- Calculate the offsets.
     local offset_x = (PetParty_MainFrame:GetWidth() - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT - button_width ) /
                      (PET_PARTY_BUTTON_COUNT + 1);
-    local offset_y = 0;
+    local offset_y = -PetParty.FONT_STRING_HEIGHT - PetParty.FONT_STRING_PADDING - PetParty.PADDING;
     
     -- Update the position of the create pet party button.
     PetParty_MainFrame_Button_Create_Pet_Party:ClearAllPoints();

@@ -49,13 +49,14 @@
                         </Anchor>
                     </Anchors>
                 </Texture>
-                <FontString name="$parent_Title_Font_String" inherits="GameFontNormal">
+                <FontString name="$parent_Font_String_Title" inherits="GameFontNormal">
                     <Anchors>
                         <Anchor point="TOP">
                             <Offset x="0" y="-4"/>
                         </Anchor>
                     </Anchors>
                 </FontString>
+                <FontString name="$parent_Font_String_Pet_Parties" inherits="GameFontNormal"/>
             </Layer>
         </Layers>
         <Frames>

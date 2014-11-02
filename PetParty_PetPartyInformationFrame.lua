@@ -22,8 +22,6 @@
 -- Constants.
 --
 
-local PADDING = 2;
-
 local BUTTON_WIDTH = 22;
 local BUTTON_HEIGHT = 22;
 
@@ -159,9 +157,9 @@ function PetParty.CreatePetInformationFrame(parent, name)
     for j = 1, PetParty.ABILITY_GROUPS_PER_PET do
         for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
             -- Create the button.
-            local offset_x = (PADDING) +
+            local offset_x = (PetParty.PADDING) +
                              (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
-                             (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
+                             (PetParty.PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
                              (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - k));
             local offset_y = BUTTON_OFFSET_Y;
             
@@ -250,7 +248,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
     pet_information_frame.font_string_name:SetJustifyH("LEFT");
     pet_information_frame.font_string_name:ClearAllPoints();
     pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame);
-    pet_information_frame.font_string_name:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PADDING, 0);
+    pet_information_frame.font_string_name:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PetParty.PADDING, 0);
     pet_information_frame.font_string_name:SetPoint("BOTTOMRIGHT", pet_information_frame);
     
     pet_information_frame.font_string_subname = pet_information_frame:CreateFontString();
@@ -258,7 +256,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
     pet_information_frame.font_string_subname:SetJustifyH("LEFT");
     pet_information_frame.font_string_subname:ClearAllPoints();
     pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame);
-    pet_information_frame.font_string_subname:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PADDING, 0);
+    pet_information_frame.font_string_subname:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PetParty.PADDING, 0);
     pet_information_frame.font_string_subname:SetPoint("BOTTOMRIGHT", pet_information_frame);
     
     pet_information_frame.font_string_training_pet = pet_information_frame:CreateFontString();
@@ -266,7 +264,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
     pet_information_frame.font_string_training_pet:SetJustifyH("LEFT");
     pet_information_frame.font_string_training_pet:ClearAllPoints();
     pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame);
-    pet_information_frame.font_string_training_pet:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PADDING, 0);
+    pet_information_frame.font_string_training_pet:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PetParty.PADDING, 0);
     pet_information_frame.font_string_training_pet:SetPoint("BOTTOMRIGHT", pet_information_frame);
     pet_information_frame.font_string_training_pet:SetText(PetParty.L["(Training Pet)"]);
     pet_information_frame.font_string_training_pet:Hide();
@@ -389,7 +387,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     PetParty_PetPartyInformationFrame:ClearAllPoints();
     PetParty_PetPartyInformationFrame:SetPoint("LEFT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_LEFT, 0);
     PetParty_PetPartyInformationFrame:SetPoint("RIGHT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_RIGHT, 0);
-    PetParty_PetPartyInformationFrame:SetPoint("TOP", PetParty_PetPartyScrollFrame, "BOTTOM", 0, -PADDING);
+    PetParty_PetPartyInformationFrame:SetPoint("TOP", PetParty_PetPartyScrollFrame, "BOTTOM", 0, -PetParty.PADDING);
     PetParty_PetPartyInformationFrame:SetPoint("BOTTOM", PetParty_MainFrame, "BOTTOM", 0, PetParty.MAIN_FRAME_OFFSET_BOTTOM);
     
     -- Register the per party information frame for events.

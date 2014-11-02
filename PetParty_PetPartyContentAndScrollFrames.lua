@@ -28,8 +28,15 @@ local PET_PARTY_FRAME_FONT_SELECTED = "GameFontGreen";
 
 local PET_PARTY_FRAME_SIZE = 22;
 
-local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP - PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT - 26;
-local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_TOP + PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT;
+local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP -
+                                PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT -
+                                PetParty.FONT_STRING_HEIGHT -
+                                PetParty.FONT_STRING_PADDING -
+                                PetParty.PADDING -
+                                26;
+
+local SCROLL_FRAME_OFFSET_BOTTOM = -PetParty.MAIN_FRAME_OFFSET_TOP +
+                                   PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT;
 
 local SCROLL_BAR_ALPHA = 0.4;
 
