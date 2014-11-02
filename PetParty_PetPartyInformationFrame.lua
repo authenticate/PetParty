@@ -27,15 +27,13 @@ local PADDING = 2;
 local BUTTON_WIDTH = 22;
 local BUTTON_HEIGHT = 22;
 
-local BUTTON_ICON_WIDTH = 4;
-local BUTTON_ICON_HEIGHT = 4;
+local BUTTON_ICON_WIDTH = 16;
+local BUTTON_ICON_HEIGHT = 16;
 
-local BUTTON_ICON_R = 0;
-local BUTTON_ICON_G = 1;
-local BUTTON_ICON_B = 0;
-local BUTTON_ICON_A = 1;
+local BUTTON_OFFSET_Y = -6;
 
-local BUTTON_OFFSET_Y = -BUTTON_ICON_HEIGHT;
+local BUTTON_ICON_OFFSET_X = -3;
+local BUTTON_ICON_OFFSET_Y = 8;
 
 local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT / PetParty.PETS_PER_PARTY;
 
@@ -160,7 +158,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
                              (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
                              (PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
                              (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - k));
-            local offset_y = PADDING + BUTTON_OFFSET_Y;
+            local offset_y = BUTTON_OFFSET_Y;
             
             local button = CreateFrame("Button", nil, pet_information_frame);
             button:ClearAllPoints();
@@ -220,14 +218,18 @@ function PetParty.CreatePetInformationFrame(parent, name)
             
             -- Create the button icon.
             local button_icon = CreateFrame("Frame", nil, button);
+            button_icon:Hide();
             button_icon:ClearAllPoints();
-            button_icon:SetPoint("BOTTOM", button, "TOP", 0, -BUTTON_OFFSET_Y);
+            button_icon:SetPoint("RIGHT", pet_information_frame, (-offset_x) + BUTTON_ICON_OFFSET_X, (-offset_y) + BUTTON_ICON_OFFSET_Y);
             button_icon:SetWidth(BUTTON_ICON_WIDTH);
             button_icon:SetHeight(BUTTON_ICON_HEIGHT);
             
             button_icon.texture = button_icon:CreateTexture();
             button_icon.texture:SetAllPoints();
-            button_icon.texture:SetTexture(0, 0, 0, 0);
+            
+            -- Magic numbers for a "star" from Blizzard's UI source.
+            button_icon.texture:SetTexture("Interface\\PetBattles\\PetJournal");
+            button_icon.texture:SetTexCoord(0.11328125, 0.16210938, 0.02246094, 0.04687500);
             
             -- Store the button icon.
             button.icon = button_icon;
@@ -516,7 +518,7 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
                         frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
                         
                         -- Update the pet ability button icon.
-                        frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+                        frame.pet_ability_buttons[i].icon:Hide();
                     end
                 end
             ;
@@ -715,16 +717,13 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 -- For each pet ability button...
                 for i = 1, #pet_information_frame.pet_ability_buttons do
                     -- Update the pet ability button icon.
-                    pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+                    pet_information_frame.pet_ability_buttons[i].icon:Hide();
                 end
                 
                 -- For each active pet ability button...
                 for i = 1, #pet_information_frame.pet_ability_buttons_active do
                     -- Update the pet ability button icon.
-                    pet_information_frame.pet_ability_buttons_active[i].icon.texture:SetTexture(BUTTON_ICON_R,
-                                                                                                BUTTON_ICON_G,
-                                                                                                BUTTON_ICON_B,
-                                                                                                BUTTON_ICON_A);
+                    pet_information_frame.pet_ability_buttons_active[i].icon:Show();
                 end
             else
                 -- Update the strings.
@@ -749,7 +748,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                     pet_information_frame.pet_ability_buttons[i].texture:SetTexture(nil);
                     
                     -- Update the pet ability button icon.
-                    pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+                    pet_information_frame.pet_ability_buttons[i].icon:Hide();
                 end
             end
         end

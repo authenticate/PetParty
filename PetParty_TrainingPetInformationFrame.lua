@@ -22,11 +22,6 @@
 -- Constants.
 --
 
-local BUTTON_ICON_R = 0;
-local BUTTON_ICON_G = 1;
-local BUTTON_ICON_B = 0;
-local BUTTON_ICON_A = 1;
-
 local TRAINING_PET_R = 0;
 local TRAINING_PET_G = 0;
 local TRAINING_PET_B = 0;
@@ -379,7 +374,7 @@ function PetParty.SetPetGUIDTrainingPetFrame(pet_guid)
         pet_information_frame.pet_ability_buttons[i].ability_guid = idTable[i];
         pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
         
-        pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+        pet_information_frame.pet_ability_buttons[i].icon:Hide();
     end
 end
 
@@ -465,16 +460,13 @@ function PetParty.UpdateTrainingPetInformationFrame()
         -- For each pet ability button...
         for i = 1, #pet_information_frame.pet_ability_buttons do
             -- Update the pet ability button icon.
-            pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+            pet_information_frame.pet_ability_buttons[i].icon:Hide();
         end
         
         -- For each active pet ability button...
         for i = 1, #pet_information_frame.pet_ability_buttons_active do
             -- Update the pet ability button icon.
-            pet_information_frame.pet_ability_buttons_active[i].icon.texture:SetTexture(BUTTON_ICON_R,
-                                                                                        BUTTON_ICON_G,
-                                                                                        BUTTON_ICON_B,
-                                                                                        BUTTON_ICON_A);
+            pet_information_frame.pet_ability_buttons_active[i].icon:Show();
         end
     -- If there is not a training pet...
     else
@@ -500,7 +492,7 @@ function PetParty.UpdateTrainingPetInformationFrame()
             pet_information_frame.pet_ability_buttons[i].texture:SetTexture(nil);
             
             -- Update the pet ability button icon.
-            pet_information_frame.pet_ability_buttons[i].icon.texture:SetTexture(0, 0, 0, 0);
+            pet_information_frame.pet_ability_buttons[i].icon:Hide();
         end
     end
 end
