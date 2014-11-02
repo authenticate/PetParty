@@ -33,6 +33,9 @@ PetParty.PETS_PER_PARTY = 3;
 
 PetParty.PADDING = 2;
 
+PetParty.BUTTON_WIDTH = 22;
+PetParty.BUTTON_HEIGHT = 22;
+
 PetParty.FONT_STRING_HEIGHT = 18;
 PetParty.FONT_STRING_PADDING = 4;
 
@@ -42,9 +45,10 @@ PetParty.MAIN_FRAME_OFFSET_RIGHT = -14;
 PetParty.MAIN_FRAME_OFFSET_TOP = -34;
 PetParty.MAIN_FRAME_OFFSET_BOTTOM = 14;
 
+PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y = 12;
 PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT = 175;
 
-PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT = 60;
+PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT = 42;
 
 -- TODO: This color is inconsistent with Blizzard's default tooltips.  Does anyone know the correct color?
 PetParty.TOOLTIP_BACKGROUND_R = 0;

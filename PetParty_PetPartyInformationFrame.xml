@@ -138,6 +138,11 @@
     </Button>
     
     <Frame name="PetParty_PetPartyInformationFrame" parent="PetParty_MainFrame" hidden="false" enableMouse="false" movable="false" resizable="false">
+        <Layers>
+            <Layer level="ARTWORK">
+                <FontString name="$parent_Font_String_Configuration" inherits="GameFontNormal"/>
+            </Layer>
+        </Layers>
         <Frames>
             <Button name="$parent_Button_Activate" inherits="OptionsButtonTemplate" hidden="false">
                 <Scripts>

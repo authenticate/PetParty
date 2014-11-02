@@ -22,9 +22,6 @@
 -- Constants.
 --
 
-local BUTTON_WIDTH = 22;
-local BUTTON_HEIGHT = 22;
-
 local BUTTON_ICON_WIDTH = 16;
 local BUTTON_ICON_HEIGHT = 16;
 
@@ -38,7 +35,9 @@ local BUTTON_ICON_TEXTURE_COORDINATE_RIGHT = 0.16210938;
 local BUTTON_ICON_TEXTURE_COORDINATE_TOP = 0.02246094;
 local BUTTON_ICON_TEXTURE_COORDINATE_BOTTOM = 0.04687500;
 
-local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT / PetParty.PETS_PER_PARTY;
+local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = (PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT - PetParty.FONT_STRING_HEIGHT -
+                                                      PetParty.FONT_STRING_PADDING - PetParty.PADDING - PetParty.BUTTON_HEIGHT) /
+                                                     PetParty.PETS_PER_PARTY;
 
 local PET_INFORMATION_PARTY_BUTTON_COUNT = 2;
 
@@ -51,8 +50,6 @@ local PET_INFORMATION_PARTY_PET_INFORMATION_R = 0;
 local PET_INFORMATION_PARTY_PET_INFORMATION_G = 0;
 local PET_INFORMATION_PARTY_PET_INFORMATION_B = 0;
 local PET_INFORMATION_PARTY_PET_INFORMATION_A = 0;
-
-local PET_INFORMATION_STRING_OFFSET_Y = 12;
 
 -- A flag if a pet information frame is the cursor.
 PetParty.pet_information_frame_cursor = nil;
@@ -158,16 +155,16 @@ function PetParty.CreatePetInformationFrame(parent, name)
         for k = 1, PetParty.ABILITIES_PER_ABILITY_GROUP do
             -- Create the button.
             local offset_x = (PetParty.PADDING) +
-                             (BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
+                             (PetParty.BUTTON_WIDTH * PetParty.ABILITIES_PER_ABILITY_GROUP * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
                              (PetParty.PADDING * 2 * (PetParty.ABILITY_GROUPS_PER_PET - j)) +
-                             (BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - k));
+                             (PetParty.BUTTON_WIDTH * (PetParty.ABILITIES_PER_ABILITY_GROUP - k));
             local offset_y = BUTTON_OFFSET_Y;
             
             local button = CreateFrame("Button", nil, pet_information_frame);
             button:ClearAllPoints();
             button:SetPoint("RIGHT", pet_information_frame, -offset_x, offset_y);
-            button:SetWidth(BUTTON_WIDTH);
-            button:SetHeight(BUTTON_HEIGHT);
+            button:SetWidth(PetParty.BUTTON_WIDTH);
+            button:SetHeight(PetParty.BUTTON_HEIGHT);
             
             -- Add a handler for when the mouse clicks a pet party information ability button.
             button:SetScript("OnClick",
@@ -418,7 +415,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     
     local parents = { PetParty_PetPartyInformationFrame };
     local anchors = { "TOPLEFT", "BOTTOMLEFT", "BOTTOMLEFT" };
-    local offset_y_s = { -BUTTON_HEIGHT, 0, 0 };
+    local offset_y_s = { -PetParty.FONT_STRING_HEIGHT - PetParty.PADDING - PetParty.BUTTON_HEIGHT, 0, 0 };
     
     -- For each pet...
     for i = 1, PetParty.PETS_PER_PARTY do
@@ -440,7 +437,8 @@ function PetParty.OnLoadPetPartyInformationFrame()
         PetParty_PetPartyInformationFrame.pet_frames[i] = pet_information_frame;
     end
     
-    -- Localize the buttons.
+    -- Localize the UI.
+    PetParty_PetPartyInformationFrame_Font_String_Configuration:SetText(PetParty.L["Battle Pet Slots' Configuration"]);
     PetParty_PetPartyInformationFrame_Button_Activate:SetText(PetParty.L["Activate"]);
     PetParty_PetPartyInformationFrame_Button_Save:SetText(PetParty.L["Save"]);
     
@@ -602,17 +600,20 @@ function PetParty.SetPetAbilityGUIDsPetInformationFrame(slot_index, ability_guid
         -- Reset the ability GUIDs.
         pet_information_frame.pet_ability_buttons_active = {};
         
-        -- For each ability GUID...
-        for i = 1, #ability_guids do
-            -- For each ability button...
-            for j = 1, #pet_information_frame.pet_ability_buttons do
-                -- Get the ability GUID.
-                local ability_guid = ability_guids[i];
-                
-                -- Get the ability button.
-                local ability_button = pet_information_frame.pet_ability_buttons[j];
-                if (ability_button.ability_guid == ability_guid) then
-                    table.insert(pet_information_frame.pet_ability_buttons_active, ability_button);
+        -- Sanity.
+        if (ability_guids ~= nil) then
+            -- For each ability GUID...
+            for i = 1, #ability_guids do
+                -- For each ability button...
+                for j = 1, #pet_information_frame.pet_ability_buttons do
+                    -- Get the ability GUID.
+                    local ability_guid = ability_guids[i];
+                    
+                    -- Get the ability button.
+                    local ability_button = pet_information_frame.pet_ability_buttons[j];
+                    if (ability_button.ability_guid == ability_guid) then
+                        table.insert(pet_information_frame.pet_ability_buttons_active, ability_button);
+                    end
                 end
             end
         end
@@ -625,9 +626,15 @@ function PetParty.UpdatePetInformationFrameLayout()
     local button_width = PetParty_PetPartyInformationFrame_Button_Activate:GetWidth() +
                          PetParty_PetPartyInformationFrame_Button_Save:GetWidth();
     
+    -- Update the position of the pet information frame configuration label.
+    PetParty_PetPartyInformationFrame_Font_String_Configuration:ClearAllPoints();
+    PetParty_PetPartyInformationFrame_Font_String_Configuration:SetPoint("TOPLEFT", 0, 0);
+    PetParty_PetPartyInformationFrame_Font_String_Configuration:SetPoint("RIGHT", 0, 0);
+    PetParty_PetPartyInformationFrame_Font_String_Configuration:SetHeight(PetParty.FONT_STRING_HEIGHT);
+    
     -- Calculate the offsets.
     local offset_x = (PetParty_PetPartyInformationFrame:GetWidth() - button_width ) / (PET_INFORMATION_PARTY_BUTTON_COUNT + 1);
-    local offset_y = 0;
+    local offset_y = -PetParty.FONT_STRING_HEIGHT - PetParty.PADDING;
     
     -- Update the position of the activate pet information frame button.
     PetParty_PetPartyInformationFrame_Button_Activate:ClearAllPoints();
@@ -666,7 +673,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 if (customName ~= nil) and (customName ~= "") and
                    (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
                     -- Update the name.
-                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PET_INFORMATION_STRING_OFFSET_Y * 2);
+                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y * 2);
                     pet_information_frame.font_string_name:SetText(speciesName);
                     
                     -- Update the subname.
@@ -674,16 +681,16 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                     pet_information_frame.font_string_subname:SetText(customName);
                     
                     -- Update the training pet.
-                    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PET_INFORMATION_STRING_OFFSET_Y * 2);
+                    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y * 2);
                     pet_information_frame.font_string_training_pet:Show();
                 -- If this pet has a custom name...
                 elseif (customName ~= nil) and (customName ~= "") then
                     -- Update the name.
-                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PET_INFORMATION_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
                     pet_information_frame.font_string_name:SetText(speciesName);
                     
                     -- Update the subname.
-                    pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP", 0, -PET_INFORMATION_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
                     pet_information_frame.font_string_subname:SetText(customName);
                     
                     -- Update the training pet.
@@ -692,7 +699,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 -- If this pet is the training pet...
                 elseif (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
                     -- Update the name.
-                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PET_INFORMATION_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
                     pet_information_frame.font_string_name:SetText(speciesName);
                     
                     -- Update the subname.
@@ -700,7 +707,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                     pet_information_frame.font_string_subname:SetText("");
                     
                     -- Update the training pet.
-                    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PET_INFORMATION_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
                     pet_information_frame.font_string_training_pet:Show();
                 -- The normal case...
                 else
