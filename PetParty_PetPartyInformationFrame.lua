@@ -34,6 +34,11 @@ local BUTTON_OFFSET_Y = -6;
 
 local BUTTON_ICON_OFFSET_X = -3;
 local BUTTON_ICON_OFFSET_Y = 8;
+local BUTTON_ICON_TEXTURE = "Interface\\PetBattles\\PetJournal";
+local BUTTON_ICON_TEXTURE_COORDINATE_LEFT = 0.11328125;
+local BUTTON_ICON_TEXTURE_COORDINATE_RIGHT = 0.16210938;
+local BUTTON_ICON_TEXTURE_COORDINATE_TOP = 0.02246094;
+local BUTTON_ICON_TEXTURE_COORDINATE_BOTTOM = 0.04687500;
 
 local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT / PetParty.PETS_PER_PARTY;
 
@@ -226,10 +231,11 @@ function PetParty.CreatePetInformationFrame(parent, name)
             
             button_icon.texture = button_icon:CreateTexture();
             button_icon.texture:SetAllPoints();
-            
-            -- Magic numbers for a "star" from Blizzard's UI source.
-            button_icon.texture:SetTexture("Interface\\PetBattles\\PetJournal");
-            button_icon.texture:SetTexCoord(0.11328125, 0.16210938, 0.02246094, 0.04687500);
+            button_icon.texture:SetTexture(BUTTON_ICON_TEXTURE);
+            button_icon.texture:SetTexCoord(BUTTON_ICON_TEXTURE_COORDINATE_LEFT,
+                                            BUTTON_ICON_TEXTURE_COORDINATE_RIGHT,
+                                            BUTTON_ICON_TEXTURE_COORDINATE_TOP,
+                                            BUTTON_ICON_TEXTURE_COORDINATE_BOTTOM);
             
             -- Store the button icon.
             button.icon = button_icon;
