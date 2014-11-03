@@ -28,7 +28,7 @@
                 <Texture atlas="PetList-ButtonBackground" parentKey="background"/>   
             </Layer>
             <Layer level="BORDER">
-                <Texture name="$parentIcon" parentKey="icon">
+                <Texture name="$parent_Icon" parentKey="icon">
                     <Size x="38" y="38"/>
                     <Anchors>
                         <Anchor point="TOPLEFT"/>
@@ -36,7 +36,7 @@
                 </Texture>
             </Layer>
             <Layer level="ARTWORK" textureSubLevel="-1">
-                <Texture name="$parentIconBorder" parentKey="icon_border" file="Interface\Common\WhiteIconFrame" hidden="false">
+                <Texture name="$parent_Icon_Border" parentKey="icon_border" file="Interface\Common\WhiteIconFrame" hidden="false">
                     <Anchors>
                         <Anchor point="TOPLEFT" relativePoint="TOPLEFT" relativeKey="$parent.icon"/>
                         <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeKey="$parent.icon"/>
@@ -44,15 +44,21 @@
                 </Texture>
             </Layer>
             <Layer level="OVERLAY" textureSubLevel="1">
-                <Texture name="$parentLevelBG" atlas="PetJournal-LevelBubble" useAtlasSize="true" parentKey="level_background">
+                <Texture parentKey="is_dead" file="Interface\PetBattles\DeadPetIcon" hidden="true">
+                    <Size x="38" y="38"/>
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parentIcon" x="3" y="-3"/>
+                        <Anchor point="CENTER" relativeTo="$parent_Icon" relativePoint="CENTER" x="0" y="0"/>
                     </Anchors>
                 </Texture>
-                <FontString name="$parentLevel" inherits="GameFontNormalSmall" justifyH="CENTER" parentKey="level">
+                <Texture name="$parent_Level_Background" atlas="PetJournal-LevelBubble" useAtlasSize="true" parentKey="level_background">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="$parent_Icon" x="3" y="-3"/>
+                    </Anchors>
+                </Texture>
+                <FontString name="$parent_Level" inherits="GameFontNormalSmall" justifyH="CENTER" parentKey="level">
                     <Size x="0" y="12"/>
                     <Anchors>
-                        <Anchor point="CENTER" relativeTo="$parentLevelBG" x="1" y="-1"/>
+                        <Anchor point="CENTER" relativeTo="$parent_Level_Background" x="1" y="-1"/>
                     </Anchors>
                 </FontString>
             </Layer>

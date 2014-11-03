@@ -728,13 +728,22 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 pet_information_frame.pet_button:Show();
                 pet_information_frame.pet_button.background:Show();
                 pet_information_frame.pet_button.icon:SetTexture(icon);
-                pet_information_frame.pet_button.level:SetShown(canBattle);
-                pet_information_frame.pet_button.level:SetText(level);
-                pet_information_frame.pet_button.level_background:Show();
                 pet_information_frame.pet_button.icon_border:Show();
                 pet_information_frame.pet_button.icon_border:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
                                                                             ITEM_QUALITY_COLORS[rarity - 1].g,
                                                                             ITEM_QUALITY_COLORS[rarity - 1].b);
+                
+                -- If the pet is alive...
+                if (health > 0) then
+                    pet_information_frame.pet_button.is_dead:Hide();
+                -- If the pet is dead...
+                else
+                    pet_information_frame.pet_button.is_dead:Show();
+                end
+                
+                pet_information_frame.pet_button.level:SetShown(canBattle);
+                pet_information_frame.pet_button.level:SetText(level);
+                pet_information_frame.pet_button.level_background:Show();
                 
                 -- For each pet ability button...
                 for i = 1, #pet_information_frame.pet_ability_buttons do
@@ -760,9 +769,10 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                 pet_information_frame.pet_button:Hide();
                 pet_information_frame.pet_button.background:Hide();
                 pet_information_frame.pet_button.icon:SetTexture(nil);
+                pet_information_frame.pet_button.icon_border:Hide();
+                pet_information_frame.pet_button.is_dead:Hide();
                 pet_information_frame.pet_button.level:Hide();
                 pet_information_frame.pet_button.level_background:Hide();
-                pet_information_frame.pet_button.icon_border:Hide();
                 
                 -- For each potential pet ability...
                 for i = 1, #pet_information_frame.pet_ability_buttons do
