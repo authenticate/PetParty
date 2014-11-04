@@ -1,7 +1,7 @@
 Brief Overview
 --------------
 
-Pet Party allows players to create and store configurations of Battle Pets for the pet battle system.  In addition, players can select a Training Pet to assist in leveling new pets through tamer daily quests.
+Pet Party allows players to create and store configurations of Battle Pets for the pet battle system in World of Warcraft.  In addition, players can select a Training Pet to assist in leveling new pets through tamer daily quests.
 
 Basic Tutorial
 --------------
