@@ -84,7 +84,17 @@ end
 -- Called when the training pet information frame receives an event.
 function PetParty.OnEventTrainingPetInformationFrame(self, event, arg1, ...)
     if (event == "PLAYER_LOGOUT") then
-        PetParty.SerializeTrainingPet()
+        -- If the training pet has not been deserialized...
+        if (not is_deserialized) then
+            -- Deserialize the training pet.
+            PetParty.DeserializeTrainingPet();
+            
+            -- Update the flag.
+            is_deserialized = true;
+        end
+        
+        -- Serialize the training pet.
+        PetParty.SerializeTrainingPet();
     end
 end
 
@@ -308,13 +318,13 @@ end
 
 -- Called when the training pet information frame is shown.
 function PetParty.OnShowTrainingPetInformationFrame()
-    -- If the training pet has not been deserialized.
+    -- If the training pet has not been deserialized...
     if (not is_deserialized) then
-        -- Update the flag.
-        is_deserialized = true;
-        
         -- Deserialize the training pet.
         PetParty.DeserializeTrainingPet();
+        
+        -- Update the flag.
+        is_deserialized = true;
         
         -- Update the pet frame's information.
         PetParty.UpdateTrainingPetInformationFrame();

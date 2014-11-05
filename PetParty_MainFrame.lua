@@ -86,6 +86,15 @@ function PetParty.OnEventMainFrame(self, event, arg1, ...)
         -- Serialize whether or not the main frame is hidden.
         PetPartyCharacterDB.main_frame_hidden = not PetParty_MainFrame:IsShown();
         
+        -- If the pet parties have not been deserialized...
+        if (not is_deserialized) then
+            -- Deserialize the pet parties.
+            PetParty.DeserializePetParties();
+        end
+        
+        -- Update the flag.
+        is_deserialized = true;
+        
         -- Serialize the pet parties.
         PetParty.SerializePetParties()
     end
@@ -172,11 +181,10 @@ end
 
 -- Called when the main frame is shown.
 function PetParty.OnShowMainFrame()
+    -- If the pet parties have not been deserialized...
     if (not is_deserialized) then
-        if (PetPartyDB ~= nil) then
-            -- Deserialize the pet parties.
-            PetParty.DeserializePetParties();
-        end
+        -- Deserialize the pet parties.
+        PetParty.DeserializePetParties();
         
         -- Update the flag.
         is_deserialized = true;
