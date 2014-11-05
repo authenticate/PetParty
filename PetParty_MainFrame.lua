@@ -172,7 +172,7 @@ function PetParty.OnLoadMainFrame()
     };
     
     -- Localize the UI.
-    PetParty_MainFrame_Font_String_Title:SetText(PetParty.L["Pet Party"] .. " - " .. PetParty.L["1.0"]);
+    PetParty_MainFrame_Font_String_Title:SetText(PetParty.L["Pet Party"] .. " - " .. PetParty.L[PetParty.ADDON_VERSION]);
     PetParty_MainFrame_Font_String_Training_Pet:SetText(PetParty.L["Training Pet"]);
     PetParty_MainFrame_Font_String_Pet_Parties:SetText(PetParty.L["Pet Parties"]);
     PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L["Create"]);
