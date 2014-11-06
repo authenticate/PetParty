@@ -19,7 +19,7 @@
 #
 
 ## Interface: 60000
-## Version: 6.0
+## Version: 1.2
 ## Title: Pet Party
 ## Notes: Creates groups of pets for the pet battle system.
 ## Author: Authentication
