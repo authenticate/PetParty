@@ -126,32 +126,23 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
                     
-                    -- Update the display.
-                    PetParty.UpdateTrainingPetInformationFrame();
-                    
                     -- Store the pet's abilities' GUIDs.
                     local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
                     PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
                 -- If this is an information pet...
                 elseif (PetParty.pet_information_frame_cursor ~= nil) then
-                    -- Store the pet's abilities' GUIDs.
-                    local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
-                    
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
                     
-                    -- Update the display.
-                    PetParty.UpdateTrainingPetInformationFrame();
+                    -- Get the pet's abilities' GUIDs.
+                    local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
                     
-                    -- Update the pet's abilities' GUIDs.
+                    -- Store the pet's abilities' GUIDs.
                     PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
                 -- If this is a pet from Blizzard's UI...
                 else
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
-                    
-                    -- Update the display.
-                    PetParty.UpdateTrainingPetInformationFrame();
                     
                     -- Cache the pet GUID of the pet currently loaded in slot one.
                     local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
@@ -196,32 +187,23 @@ function PetParty.OnLoadTrainingPetInformationFrame()
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
                     
-                    -- Update the display.
-                    PetParty.UpdateTrainingPetInformationFrame();
-                    
                     -- Store the pet's abilities' GUIDs.
                     local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
                     PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
                 -- If this is an information pet...
                 elseif (PetParty.pet_information_frame_cursor ~= nil) then
-                    -- Store the pet's abilities' GUIDs.
-                    local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
-                    
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
                     
-                    -- Update the display.
-                    PetParty.UpdateTrainingPetInformationFrame();
+                    -- Get the pet's abilities' GUIDs.
+                    local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
                     
-                    -- Update the pet's abilities' GUIDs.
+                    -- Store the pet's abilities' GUIDs.
                     PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
                 -- If this is a pet from Blizzard's UI...
                 else
                     -- Store the pet GUID.
                     PetParty.SetPetGUIDTrainingPetFrame(petID);
-                    
-                    -- Update the display.
-                    PetParty.UpdateTrainingPetInformationFrame();
                     
                     -- Cache the pet GUID of the pet currently loaded in slot one.
                     local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
