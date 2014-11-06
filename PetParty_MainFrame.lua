@@ -188,6 +188,19 @@ function PetParty.OnShowMainFrame()
         
         -- Update the flag.
         PetParty.are_pet_parties_deserialized = true;
+        
+        -- Sanity.
+        if (PetParty.pet_party_frame_selected ~= nil) then
+            -- Select an initial pet party.
+            pet_party_frame_entered = PetParty.pet_party_frame_selected;
+            pet_party_frame_pressed = PetParty.pet_party_frame_selected;
+            
+            PetParty.OnMouseUpPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
+            PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected);
+            
+            pet_party_frame_entered = nil;
+            pet_party_frame_pressed = nil;
+        end
     end
     
     -- Update all pet frames' information.
