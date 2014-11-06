@@ -61,9 +61,6 @@ local pet_party_frame_entered = nil;
 -- The currently pressed pet party frame.
 local pet_party_frame_pressed = nil;
 
--- The currently selected pet party frame.
-PetParty.pet_party_frame_selected = nil;
-
 -- Call to add a pet party frame.
 function PetParty.AddPetPartyFrame(name)
     -- Initialize the battle pet frame variables.

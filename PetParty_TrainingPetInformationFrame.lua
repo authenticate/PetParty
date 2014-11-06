@@ -27,12 +27,6 @@ local TRAINING_PET_G = 0;
 local TRAINING_PET_B = 0;
 local TRAINING_PET_A = 0;
 
--- A flag if the training pet has been deserialized.
-local is_deserialized = false;
-
--- A flag if the training pet is the cursor.
-PetParty.training_pet_cursor = false;
-
 -- Call to deserialize the training pet.
 function PetParty.DeserializeTrainingPet()
     if (PetPartyDB ~= nil) and
@@ -85,12 +79,12 @@ end
 function PetParty.OnEventTrainingPetInformationFrame(self, event, arg1, ...)
     if (event == "PLAYER_LOGOUT") then
         -- If the training pet has not been deserialized...
-        if (not is_deserialized) then
+        if (not PetParty.is_training_pet_deserialized) then
             -- Deserialize the training pet.
             PetParty.DeserializeTrainingPet();
             
             -- Update the flag.
-            is_deserialized = true;
+            PetParty.is_training_pet_deserialized = true;
         end
         
         -- Serialize the training pet.
@@ -319,12 +313,12 @@ end
 -- Called when the training pet information frame is shown.
 function PetParty.OnShowTrainingPetInformationFrame()
     -- If the training pet has not been deserialized...
-    if (not is_deserialized) then
+    if (not PetParty.is_training_pet_deserialized) then
         -- Deserialize the training pet.
         PetParty.DeserializeTrainingPet();
         
         -- Update the flag.
-        is_deserialized = true;
+        PetParty.is_training_pet_deserialized = true;
     end
     
     -- Update the pet frame's information.
@@ -426,9 +420,9 @@ function PetParty.UpdateTrainingPetInformationFrame()
     if (pet_information_frame.pet_guid ~= nil) then
         -- Get the pet's information.
         local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-              speciesName, icon, petType, companionID,
-              tooltip, description, isWild, canBattle, isTradable,
-              isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_information_frame.pet_guid);
+            speciesName, icon, petType, companionID,
+            tooltip, description, isWild, canBattle, isTradable,
+            isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_information_frame.pet_guid);
         
         -- If this pet has a custom name...
         if (customName ~= nil) and (customName ~= "") then

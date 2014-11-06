@@ -18,5 +18,24 @@
 -- along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 --
 
+--
+-- Globals.
+--
+
 -- Pet Party localization.  Use US English as the default localization.
 PetParty.L = PetParty.L_enUS;
+
+-- A flag if the pet parties have been deserialized.
+PetParty.are_pet_parties_deserialized = false;
+
+-- A flag if the training pet has been deserialized.
+PetParty.is_training_pet_deserialized = false;
+
+-- The currently selected pet party frame.
+PetParty.pet_party_frame_selected = nil;
+
+-- A flag if a pet information frame is the cursor.
+PetParty.pet_information_frame_cursor = nil;
+
+-- A flag if the training pet is the cursor.
+PetParty.training_pet_cursor = false;

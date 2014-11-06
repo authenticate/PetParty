@@ -24,9 +24,6 @@
 
 local PET_PARTY_BUTTON_COUNT = 2;
 
--- A flag if the pet parties have been deserialized.
-local is_deserialized = false;
-
 -- Called when the main frame's create pet party button is clicked.
 function PetParty.OnClickMainFrameButtonCreatePetParty()
     StaticPopup_Show("PetParty_CreatePetPartyDialog");
@@ -87,13 +84,13 @@ function PetParty.OnEventMainFrame(self, event, arg1, ...)
         PetPartyCharacterDB.main_frame_hidden = not PetParty_MainFrame:IsShown();
         
         -- If the pet parties have not been deserialized...
-        if (not is_deserialized) then
+        if (not PetParty.are_pet_parties_deserialized) then
             -- Deserialize the pet parties.
             PetParty.DeserializePetParties();
+            
+            -- Update the flag.
+            PetParty.are_pet_parties_deserialized = true;
         end
-        
-        -- Update the flag.
-        is_deserialized = true;
         
         -- Serialize the pet parties.
         PetParty.SerializePetParties()
@@ -185,17 +182,17 @@ end
 -- Called when the main frame is shown.
 function PetParty.OnShowMainFrame()
     -- If the pet parties have not been deserialized...
-    if (not is_deserialized) then
+    if (not PetParty.are_pet_parties_deserialized) then
         -- Deserialize the pet parties.
         PetParty.DeserializePetParties();
         
         -- Update the flag.
-        is_deserialized = true;
-        
-        -- Update all pet frames' information.
-        for i = 1, PetParty.PETS_PER_PARTY do
-            PetParty.UpdatePetInformationPetInformationFrame(i);
-        end
+        PetParty.are_pet_parties_deserialized = true;
+    end
+    
+    -- Update all pet frames' information.
+    for i = 1, PetParty.PETS_PER_PARTY do
+        PetParty.UpdatePetInformationPetInformationFrame(i);
     end
 end
 

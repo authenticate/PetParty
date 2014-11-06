@@ -51,9 +51,6 @@ local PET_INFORMATION_PARTY_PET_INFORMATION_G = 0;
 local PET_INFORMATION_PARTY_PET_INFORMATION_B = 0;
 local PET_INFORMATION_PARTY_PET_INFORMATION_A = 0;
 
--- A flag if a pet information frame is the cursor.
-PetParty.pet_information_frame_cursor = nil;
-
 -- Call to create a pet information frame.
 function PetParty.CreatePetInformationFrame(parent, name)
     -- Create a pet party information frame.
@@ -507,9 +504,9 @@ function PetParty.SetPetGUIDPetInformationFrame(slot_index, pet_guid)
                     if (frame.pet_guid ~= nil) and (frame.pet_guid ~= "") then
                         -- Get the pet's information.
                         local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
-                              speciesName, icon, petType, companionID,
-                              tooltip, description, isWild, canBattle, isTradable,
-                              isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(frame.pet_guid);
+                            speciesName, icon, petType, companionID,
+                            tooltip, description, isWild, canBattle, isTradable,
+                            isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(frame.pet_guid);
                         
                         -- Get the pet's abilities.
                         local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
