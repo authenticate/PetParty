@@ -325,13 +325,13 @@ function PetParty.OnShowTrainingPetInformationFrame()
         
         -- Update the flag.
         is_deserialized = true;
-        
-        -- Update the pet frame's information.
-        PetParty.UpdateTrainingPetInformationFrame();
-        
-        -- Signal the training pet has changed.
-        PetParty.OnTrainingPetChangedPetPartyInformationFrame();
     end
+    
+    -- Update the pet frame's information.
+    PetParty.UpdateTrainingPetInformationFrame();
+    
+    -- Signal the training pet has changed.
+    PetParty.OnTrainingPetChangedPetPartyInformationFrame();
 end
 
 -- Call to serialize the training pet.

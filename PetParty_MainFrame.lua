@@ -130,6 +130,9 @@ function PetParty.OnLoadMainFrame()
                 if (text ~= nil) and (text ~= "") then
                     -- Create a pet party frame.
                     PetParty.AddPetPartyFrame(text);
+                    
+                    -- Store the pet parties.
+                    PetParty.SerializePetParties();
                 end
             end
         ,

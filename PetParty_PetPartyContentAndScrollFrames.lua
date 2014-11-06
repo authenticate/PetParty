@@ -193,9 +193,6 @@ function PetParty.AddPetPartyFrame(name)
     
     -- Update the scroll bar layout.
     PetParty.UpdatePetPartyScrollBarLayout();
-    
-    -- Store the pet parties.
-    PetParty.SerializePetParties();
 end
 
 -- Call to create the pet party content and scroll frames.
