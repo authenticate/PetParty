@@ -49,6 +49,32 @@ PetParty.MAIN_FRAME_OFFSET_BOTTOM = 14;
 PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y = 12;
 PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT = 175;
 
+PetParty.STRING_BUTTON_ACTIVATE = "Activate";
+PetParty.STRING_BUTTON_ACTIVATE_TOOLTIP = "Loads the configuration into the Battle Pet Slots.";
+
+PetParty.STRING_BUTTON_CANCEL = "Cancel";
+
+PetParty.STRING_BUTTON_CREATE = "Create";
+PetParty.STRING_BUTTON_CREATE_TOOLTIP = "Creates a new Pet Party.";
+
+PetParty.STRING_BUTTON_DELETE = "Delete";
+PetParty.STRING_BUTTON_DELETE_TOOLTIP = "Deletes the currently selected Pet Party.";
+
+PetParty.STRING_BUTTON_HIDE_TOOLTIP = "Hides the Pet Party frame.";
+
+PetParty.STRING_BUTTON_JOURNAL_TOOLTIP = "Creates groups of pets for the pet battle system.";
+
+PetParty.STRING_BUTTON_SAVE = "Save";
+PetParty.STRING_BUTTON_SAVE_TOOLTIP = "Stores the configuration into the currently selected Pet Party.";
+
+PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY = "Create a pet party.";
+
+PetParty.STRING_BATTLE_PETS_SLOTS_CONFIGURATION = "Battle Pet Slots' Configuration";
+PetParty.STRING_DRAG = "Drag a battle pet to train here."
+PetParty.STRING_PET_PARTY = "Pet Party";
+PetParty.STRING_PET_PARTIES = "Pet Parties";
+PetParty.STRING_TRAINING_PET = "Training Pet";
+
 PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT = 42;
 
 -- TODO: This color is inconsistent with Blizzard's default tooltips.  Does anyone know the correct color?

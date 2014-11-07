@@ -260,7 +260,7 @@ function PetParty.CreatePetInformationFrame(parent, name)
     pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame);
     pet_information_frame.font_string_training_pet:SetPoint("LEFT", pet_information_frame.pet_button, "RIGHT", PetParty.PADDING, 0);
     pet_information_frame.font_string_training_pet:SetPoint("BOTTOMRIGHT", pet_information_frame);
-    pet_information_frame.font_string_training_pet:SetText(PetParty.L["(Training Pet)"]);
+    pet_information_frame.font_string_training_pet:SetText("(" .. PetParty.L[PetParty.STRING_TRAINING_PET] .. ")");
     pet_information_frame.font_string_training_pet:Hide();
     
     -- Return the pet information frame.
@@ -435,9 +435,9 @@ function PetParty.OnLoadPetPartyInformationFrame()
     end
     
     -- Localize the UI.
-    PetParty_PetPartyInformationFrame_Font_String_Configuration:SetText(PetParty.L["Battle Pet Slots' Configuration"]);
-    PetParty_PetPartyInformationFrame_Button_Activate:SetText(PetParty.L["Activate"]);
-    PetParty_PetPartyInformationFrame_Button_Save:SetText(PetParty.L["Save"]);
+    PetParty_PetPartyInformationFrame_Font_String_Configuration:SetText(PetParty.L[PetParty.STRING_BATTLE_PETS_SLOTS_CONFIGURATION]);
+    PetParty_PetPartyInformationFrame_Button_Activate:SetText(PetParty.L[PetParty.STRING_BUTTON_ACTIVATE]);
+    PetParty_PetPartyInformationFrame_Button_Save:SetText(PetParty.L[PetParty.STRING_BUTTON_SAVE]);
     
     -- Update pet information frame layout.
     PetParty.UpdatePetInformationFrameLayout();

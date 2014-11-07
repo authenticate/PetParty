@@ -474,7 +474,7 @@ function PetParty.UpdateTrainingPetInformationFrame()
         pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP");
         pet_information_frame.font_string_name:SetText("");
         pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP");
-        pet_information_frame.font_string_subname:SetText(PetParty.L["Drag a battle pet to train here."]);
+        pet_information_frame.font_string_subname:SetText(PetParty.L[PetParty.STRING_DRAG]);
         pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP");
         pet_information_frame.font_string_training_pet:Hide();
         

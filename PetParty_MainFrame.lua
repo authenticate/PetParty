@@ -118,9 +118,9 @@ function PetParty.OnLoadMainFrame()
     
     -- Create the create pet party dialog box.
     StaticPopupDialogs["PetParty_CreatePetPartyDialog"] = {
-        text = PetParty.L["Create a pet party."],
-        button1 = PetParty.L["Create"],
-        button2 = PetParty.L["Cancel"],
+        text = PetParty.L[PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY],
+        button1 = PetParty.L[PetParty.STRING_BUTTON_CREATE],
+        button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
         OnAccept =
             function (self)
                 local text = self.editBox:GetText();
@@ -172,11 +172,11 @@ function PetParty.OnLoadMainFrame()
     };
     
     -- Localize the UI.
-    PetParty_MainFrame_Font_String_Title:SetText(PetParty.L["Pet Party"] .. " - " .. PetParty.L[PetParty.ADDON_VERSION]);
-    PetParty_MainFrame_Font_String_Training_Pet:SetText(PetParty.L["Training Pet"]);
-    PetParty_MainFrame_Font_String_Pet_Parties:SetText(PetParty.L["Pet Parties"]);
-    PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L["Create"]);
-    PetParty_MainFrame_Button_Delete_Pet_Party:SetText(PetParty.L["Delete"]);
+    PetParty_MainFrame_Font_String_Title:SetText(PetParty.L[PetParty.STRING_PET_PARTY] .. " - " .. PetParty.L[PetParty.ADDON_VERSION]);
+    PetParty_MainFrame_Font_String_Training_Pet:SetText(PetParty.L[PetParty.STRING_TRAINING_PET]);
+    PetParty_MainFrame_Font_String_Pet_Parties:SetText(PetParty.L[PetParty.STRING_PET_PARTIES]);
+    PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L[PetParty.STRING_BUTTON_CREATE]);
+    PetParty_MainFrame_Button_Delete_Pet_Party:SetText(PetParty.L[PetParty.STRING_BUTTON_DELETE]);
 end
 
 -- Called when the main frame is shown.

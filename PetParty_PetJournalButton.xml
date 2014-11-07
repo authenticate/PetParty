@@ -62,11 +62,11 @@
                 PetParty_Tooltip:SetBackdropColor(PetParty.TOOLTIP_BACKGROUND_R,
                                                   PetParty.TOOLTIP_BACKGROUND_G,
                                                   PetParty.TOOLTIP_BACKGROUND_B);
-                PetParty_Tooltip:AddLine(PetParty.L["Pet Party"],
+                PetParty_Tooltip:AddLine(PetParty.L[PetParty.STRING_PET_PARTY],
                                                     PetParty.TOOLTIP_TITLE_R,
                                                     PetParty.TOOLTIP_TITLE_G,
                                                     PetParty.TOOLTIP_TITLE_B);
-                PetParty_Tooltip:AddLine(PetParty.L["Creates groups of pets for the pet battle system."],
+                PetParty_Tooltip:AddLine(PetParty.L[PetParty.STRING_BUTTON_JOURNAL_TOOLTIP],
                                                     PetParty.TOOLTIP_DESCRIPTION_R,
                                                     PetParty.TOOLTIP_DESCRIPTION_G,
                                                     PetParty.TOOLTIP_DESCRIPTION_B);
