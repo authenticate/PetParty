@@ -126,19 +126,7 @@ function PetParty.AddPetPartyFrame(name)
         PetParty_PetPartyContentFrame.content.frame_count_allocated = PetParty_PetPartyContentFrame.content.frame_count_allocated + 1;
     end
     
-    -- Update the pet party frame's anchors.
-    pet_party_frame:ClearAllPoints();
-    
-    if (PetParty_PetPartyContentFrame.content.frame_count == 0) then
-        -- Anchor the frame to the content frame.
-        pet_party_frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
-    else
-        -- Anchor the frame to the previous frame.
-        pet_party_frame:SetPoint("BOTTOMLEFT", PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count], "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
-    end
-    
-    pet_party_frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
-    
+    -- Update the pet party frame's name.
     pet_party_frame.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT);
     pet_party_frame.font_string_name:SetText(name);
     pet_party_frame.font_string_name:ClearAllPoints();
@@ -174,7 +162,61 @@ function PetParty.AddPetPartyFrame(name)
     -- Store the pet party frame.
     PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = pet_party_frame;
     
+    --
+    -- Sort the pet party frames by name.
+    --
+    
+    table.sort(PetParty_PetPartyContentFrame.content.frames,
+        function(frame_a, frame_b)
+            local result = false;
+            
+            if (frame_a.font_string_name:GetText() < frame_b.font_string_name:GetText()) then
+                result = true;
+            end
+            
+            return result;
+        end
+    );
+    
+    --
+    -- Update the sorted pet party frames' IDs and anchors.
+    --
+    
+    for i = 1, #PetParty_PetPartyContentFrame.content.frames do
+        -- Get the frame.
+        local frame = PetParty_PetPartyContentFrame.content.frames[i];
+        
+        --
+        -- Update the pet party frame's ID.
+        --
+        
+        frame.id = i;
+        
+        --
+        -- Update the pet party frame's anchors.
+        --
+        
+        frame:ClearAllPoints();
+        
+        if (i == 1) then
+            -- Anchor the frame to the content frame.
+            frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
+        else
+            -- Get the previous frame.
+            local previous_frame = PetParty_PetPartyContentFrame.content.frames[i - 1];
+            
+            -- Anchor the frame to the previous frame.
+            frame:SetPoint("BOTTOMLEFT", previous_frame, "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+        end
+        
+        frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
+    end
+    
+    --
     -- Select the new pet party frame.
+    --
+    
+    -- Store the previously selected pet party frame.
     local pet_party_frame_previously_selected = PetParty.pet_party_frame_selected;
     PetParty.pet_party_frame_selected = pet_party_frame;
     
