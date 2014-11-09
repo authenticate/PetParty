@@ -365,10 +365,8 @@ end
 -- Call to deserialize the pet parties.
 function PetParty.DeserializePetParties()
     if (PetPartyDB ~= nil) and
-       (PetPartyDB.pet_party_count ~= nil) and
        (PetPartyDB.pet_parties ~= nil) then
         -- Cache the values.
-        local pet_party_count = PetPartyDB.pet_party_count;
         local pet_parties = PetPartyDB.pet_parties;
         
         -- Delete any current pet parties.
@@ -377,7 +375,7 @@ function PetParty.DeserializePetParties()
         end
         
         -- For each pet party...
-        for i = 1, pet_party_count do
+        for i = 1, #pet_parties do
             -- Get the pet party.
             local pet_party = pet_parties[i];
             
@@ -507,7 +505,6 @@ function PetParty.SerializePetParties()
     end
     
     -- Clear any old data.
-    PetPartyDB.pet_party_count = 0;
     PetPartyDB.pet_parties = {};
     
     -- For each pet party frame...
@@ -537,9 +534,6 @@ function PetParty.SerializePetParties()
         
         PetPartyDB.pet_parties[i] = pet_party;
     end
-    
-    -- Store the number of pet parties.
-    PetPartyDB.pet_party_count = PetParty_PetPartyContentFrame.content.frame_count;
 end
 
 -- Call to update the pet party scroll bar layout.
