@@ -356,9 +356,6 @@ function PetParty.DeletePetPartyFrame()
                 PetParty.SetPetAbilityGUIDsPetInformationFrame(i, PetParty.pet_party_frame_selected.ability_guids[i]);
             end
         end
-        
-        -- Store the pet parties.
-        PetParty.SerializePetParties();
     end
 end
 
@@ -368,6 +365,7 @@ function PetParty.DeserializePetParties()
        (PetPartyDB.pet_parties ~= nil) then
         -- Cache the values.
         local pet_parties = PetPartyDB.pet_parties;
+        local pet_party_selected_id = PetPartyDB.pet_party_selected_id;
         
         -- Delete any current pet parties.
         while (PetParty.pet_party_frame_selected ~= nil) do
@@ -382,7 +380,7 @@ function PetParty.DeserializePetParties()
             -- Create a pet party frame.
             PetParty.AddPetPartyFrame(pet_party.name);
             
-            -- Get the pet party's training pet's ID.
+            -- Store the pet party's training pet's ID.
             PetParty.pet_party_frame_selected.pet_training_frame_id = pet_party.pet_training_frame_id;
             
             -- For each pet...
@@ -392,6 +390,23 @@ function PetParty.DeserializePetParties()
                 
                 -- Store the pet party's ability GUIDs.
                 PetParty.pet_party_frame_selected.ability_guids[j] = pet_party.ability_guids[j];
+            end
+        end
+        
+        -- If there's a selected pet party ID...
+        if (pet_party_selected_id ~= nil) then
+            -- Store the previously selected pet party frame.
+            local pet_party_frame_previously_selected = PetParty.pet_party_frame_selected;
+            PetParty.pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[pet_party_selected_id];
+            
+            -- Update the previously selected frame. 
+            if (pet_party_frame_previously_selected ~= nil) then
+                PetParty.OnLeavePetPartyFrame(pet_party_frame_previously_selected, false);
+            end
+            
+            -- Update the selected frame.
+            if (PetParty.pet_party_frame_selected ~= nil) then
+                PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
             end
         end
     end
@@ -506,6 +521,7 @@ function PetParty.SerializePetParties()
     
     -- Clear any old data.
     PetPartyDB.pet_parties = {};
+    PetPartyDB.pet_party_selected_id = nil;
     
     -- For each pet party frame...
     for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
@@ -532,7 +548,14 @@ function PetParty.SerializePetParties()
             pet_party.ability_guids[j] = pet_party_frame.ability_guids[j];
         end
         
+        -- Store the pet party.
         PetPartyDB.pet_parties[i] = pet_party;
+    end
+    
+    -- If there's a selected pet party frame...
+    if (PetParty.pet_party_frame_selected) then
+        -- Store the selected pet party's ID.
+        PetPartyDB.pet_party_selected_id = PetParty.pet_party_frame_selected.id;
     end
 end
 

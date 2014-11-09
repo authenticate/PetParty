@@ -34,6 +34,9 @@ function PetParty.OnClickMainFrameButtonDeletePetParty()
     -- Delete the selected pet party frame.
     PetParty.DeletePetPartyFrame();
     
+    -- Store the pet parties.
+    PetParty.SerializePetParties();
+    
     -- If there's a selected pet party frame...
     if (PetParty.pet_party_frame_selected) then
         -- Simulate the selected pet party frame being selected.
