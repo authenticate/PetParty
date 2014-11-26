@@ -308,7 +308,7 @@ end
 -- Call to delete the currently selected pet party frame.
 function PetParty.DeletePetPartyFrame()
     if (PetParty.pet_party_frame_selected ~= nil) then
-        -- Remove the frame the scroll area.
+        -- Remove the frame from the scroll area.
         PetParty.pet_party_frame_selected:Hide();
         PetParty.pet_party_frame_selected:SetParent(nil);
         
@@ -376,10 +376,10 @@ function PetParty.DeletePetPartyFrame()
                 PetParty.SetPetAbilityGUIDsPetInformationFrame(i, PetParty.pet_party_frame_selected.ability_guids[i]);
             end
         end
+        
+        -- Update the scroll bar layout.
+        PetParty.UpdatePetPartyScrollBarLayout();
     end
-    
-    -- Update the scroll bar layout.
-    PetParty.UpdatePetPartyScrollBarLayout();
 end
 
 -- Call to deserialize the pet parties.

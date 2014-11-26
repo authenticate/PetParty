@@ -40,7 +40,10 @@ function PetParty.OnClickMainFrameButtonDeletePetParty()
     -- If there's a selected pet party frame...
     if (PetParty.pet_party_frame_selected) then
         -- Simulate the selected pet party frame being selected.
+        PetParty.OnEnterPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
+        PetParty.OnMouseDownPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
         PetParty.OnMouseUpPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
+        PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
     end
 end
 
