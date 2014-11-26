@@ -163,10 +163,19 @@ function PetParty.AddPetPartyFrame(name)
     PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count] = pet_party_frame;
     
     --
-    -- Sort the pet party frames by name.
+    -- Cache the active pet party frames.
     --
     
-    table.sort(PetParty_PetPartyContentFrame.content.frames,
+    local active_pet_party_frames = {};
+    for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
+        active_pet_party_frames[i] = PetParty_PetPartyContentFrame.content.frames[i];
+    end
+    
+    --
+    -- Sort the active pet party frames by name.
+    --
+    
+    table.sort(active_pet_party_frames,
         function(frame_a, frame_b)
             local result = false;
             
@@ -177,6 +186,14 @@ function PetParty.AddPetPartyFrame(name)
             return result;
         end
     );
+    
+    --
+    -- Store the sorted active pet party frames.
+    --
+    
+    for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
+        PetParty_PetPartyContentFrame.content.frames[i] = active_pet_party_frames[i];
+    end
     
     --
     -- Update the sorted pet party frames' IDs and anchors.
