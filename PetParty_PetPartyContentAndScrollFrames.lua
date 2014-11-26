@@ -241,7 +241,10 @@ function PetParty.CreatePetPartyContentAndScrollFrames()
     PetParty_PetPartyScrollFrame:SetPoint("TOPLEFT", PetParty.MAIN_FRAME_OFFSET_LEFT, SCROLL_FRAME_OFFSET_TOP);
     PetParty_PetPartyScrollFrame:SetPoint("BOTTOM", 0, SCROLL_FRAME_OFFSET_BOTTOM);
     PetParty_PetPartyScrollFrame:EnableMouseWheel(true);
-    PetParty_PetPartyScrollFrame:SetWidth(PetParty_PetPartyScrollFrame:GetParent():GetWidth() - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT);
+    PetParty_PetPartyScrollFrame:SetWidth(PetParty_PetPartyScrollFrame:GetParent():GetWidth() -
+                                          PetParty.MAIN_FRAME_OFFSET_LEFT +
+                                          PetParty.MAIN_FRAME_OFFSET_RIGHT -
+                                          SCROLL_BAR_WIDTH);
     
     local texture = PetParty_PetPartyScrollFrame:CreateTexture();
     texture:SetAllPoints();
@@ -249,11 +252,11 @@ function PetParty.CreatePetPartyContentAndScrollFrames()
     
     -- Create the scroll bar.
     CreateFrame("Slider", "PetParty_PetPartyScrollBar", PetParty_PetPartyScrollFrame, "UIPanelScrollBarTemplate");
-    PetParty_PetPartyScrollBar:SetPoint("TOPLEFT", PetParty_PetPartyScrollFrame, "TOPRIGHT", SCROLL_BAR_OFFSET_LEFT, SCROLL_BAR_OFFSET_TOP);
+    PetParty_PetPartyScrollBar:SetPoint("TOPLEFT", PetParty_PetPartyScrollFrame, "TOPRIGHT", 0, SCROLL_BAR_OFFSET_TOP);
     PetParty_PetPartyScrollBar:SetPoint("BOTTOMLEFT", PetParty_PetPartyScrollFrame, "BOTTOMRIGHT", SCROLL_BAR_OFFSET_RIGHT, SCROLL_BAR_OFFSET_BOTTOM);
     PetParty_PetPartyScrollBar:SetMinMaxValues(0, 0);
     PetParty_PetPartyScrollBar:SetValueStep(0);
-    PetParty_PetPartyScrollBar.scrollStep = BATTLE_PET_FRAME_SIZE;
+    PetParty_PetPartyScrollBar.scrollStep = PET_PARTY_FRAME_SIZE;
     PetParty_PetPartyScrollBar:SetStepsPerPage(SCROLL_BAR_STEPS_PER_PAGE);
     PetParty_PetPartyScrollBar:SetValue(0);
     PetParty_PetPartyScrollBar:SetObeyStepOnDrag(true);
@@ -566,7 +569,10 @@ function PetParty.UpdatePetPartyScrollBarLayout()
     PetParty_PetPartyScrollFrame:SetPoint("BOTTOM", 0, SCROLL_FRAME_OFFSET_BOTTOM);
     
     -- Update the width of the pet party scroll frame.
-    PetParty_PetPartyScrollFrame:SetWidth(PetParty_PetPartyScrollFrame:GetParent():GetWidth() - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT);
+    PetParty_PetPartyScrollFrame:SetWidth(PetParty_PetPartyScrollFrame:GetParent():GetWidth() -
+                                          PetParty.MAIN_FRAME_OFFSET_LEFT +
+                                          PetParty.MAIN_FRAME_OFFSET_RIGHT -
+                                          SCROLL_BAR_WIDTH);
     
     -- The height of the content frame.
     local height_content_frame = 0;
@@ -574,8 +580,7 @@ function PetParty.UpdatePetPartyScrollBarLayout()
     if (PetParty_PetPartyContentFrame.content ~= nil) then
         if (PetParty_PetPartyContentFrame.content.frame_count > 0) then
             -- Calculate the height of the content frame.
-            local frame = PetParty_PetPartyContentFrame.content.frames[PetParty_PetPartyContentFrame.content.frame_count];
-            height_content_frame = frame.font_string_name:GetHeight() * PetParty_PetPartyContentFrame.content.frame_count;
+            height_content_frame = PET_PARTY_FRAME_SIZE * PetParty_PetPartyContentFrame.content.frame_count;
         end
     end
     
