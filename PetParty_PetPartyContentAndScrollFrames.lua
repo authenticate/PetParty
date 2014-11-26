@@ -360,6 +360,9 @@ function PetParty.DeletePetPartyFrame()
             end
         end
     end
+    
+    -- Update the scroll bar layout.
+    PetParty.UpdatePetPartyScrollBarLayout();
 end
 
 -- Call to deserialize the pet parties.
