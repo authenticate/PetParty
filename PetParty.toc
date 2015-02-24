@@ -18,7 +18,7 @@
 # along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-## Interface: 60000
+## Interface: 60100
 ## Version: 1.4
 ## Title: Pet Party
 ## Notes: Creates groups of pets for the pet battle system.
