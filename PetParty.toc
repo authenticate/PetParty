@@ -19,7 +19,7 @@
 #
 
 ## Interface: 60100
-## Version: 1.4
+## Version: 1.5
 ## Title: Pet Party
 ## Notes: Creates groups of pets for the pet battle system.
 ## Author: Authentication
