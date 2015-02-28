@@ -51,10 +51,10 @@ end
 function PetParty.OnEventMainFrame(self, event, arg1, ...)
     if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
         -- Load Blizzard's pet journal.
-        if not IsAddOnLoaded("Blizzard_PetJournal") then
-            LoadAddOn("Blizzard_PetJournal")
+        if not IsAddOnLoaded("Blizzard_Collections") then
+            LoadAddOn("Blizzard_Collections")
         end
-    elseif (event == "ADDON_LOADED") and (arg1 == "Blizzard_PetJournal") then
+    elseif (event == "ADDON_LOADED") and (arg1 == "Blizzard_Collections") then
         -- Anchor the main frame to Blizzard's pet journal.
         PetParty_MainFrame:SetParent(PetJournal);
         PetParty_MainFrame:ClearAllPoints();
