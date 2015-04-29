@@ -331,31 +331,42 @@ function PetParty.SetPetGUIDTrainingPetFrame(pet_guid)
     -- Get the pet information frame.
     local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
     
-    -- Store the new pet.
-    pet_information_frame.pet_guid = pet_guid;
+    local result = false;
     
     -- Sanity.
-    if (pet_information_frame.pet_guid ~= nil) and (pet_information_frame.pet_guid ~= "") then
+    if (pet_guid ~= nil) and (pet_guid ~= "") then
         -- Get the pet's information.
         local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
             speciesName, icon, petType, companionID,
             tooltip, description, isWild, canBattle, isTradable,
-            isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_information_frame.pet_guid);
+            isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_guid);
         
-        -- Get the pet's abilities.
-        local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
-        
-        -- For each of the pet's abilities...
-        for i = 1, #pet_information_frame.pet_ability_buttons do
-            -- Get the ability information.
-            local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
+        -- Sanity.
+        if (speciesID ~= nil) then
+            result = true;
             
-            -- Update the pet ability button.
-            pet_information_frame.pet_ability_buttons[i].ability_guid = idTable[i];
-            pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
-            pet_information_frame.pet_ability_buttons[i].icon:Hide();
+            -- Get the pet's abilities.
+            local idTable, levelTable = C_PetJournal.GetPetAbilityList(speciesID);
+            
+            -- For each of the pet's abilities...
+            for i = 1, #pet_information_frame.pet_ability_buttons do
+                -- Get the ability information.
+                local abilityName, abilityIcon, abilityType = C_PetJournal.GetPetAbilityInfo(idTable[i]);
+                
+                -- Update the pet ability button.
+                pet_information_frame.pet_ability_buttons[i].ability_guid = idTable[i];
+                pet_information_frame.pet_ability_buttons[i].texture:SetTexture(abilityIcon);
+                pet_information_frame.pet_ability_buttons[i].icon:Hide();
+            end
         end
-    else
+    end
+    
+    -- Store the new pet.
+    pet_information_frame.pet_guid = pet_guid;
+    
+    if (not result) then
+        pet_information_frame.pet_guid = nil;
+        
         -- For each of the pet's abilities...
         for i = 1, #pet_information_frame.pet_ability_buttons do
             -- Update the pet ability button.
@@ -398,78 +409,86 @@ function PetParty.UpdateTrainingPetInformationFrame()
     -- Get the pet information frame.
     local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
     
+    local result = false;
+    
     -- If there is a training pet...
-    if (pet_information_frame.pet_guid ~= nil) then
+    if (pet_information_frame.pet_guid ~= nil) and (pet_information_frame.pet_guid ~= "") then
         -- Get the pet's information.
         local speciesID, customName, level, XP, maxXP, displayID, isFavorite,
             speciesName, icon, petType, companionID,
             tooltip, description, isWild, canBattle, isTradable,
             isUnique, isObtainable = C_PetJournal.GetPetInfoByPetID(pet_information_frame.pet_guid);
         
-        -- If this pet has a custom name...
-        if (customName ~= nil) and (customName ~= "") then
-            -- Update the name.
-            pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y * 2);
-            pet_information_frame.font_string_name:SetText(speciesName);
+        if (speciesID ~= nil) then
+            result = true;
             
-            -- Update the subname.
-            pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP", 0);
-            pet_information_frame.font_string_subname:SetText(customName);
+            -- If this pet has a custom name...
+            if (customName ~= nil) and (customName ~= "") then
+                -- Update the name.
+                pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y * 2);
+                pet_information_frame.font_string_name:SetText(speciesName);
+                
+                -- Update the subname.
+                pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP", 0);
+                pet_information_frame.font_string_subname:SetText(customName);
+                
+                -- Update the training pet.
+                pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y * 2);
+                pet_information_frame.font_string_training_pet:Show();
+            else
+                -- Update the name.
+                pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
+                pet_information_frame.font_string_name:SetText(speciesName);
+                
+                -- Update the subname.
+                pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP");
+                pet_information_frame.font_string_subname:SetText("");
+                
+                -- Update the training pet.
+                pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
+                pet_information_frame.font_string_training_pet:Show();
+            end
             
-            -- Update the training pet.
-            pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y * 2);
-            pet_information_frame.font_string_training_pet:Show();
-        else
-            -- Update the name.
-            pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP", 0, PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
-            pet_information_frame.font_string_name:SetText(speciesName);
+            -- Get the pet's statistics.
+            local health, maxHealth, attack, speed, rarity = C_PetJournal.GetPetStats(pet_information_frame.pet_guid);
             
-            -- Update the subname.
-            pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP");
-            pet_information_frame.font_string_subname:SetText("");
+            -- Update the pet button.
+            pet_information_frame.pet_button:Show();
+            pet_information_frame.pet_button.background:Show();
+            pet_information_frame.pet_button.icon:SetTexture(icon);
+            pet_information_frame.pet_button.icon_border:Show();
+            pet_information_frame.pet_button.icon_border:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
+                                                                        ITEM_QUALITY_COLORS[rarity - 1].g,
+                                                                        ITEM_QUALITY_COLORS[rarity - 1].b);
             
-            -- Update the training pet.
-            pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
-            pet_information_frame.font_string_training_pet:Show();
+            -- If the pet is alive...
+            if (health > 0) then
+                pet_information_frame.pet_button.is_dead:Hide();
+            -- If the pet is dead...
+            else
+                pet_information_frame.pet_button.is_dead:Show();
+            end
+            
+            pet_information_frame.pet_button.level:SetShown(canBattle);
+            pet_information_frame.pet_button.level:SetText(level);
+            pet_information_frame.pet_button.level_background:Show();
+            
+            -- For each pet ability button...
+            for i = 1, #pet_information_frame.pet_ability_buttons do
+                -- Update the pet ability button icon.
+                pet_information_frame.pet_ability_buttons[i].icon:Hide();
+            end
+            
+            -- For each active pet ability button...
+            for i = 1, #pet_information_frame.pet_ability_buttons_active do
+                -- Update the pet ability button icon.
+                pet_information_frame.pet_ability_buttons_active[i].icon:Show();
+            end
         end
-        
-        -- Get the pet's statistics.
-        local health, maxHealth, attack, speed, rarity = C_PetJournal.GetPetStats(pet_information_frame.pet_guid);
-        
-        -- Update the pet button.
-        pet_information_frame.pet_button:Show();
-        pet_information_frame.pet_button.background:Show();
-        pet_information_frame.pet_button.icon:SetTexture(icon);
-        pet_information_frame.pet_button.icon_border:Show();
-        pet_information_frame.pet_button.icon_border:SetVertexColor(ITEM_QUALITY_COLORS[rarity - 1].r,
-                                                                    ITEM_QUALITY_COLORS[rarity - 1].g,
-                                                                    ITEM_QUALITY_COLORS[rarity - 1].b);
-        
-        -- If the pet is alive...
-        if (health > 0) then
-            pet_information_frame.pet_button.is_dead:Hide();
-        -- If the pet is dead...
-        else
-            pet_information_frame.pet_button.is_dead:Show();
-        end
-        
-        pet_information_frame.pet_button.level:SetShown(canBattle);
-        pet_information_frame.pet_button.level:SetText(level);
-        pet_information_frame.pet_button.level_background:Show();
-        
-        -- For each pet ability button...
-        for i = 1, #pet_information_frame.pet_ability_buttons do
-            -- Update the pet ability button icon.
-            pet_information_frame.pet_ability_buttons[i].icon:Hide();
-        end
-        
-        -- For each active pet ability button...
-        for i = 1, #pet_information_frame.pet_ability_buttons_active do
-            -- Update the pet ability button icon.
-            pet_information_frame.pet_ability_buttons_active[i].icon:Show();
-        end
+    end
+    
     -- If there is not a training pet...
-    else
+    if (not result) then
         -- Update the strings.
         pet_information_frame.font_string_name:SetPoint("TOP", pet_information_frame, "TOP");
         pet_information_frame.font_string_name:SetText("");
