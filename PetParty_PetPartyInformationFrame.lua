@@ -696,6 +696,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                     
                     -- Update the training pet.
                     pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y * 2);
+                    pet_information_frame.font_string_training_pet:SetText("(" .. PetParty.L[PetParty.STRING_TRAINING_PET] .. ")");
                     pet_information_frame.font_string_training_pet:Show();
                 -- If this pet has a custom name...
                 elseif (customName ~= nil) and (customName ~= "") then
@@ -709,6 +710,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                     
                     -- Update the training pet.
                     pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame);
+                    pet_information_frame.font_string_training_pet:SetText("(" .. PetParty.L[PetParty.STRING_TRAINING_PET] .. ")");
                     pet_information_frame.font_string_training_pet:Hide();
                 -- If this pet is the training pet...
                 elseif (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
@@ -722,6 +724,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                     
                     -- Update the training pet.
                     pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP", 0, -PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y);
+                    pet_information_frame.font_string_training_pet:SetText("(" .. PetParty.L[PetParty.STRING_TRAINING_PET] .. ")");
                     pet_information_frame.font_string_training_pet:Show();
                 -- The normal case...
                 else
@@ -735,6 +738,7 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
                     
                     -- Update the training pet.
                     pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame);
+                    pet_information_frame.font_string_training_pet:SetText("(" .. PetParty.L[PetParty.STRING_TRAINING_PET] .. ")");
                     pet_information_frame.font_string_training_pet:Hide();
                 end
                 
@@ -779,8 +783,16 @@ function PetParty.UpdatePetInformationPetInformationFrame(slot_index)
             pet_information_frame.font_string_name:SetText("");
             pet_information_frame.font_string_subname:SetPoint("TOP", pet_information_frame, "TOP");
             pet_information_frame.font_string_subname:SetText("");
+            
             pet_information_frame.font_string_training_pet:SetPoint("TOP", pet_information_frame, "TOP");
-            pet_information_frame.font_string_training_pet:Hide();
+            
+            if (PetParty_PetPartyInformationFrame.training_pet_frame == pet_information_frame) then
+                pet_information_frame.font_string_training_pet:SetText("(" .. PetParty.L[PetParty.STRING_TRAINING_PET] .. ")");
+            else
+                pet_information_frame.font_string_training_pet:SetText(PetParty.L[PetParty.STRING_DRAG]);
+            end
+            
+            pet_information_frame.font_string_training_pet:Show();
             
             -- Update the pet button.
             pet_information_frame.pet_button:Hide();
