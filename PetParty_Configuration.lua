@@ -70,8 +70,8 @@ PetParty.STRING_BUTTON_SAVE_TOOLTIP = "Stores the configuration into the current
 PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY = "Create a pet party.";
 
 PetParty.STRING_BATTLE_PETS_SLOTS_CONFIGURATION = "Battle Pet Slots' Configuration";
-PetParty.STRING_DRAG = "Drag a battle pet here."
-PetParty.STRING_DRAG_BATTLE = "Drag a battle pet to train here."
+PetParty.STRING_DRAG = "Drag a battle pet here.";
+PetParty.STRING_DRAG_BATTLE = "Drag a battle pet to train here.";
 PetParty.STRING_PET_PARTY = "Pet Party";
 PetParty.STRING_PET_PARTIES = "Pet Parties";
 PetParty.STRING_TRAINING_PET = "Training Pet";
