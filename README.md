@@ -30,4 +30,4 @@ Advanced Tutorial - (For Training Pets)
 4.) Drag and drop the Training Pet frame into the final slot of the Battle Pet Slots' Configuration.
 
 5.) Click Save to store the pet party.
-Note: This will save a Training Pet as the final pet in this pet party and not the pet itself.  So, changing the Training Pet will automatically update all pet parities with the Training Pet.
+Note: This will save a Training Pet as the final pet in this pet party and not the pet itself.  So, changing the Training Pet will automatically update all pet parties with the Training Pet.
