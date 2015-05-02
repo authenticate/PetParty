@@ -33,7 +33,11 @@ end
 -- Called when the main frame's rename pet party button is clicked.
 function PetParty.OnClickMainFrameButtonRenamePetParty()
     PetParty.HidePopups();
-    StaticPopup_Show(PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY);
+    
+    -- If there's a selected pet party frame...
+    if (PetParty.pet_party_frame_selected ~= nil) then
+        StaticPopup_Show(PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY);
+    end
 end
 
 -- Called when the main frame's delete pet party button is clicked.
@@ -136,7 +140,6 @@ function PetParty.OnLoadMainFrame()
         text = PetParty.L[PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY],
         button1 = PetParty.L[PetParty.STRING_BUTTON_CREATE],
         button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
-        exclusive = true,
         OnAccept =
             function (self)
                 local text = self.editBox:GetText();
@@ -177,6 +180,7 @@ function PetParty.OnLoadMainFrame()
                 self:GetParent():Hide();
             end
         ,
+        exclusive = true,
         hasEditBox = true,
         timeout = 0,
         whileDead = true,
@@ -189,33 +193,43 @@ function PetParty.OnLoadMainFrame()
         text = PetParty.L[PetParty.STRING_DIALOG_TITLE_RENAME_PET_PARTY],
         button1 = PetParty.L[PetParty.STRING_BUTTON_RENAME],
         button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
-        exclusive = true,
         OnAccept =
             function (self)
                 local text = self.editBox:GetText();
                 if (text ~= nil) and (text ~= "") then
                     -- If there's a selected pet party frame...
                     if (PetParty.pet_party_frame_selected ~= nil) then
-                        -- TODO: Fully implement renaming.
-                        print("Hello World: " .. text);
+                        -- Rename the pet party.
+                        PetParty.pet_party_frame_selected.font_string_name:SetText(text);
                     end
                 end
             end
         ,
         OnShow =
             function (self, data)
-                -- TODO: Fully implement initializing to currently selected party.
-                self.editBox:SetText("Hello World");
-                self.button1:Disable();
+                -- If there's a selected pet party frame...
+                if (PetParty.pet_party_frame_selected ~= nil) then
+                    local text = PetParty.pet_party_frame_selected.font_string_name:GetText();
+                    self.editBox:SetText(text);
+                    self.button1:Disable();
+                else
+                    self:Hide();
+                end
             end
         ,
         EditBoxOnTextChanged =
             function (self)
+                self:GetParent().button1:Disable();
+                
                 local text = self:GetText();
                 if (text ~= nil) and (text ~= "") then
-                    self:GetParent().button1:Enable();
-                else
-                    self:GetParent().button1:Disable();
+                    -- If there's a selected pet party frame...
+                    if (PetParty.pet_party_frame_selected ~= nil) then
+                        local text_current = PetParty.pet_party_frame_selected.font_string_name:GetText();
+                        if (text ~= text_current) then
+                            self:GetParent().button1:Enable();
+                        end
+                    end
                 end
             end
         ,
@@ -231,6 +245,7 @@ function PetParty.OnLoadMainFrame()
                 self:GetParent():Hide();
             end
         ,
+        exclusive = true,
         hasEditBox = true,
         timeout = 0,
         whileDead = true,

@@ -467,6 +467,8 @@ end
 -- Called when the mouse is released on a pet party frame.
 function PetParty.OnMouseUpPetPartyFrame(self, button)
     if (button == "LeftButton") and (pet_party_frame_entered == pet_party_frame_pressed) then
+        PetParty.HidePopups();
+        
         -- Reset the old frame.
         if (PetParty.pet_party_frame_selected ~= nil) then
             -- Cache the old frame.
