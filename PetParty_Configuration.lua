@@ -57,6 +57,9 @@ PetParty.STRING_BUTTON_CANCEL = "Cancel";
 PetParty.STRING_BUTTON_CREATE = "Create";
 PetParty.STRING_BUTTON_CREATE_TOOLTIP = "Creates a new Pet Party.";
 
+PetParty.STRING_BUTTON_RENAME = "Rename";
+PetParty.STRING_BUTTON_RENAME_TOOLTIP = "Renames the currently selected Pet Party.";
+
 PetParty.STRING_BUTTON_DELETE = "Delete";
 PetParty.STRING_BUTTON_DELETE_TOOLTIP = "Deletes the currently selected Pet Party.";
 
@@ -67,7 +70,11 @@ PetParty.STRING_BUTTON_JOURNAL_TOOLTIP = "Creates groups of pets for the pet bat
 PetParty.STRING_BUTTON_SAVE = "Save";
 PetParty.STRING_BUTTON_SAVE_TOOLTIP = "Stores the configuration into the currently selected Pet Party.";
 
+PetParty.STRING_DIALOG_NAME_CREATE_PET_PARTY = "PetParty_CreatePetPartyDialog";
 PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY = "Create a pet party.";
+
+PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY = "PetParty_RenamePetPartyDialog";
+PetParty.STRING_DIALOG_TITLE_RENAME_PET_PARTY = "Rename the pet party.";
 
 PetParty.STRING_BATTLE_PETS_SLOTS_CONFIGURATION = "Battle Pet Slots' Configuration";
 PetParty.STRING_DRAG = "Drag a battle pet here.";
