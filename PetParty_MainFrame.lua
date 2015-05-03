@@ -53,7 +53,6 @@ function PetParty.OnClickMainFrameButtonDeletePetParty()
         PetParty.OnClickPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton", false);
     end
     
-    -- Store the pet parties.
     PetParty.SerializePetParties();
 end
 
