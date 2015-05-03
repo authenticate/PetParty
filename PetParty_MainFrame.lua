@@ -315,7 +315,10 @@ function PetParty.UpdateMainFrameLayout()
     PetParty_TrainingPetInformationFrame:SetHeight(PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT);
     
     -- Update the starting location.
-    start_y = start_y - PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT;
+    start_y = start_y -
+              PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT -
+              PetParty.PET_INFORMATION_FRAME_HEIGHT +
+              PetParty.PADDING;
     
     -- Update the position of the pet parties label.
     PetParty_MainFrame_Font_String_Pet_Parties:ClearAllPoints();

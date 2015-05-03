@@ -48,7 +48,7 @@ PetParty.MAIN_FRAME_OFFSET_BOTTOM = 14;
 
 PetParty.PET_INFORMATION_FONT_STRING_OFFSET_Y = 12;
 PetParty.PET_INFORMATION_FRAME_HEIGHT = 175;
-PetParty.PET_INFORMATION_FRAME_PADDING = -8;
+PetParty.PET_INFORMATION_FRAME_PADDING = 2;
 
 PetParty.STRING_BUTTON_ACTIVATE = "Activate";
 PetParty.STRING_BUTTON_ACTIVATE_TOOLTIP = "Loads the configuration into the Battle Pet Slots.";
@@ -84,7 +84,7 @@ PetParty.STRING_PET_PARTY = "Pet Party";
 PetParty.STRING_PET_PARTIES = "Pet Parties";
 PetParty.STRING_TRAINING_PET = "Training Pet";
 
-PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT = 42;
+PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT = 40;
 
 -- TODO: This color is inconsistent with Blizzard's default tooltips.  Does anyone know the correct color?
 PetParty.TOOLTIP_BACKGROUND_R = 0;

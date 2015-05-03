@@ -43,19 +43,17 @@ local PET_PARTY_FRAME_PUSHED_A = 0.333;
 
 local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP -
                                 PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT -
+                                PetParty.PADDING -
+                                PetParty.PET_INFORMATION_FRAME_HEIGHT -
+                                PetParty.PET_INFORMATION_FRAME_PADDING -
                                 PetParty.FONT_STRING_HEIGHT -
                                 PetParty.FONT_STRING_PADDING -
                                 PetParty.FONT_STRING_HEIGHT -
                                 PetParty.FONT_STRING_PADDING -
                                 PetParty.PADDING -
-                                20;
+                                12;
 
-local SCROLL_FRAME_OFFSET_BOTTOM = PetParty.PET_INFORMATION_FRAME_HEIGHT -
-                                   PetParty.PET_INFORMATION_FRAME_PADDING -
-                                   PetParty.MAIN_FRAME_OFFSET_TOP +
-                                   PetParty.MAIN_FRAME_OFFSET_BOTTOM -
-                                   PetParty.FONT_STRING_HEIGHT -
-                                   PetParty.BUTTON_HEIGHT;
+local SCROLL_FRAME_OFFSET_BOTTOM = 18;
 
 local SCROLL_BAR_ALPHA = 0.4;
 

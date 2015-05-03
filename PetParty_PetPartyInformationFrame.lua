@@ -378,13 +378,6 @@ end
 
 -- Called when the pet party information frame is loaded.
 function PetParty.OnLoadPetPartyInformationFrame()
-    -- Configure the pet party information frame.
-    PetParty_PetPartyInformationFrame:ClearAllPoints();
-    PetParty_PetPartyInformationFrame:SetPoint("LEFT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_LEFT, 0);
-    PetParty_PetPartyInformationFrame:SetPoint("RIGHT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_RIGHT, 0);
-    PetParty_PetPartyInformationFrame:SetPoint("TOP", PetParty_PetPartyScrollFrame, "BOTTOM", 0, PetParty.PET_INFORMATION_FRAME_PADDING);
-    PetParty_PetPartyInformationFrame:SetPoint("BOTTOM", PetParty_MainFrame, "BOTTOM", 0, PetParty.MAIN_FRAME_OFFSET_BOTTOM);
-    
     -- Register the per party information frame for events.
     PetParty_PetPartyInformationFrame:RegisterEvent("PET_JOURNAL_LIST_UPDATE");
     
@@ -411,7 +404,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     
     local parents = { PetParty_PetPartyInformationFrame };
     local anchors = { "TOPLEFT", "BOTTOMLEFT", "BOTTOMLEFT" };
-    local offset_y_s = { -PetParty.FONT_STRING_HEIGHT - PetParty.PADDING - PetParty.BUTTON_HEIGHT, 0, 0 };
+    local offset_y_s = { -PetParty.FONT_STRING_HEIGHT - PetParty.PADDING - PetParty.BUTTON_HEIGHT - PetParty.PADDING, 0, 0 };
     
     -- For each pet...
     for i = 1, PetParty.PETS_PER_PARTY do
@@ -626,6 +619,13 @@ end
 
 -- Call to update the pet information frame layout.
 function PetParty.UpdatePetInformationFrameLayout()
+    -- Configure the pet party information frame.
+    PetParty_PetPartyInformationFrame:ClearAllPoints();
+    PetParty_PetPartyInformationFrame:SetPoint("LEFT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_LEFT, 0);
+    PetParty_PetPartyInformationFrame:SetPoint("RIGHT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_RIGHT, 0);
+    PetParty_PetPartyInformationFrame:SetPoint("TOP", PetParty_TrainingPetInformationFrame, "BOTTOM", 0, -PetParty.PET_INFORMATION_FRAME_PADDING);
+    PetParty_PetPartyInformationFrame:SetPoint("BOTTOM", PetParty_MainFrame, "BOTTOM", 0, PetParty.MAIN_FRAME_OFFSET_BOTTOM);
+    
     -- Calculate the width of all the pet information buttons.
     local button_width = PetParty_PetPartyInformationFrame_Button_Activate:GetWidth() +
                          PetParty_PetPartyInformationFrame_Button_Save:GetWidth();
