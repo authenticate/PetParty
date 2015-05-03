@@ -50,7 +50,8 @@ local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP -
                                 PetParty.PADDING -
                                 20;
 
-local SCROLL_FRAME_OFFSET_BOTTOM = PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT -
+local SCROLL_FRAME_OFFSET_BOTTOM = PetParty.PET_INFORMATION_FRAME_HEIGHT -
+                                   PetParty.PET_INFORMATION_FRAME_PADDING -
                                    PetParty.MAIN_FRAME_OFFSET_TOP +
                                    PetParty.MAIN_FRAME_OFFSET_BOTTOM -
                                    PetParty.FONT_STRING_HEIGHT -

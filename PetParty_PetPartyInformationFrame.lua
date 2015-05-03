@@ -35,21 +35,16 @@ local BUTTON_ICON_TEXTURE_COORDINATE_RIGHT = 0.16210938;
 local BUTTON_ICON_TEXTURE_COORDINATE_TOP = 0.02246094;
 local BUTTON_ICON_TEXTURE_COORDINATE_BOTTOM = 0.04687500;
 
-local PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT = (PetParty.PET_INFORMATION_PARTY_FRAME_HEIGHT - PetParty.FONT_STRING_HEIGHT -
-                                                      PetParty.FONT_STRING_PADDING - PetParty.PADDING - PetParty.BUTTON_HEIGHT) /
-                                                     PetParty.PETS_PER_PARTY;
+local PET_INFORMATION_HEIGHT = (PetParty.PET_INFORMATION_FRAME_HEIGHT - PetParty.FONT_STRING_HEIGHT -
+                                PetParty.FONT_STRING_PADDING - PetParty.PADDING - PetParty.BUTTON_HEIGHT) /
+                               PetParty.PETS_PER_PARTY;
 
-local PET_INFORMATION_PARTY_BUTTON_COUNT = 2;
+local PET_INFORMATION_BUTTON_COUNT = 2;
 
-local PET_INFORMATION_PARTY_R = 0;
-local PET_INFORMATION_PARTY_G = 0;
-local PET_INFORMATION_PARTY_B = 0;
-local PET_INFORMATION_PARTY_A = 0;
-
-local PET_INFORMATION_PARTY_PET_INFORMATION_R = 0;
-local PET_INFORMATION_PARTY_PET_INFORMATION_G = 0;
-local PET_INFORMATION_PARTY_PET_INFORMATION_B = 0;
-local PET_INFORMATION_PARTY_PET_INFORMATION_A = 0;
+local PET_INFORMATION_R = 0;
+local PET_INFORMATION_G = 0;
+local PET_INFORMATION_B = 0;
+local PET_INFORMATION_A = 0;
 
 -- Call to create a pet information frame.
 function PetParty.CreatePetInformationFrame(parent, name)
@@ -132,10 +127,10 @@ function PetParty.CreatePetInformationFrame(parent, name)
     
     texture = pet_information_frame:CreateTexture();
     texture:SetAllPoints();
-    texture:SetTexture(PET_INFORMATION_PARTY_PET_INFORMATION_R,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_G,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_B,
-                       PET_INFORMATION_PARTY_PET_INFORMATION_A);
+    texture:SetTexture(PET_INFORMATION_R,
+                       PET_INFORMATION_G,
+                       PET_INFORMATION_B,
+                       PET_INFORMATION_A);
     
     -- Create the pet party pet button.
     local pet_button = CreateFrame("Button", name .. "_PetButton", pet_information_frame, "PetParty_PetInformationButtonTemplate");
@@ -387,7 +382,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
     PetParty_PetPartyInformationFrame:ClearAllPoints();
     PetParty_PetPartyInformationFrame:SetPoint("LEFT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_LEFT, 0);
     PetParty_PetPartyInformationFrame:SetPoint("RIGHT", PetParty_MainFrame, PetParty.MAIN_FRAME_OFFSET_RIGHT, 0);
-    PetParty_PetPartyInformationFrame:SetPoint("TOP", PetParty_PetPartyScrollFrame, "BOTTOM", 0, -PetParty.PADDING);
+    PetParty_PetPartyInformationFrame:SetPoint("TOP", PetParty_PetPartyScrollFrame, "BOTTOM", 0, PetParty.PET_INFORMATION_FRAME_PADDING);
     PetParty_PetPartyInformationFrame:SetPoint("BOTTOM", PetParty_MainFrame, "BOTTOM", 0, PetParty.MAIN_FRAME_OFFSET_BOTTOM);
     
     -- Register the per party information frame for events.
@@ -399,10 +394,10 @@ function PetParty.OnLoadPetPartyInformationFrame()
     -- Configure the pet party information frame's background texture.
     local texture = PetParty_PetPartyInformationFrame:CreateTexture();
     texture:SetAllPoints();
-    texture:SetTexture(PET_INFORMATION_PARTY_R,
-                       PET_INFORMATION_PARTY_G,
-                       PET_INFORMATION_PARTY_B,
-                       PET_INFORMATION_PARTY_A);
+    texture:SetTexture(PET_INFORMATION_R,
+                       PET_INFORMATION_G,
+                       PET_INFORMATION_B,
+                       PET_INFORMATION_A);
     
     -- Initialize the pet party information frame's training pet frame variable.
     PetParty_PetPartyInformationFrame.training_pet_frame = nil;
@@ -427,7 +422,7 @@ function PetParty.OnLoadPetPartyInformationFrame()
         pet_information_frame:ClearAllPoints();
         pet_information_frame:SetPoint("TOPLEFT", parents[i], anchors[i], 0, offset_y_s[i]);
         pet_information_frame:SetPoint("RIGHT", PetParty_PetPartyInformationFrame);
-        pet_information_frame:SetHeight(PET_INFORMATION_PARTY_PET_INFORMATION_HEIGHT);
+        pet_information_frame:SetHeight(PET_INFORMATION_HEIGHT);
         
         pet_information_frame.id = i;
         
@@ -642,7 +637,7 @@ function PetParty.UpdatePetInformationFrameLayout()
     PetParty_PetPartyInformationFrame_Font_String_Configuration:SetHeight(PetParty.FONT_STRING_HEIGHT);
     
     -- Calculate the offsets.
-    local offset_x = (PetParty_PetPartyInformationFrame:GetWidth() - button_width ) / (PET_INFORMATION_PARTY_BUTTON_COUNT + 1);
+    local offset_x = (PetParty_PetPartyInformationFrame:GetWidth() - button_width ) / (PET_INFORMATION_BUTTON_COUNT + 1);
     local offset_y = -PetParty.FONT_STRING_HEIGHT - PetParty.PADDING;
     
     -- Update the position of the activate pet information frame button.
