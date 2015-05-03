@@ -24,6 +24,124 @@
 
 local PET_PARTY_BUTTON_COUNT = 3;
 
+--
+-- Define some dialogs for creating and renaming pet parties.
+--
+
+StaticPopupDialogs[PetParty.STRING_DIALOG_NAME_CREATE_PET_PARTY] = {
+    text = PetParty.L[PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY],
+    button1 = PetParty.L[PetParty.STRING_BUTTON_CREATE],
+    button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
+    OnAccept =
+        function (self)
+            local text = self.editBox:GetText();
+            if (text ~= nil) and (text ~= "") then
+                -- Create a pet party frame.
+                PetParty.AddPetPartyFrame(text);
+                
+                -- Store the pet parties.
+                PetParty.SerializePetParties();
+            end
+        end
+    ,
+    OnShow =
+        function (self, data)
+            self.editBox:SetText("");
+            self.button1:Disable();
+        end
+    ,
+    EditBoxOnTextChanged =
+        function (self)
+            local text = self:GetText();
+            if (text ~= nil) and (text ~= "") then
+                self:GetParent().button1:Enable();
+            else
+                self:GetParent().button1:Disable();
+            end
+        end
+    ,
+    EditBoxOnEnterPressed =
+        function (self)
+            if (self:GetParent().button1:IsEnabled()) then
+                self:GetParent().button1:Click("LeftButton", false);
+            end
+        end
+    ,
+    EditBoxOnEscapePressed =
+        function (self)
+            self:GetParent():Hide();
+        end
+    ,
+    exclusive = true,
+    hasEditBox = true,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+};
+
+StaticPopupDialogs[PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY] = {
+    text = PetParty.L[PetParty.STRING_DIALOG_TITLE_RENAME_PET_PARTY],
+    button1 = PetParty.L[PetParty.STRING_BUTTON_RENAME],
+    button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
+    OnAccept =
+        function (self)
+            local text = self.editBox:GetText();
+            if (text ~= nil) and (text ~= "") then
+                if (PetParty.pet_party_frame_selected ~= nil) then
+                    -- Rename the pet party.
+                    PetParty.pet_party_frame_selected:SetText(text);
+                    PetParty.SerializePetParties();
+                end
+            end
+        end
+    ,
+    OnShow =
+        function (self, data)
+            if (PetParty.pet_party_frame_selected ~= nil) then
+                local text = PetParty.pet_party_frame_selected:GetText();
+                self.editBox:SetText(text);
+                self.button1:Disable();
+            else
+                self:Hide();
+            end
+        end
+    ,
+    EditBoxOnTextChanged =
+        function (self)
+            self:GetParent().button1:Disable();
+            
+            local text = self:GetText();
+            if (text ~= nil) and (text ~= "") then
+                if (PetParty.pet_party_frame_selected ~= nil) then
+                    local text_current = PetParty.pet_party_frame_selected:GetText();
+                    if (text ~= text_current) then
+                        self:GetParent().button1:Enable();
+                    end
+                end
+            end
+        end
+    ,
+    EditBoxOnEnterPressed =
+        function (self)
+            if (self:GetParent().button1:IsEnabled()) then
+                self:GetParent().button1:Click("LeftButton", false);
+            end
+        end
+    ,
+    EditBoxOnEscapePressed =
+        function (self)
+            self:GetParent():Hide();
+        end
+    ,
+    exclusive = true,
+    hasEditBox = true,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+};
+
 -- Called when the main frame's create pet party button is clicked.
 function PetParty.OnClickMainFrameButtonCreatePetParty()
     PetParty.HidePopups();
@@ -126,122 +244,6 @@ function PetParty.OnLoadMainFrame()
     
     -- Create the pet party scroll frame.
     PetParty.CreatePetPartyContentAndScrollFrames();
-    
-    -- Create the create pet party dialog box.
-    StaticPopupDialogs[PetParty.STRING_DIALOG_NAME_CREATE_PET_PARTY] = {
-        text = PetParty.L[PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY],
-        button1 = PetParty.L[PetParty.STRING_BUTTON_CREATE],
-        button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
-        OnAccept =
-            function (self)
-                local text = self.editBox:GetText();
-                if (text ~= nil) and (text ~= "") then
-                    -- Create a pet party frame.
-                    PetParty.AddPetPartyFrame(text);
-                    
-                    -- Store the pet parties.
-                    PetParty.SerializePetParties();
-                end
-            end
-        ,
-        OnShow =
-            function (self, data)
-                self.editBox:SetText("");
-                self.button1:Disable();
-            end
-        ,
-        EditBoxOnTextChanged =
-            function (self)
-                local text = self:GetText();
-                if (text ~= nil) and (text ~= "") then
-                    self:GetParent().button1:Enable();
-                else
-                    self:GetParent().button1:Disable();
-                end
-            end
-        ,
-        EditBoxOnEnterPressed =
-            function (self)
-                if (self:GetParent().button1:IsEnabled()) then
-                    self:GetParent().button1:Click("LeftButton", false);
-                end
-            end
-        ,
-        EditBoxOnEscapePressed =
-            function (self)
-                self:GetParent():Hide();
-            end
-        ,
-        exclusive = true,
-        hasEditBox = true,
-        timeout = 0,
-        whileDead = true,
-        hideOnEscape = true,
-        preferredIndex = 3,
-    };
-    
-    -- Create the rename pet party dialog box.
-    StaticPopupDialogs[PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY] = {
-        text = PetParty.L[PetParty.STRING_DIALOG_TITLE_RENAME_PET_PARTY],
-        button1 = PetParty.L[PetParty.STRING_BUTTON_RENAME],
-        button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
-        OnAccept =
-            function (self)
-                local text = self.editBox:GetText();
-                if (text ~= nil) and (text ~= "") then
-                    if (PetParty.pet_party_frame_selected ~= nil) then
-                        -- Rename the pet party.
-                        PetParty.pet_party_frame_selected:SetText(text);
-                        PetParty.SerializePetParties();
-                    end
-                end
-            end
-        ,
-        OnShow =
-            function (self, data)
-                if (PetParty.pet_party_frame_selected ~= nil) then
-                    local text = PetParty.pet_party_frame_selected:GetText();
-                    self.editBox:SetText(text);
-                    self.button1:Disable();
-                else
-                    self:Hide();
-                end
-            end
-        ,
-        EditBoxOnTextChanged =
-            function (self)
-                self:GetParent().button1:Disable();
-                
-                local text = self:GetText();
-                if (text ~= nil) and (text ~= "") then
-                    if (PetParty.pet_party_frame_selected ~= nil) then
-                        local text_current = PetParty.pet_party_frame_selected:GetText();
-                        if (text ~= text_current) then
-                            self:GetParent().button1:Enable();
-                        end
-                    end
-                end
-            end
-        ,
-        EditBoxOnEnterPressed =
-            function (self)
-                if (self:GetParent().button1:IsEnabled()) then
-                    self:GetParent().button1:Click("LeftButton", false);
-                end
-            end
-        ,
-        EditBoxOnEscapePressed =
-            function (self)
-                self:GetParent():Hide();
-            end
-        ,
-        exclusive = true,
-        hasEditBox = true,
-        timeout = 0,
-        whileDead = true,
-        hideOnEscape = true,
-        preferredIndex = 3,
-    };
     
     -- Localize the UI.
     PetParty_MainFrame_Font_String_Title:SetText(PetParty.L[PetParty.STRING_PET_PARTY] .. " - " .. PetParty.L[PetParty.ADDON_VERSION]);
