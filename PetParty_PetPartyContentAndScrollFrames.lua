@@ -23,10 +23,23 @@
 --
 
 local PET_PARTY_FRAME_FONT = "GameFontNormal";
-local PET_PARTY_FRAME_FONT_HIGHLIGHT = "GameFontHighlight";
-local PET_PARTY_FRAME_FONT_SELECTED = "GameFontGreen";
 
 local PET_PARTY_FRAME_SIZE = 22;
+
+local PET_PARTY_FRAME_TEXTURE_OFFSET_LEFT = 0;
+local PET_PARTY_FRAME_TEXTURE_OFFSET_RIGHT = -3;
+local PET_PARTY_FRAME_TEXTURE_OFFSET_TOP = -1;
+local PET_PARTY_FRAME_TEXTURE_OFFSET_BOTTOM = 1;
+
+local PET_PARTY_FRAME_HIGHLIGHT_R = 1.0;
+local PET_PARTY_FRAME_HIGHLIGHT_G = 1.0;
+local PET_PARTY_FRAME_HIGHLIGHT_B = 1.0;
+local PET_PARTY_FRAME_HIGHLIGHT_A = 0.333;
+
+local PET_PARTY_FRAME_PUSHED_R = 0.769;
+local PET_PARTY_FRAME_PUSHED_G = 0.647;
+local PET_PARTY_FRAME_PUSHED_B = 0.157;
+local PET_PARTY_FRAME_PUSHED_A = 0.333;
 
 local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP -
                                 PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT -
@@ -55,12 +68,6 @@ local SCROLL_BAR_STEPS_PER_PAGE = 1;
 
 local SCROLL_BAR_WIDTH = 16;
 
--- The currently entered pet party frame.
-local pet_party_frame_entered = nil;
-
--- The currently pressed pet party frame.
-local pet_party_frame_pressed = nil;
-
 -- Call to add a pet party frame.
 function PetParty.AddPetPartyFrame(name)
     -- Initialize the battle pet frame variables.
@@ -81,56 +88,57 @@ function PetParty.AddPetPartyFrame(name)
         pet_party_frame:Show();
     else
         -- Create the pet party frame.
-        pet_party_frame = CreateFrame("Frame", nil, PetParty_PetPartyContentFrame);
+        pet_party_frame = CreateFrame("Button", nil, PetParty_PetPartyContentFrame);
         pet_party_frame:SetHeight(PET_PARTY_FRAME_SIZE);
         
-        -- Add an enter handler for the pet party frame.
-        pet_party_frame:SetScript("OnEnter",
-            function(self, motion)
-                PetParty.OnEnterPetPartyFrame(self, motion);
-            end
-        );
-        
-        -- Add a leave handler for the pet party frame.
-        pet_party_frame:SetScript("OnLeave",
-            function(self, motion)
-                PetParty.OnLeavePetPartyFrame(self, motion);
-            end
-        );
-        
-        -- Add a mouse down handler for the pet party frame.
-        pet_party_frame:SetScript("OnMouseDown",
-            function(self, button)
-                PetParty.OnMouseDownPetPartyFrame(self, button);
-            end
-        );
-        
-        -- Add a mouse up handler for the pet party frame.
-        pet_party_frame:SetScript("OnMouseUp",
-            function(self, button)
-                PetParty.OnMouseUpPetPartyFrame(self, button);
+        -- Add a click handler for the pet party frame.
+        pet_party_frame:SetScript("OnClick",
+            function(self, button, down)
+                PetParty.OnClickPetPartyFrame(self, button, down);
             end
         );
         
         pet_party_frame.time = 0;
         pet_party_frame.time_start = false;
         
-        pet_party_frame.texture_background = pet_party_frame:CreateTexture();
-        pet_party_frame.texture_background:SetAllPoints();
-        pet_party_frame.texture_background:SetTexture(0, 0, 0, 0);
+        pet_party_frame:SetNormalFontObject(PET_PARTY_FRAME_FONT);
         
-        -- Create the pet party title frame.
-        pet_party_frame.font_string_name = pet_party_frame:CreateFontString();
+        local texture_highlight = pet_party_frame:CreateTexture(nil, "BACKGROUND");
+        texture_highlight:ClearAllPoints();
+        texture_highlight:SetPoint("TOPLEFT", PET_PARTY_FRAME_TEXTURE_OFFSET_LEFT, PET_PARTY_FRAME_TEXTURE_OFFSET_TOP);
+        texture_highlight:SetPoint("BOTTOMRIGHT", PET_PARTY_FRAME_TEXTURE_OFFSET_RIGHT, PET_PARTY_FRAME_TEXTURE_OFFSET_BOTTOM);
+        texture_highlight:SetTexture(PET_PARTY_FRAME_HIGHLIGHT_R,
+                                     PET_PARTY_FRAME_HIGHLIGHT_G,
+                                     PET_PARTY_FRAME_HIGHLIGHT_B,
+                                     PET_PARTY_FRAME_HIGHLIGHT_A);
+        pet_party_frame:SetHighlightTexture(texture_highlight);
+        
+        local texture_pushed = pet_party_frame:CreateTexture(nil, "BACKGROUND");
+        texture_pushed:ClearAllPoints();
+        texture_pushed:SetPoint("TOPLEFT", PET_PARTY_FRAME_TEXTURE_OFFSET_LEFT, PET_PARTY_FRAME_TEXTURE_OFFSET_TOP);
+        texture_pushed:SetPoint("BOTTOMRIGHT", PET_PARTY_FRAME_TEXTURE_OFFSET_RIGHT, PET_PARTY_FRAME_TEXTURE_OFFSET_BOTTOM);
+        texture_pushed:SetTexture(PET_PARTY_FRAME_PUSHED_R,
+                                  PET_PARTY_FRAME_PUSHED_G,
+                                  PET_PARTY_FRAME_PUSHED_B,
+                                  PET_PARTY_FRAME_PUSHED_A);
+        pet_party_frame:SetPushedTexture(texture_pushed);
+        
+        local texture_toggled = pet_party_frame:CreateTexture(nil, "BACKGROUND");
+        texture_toggled:ClearAllPoints();
+        texture_toggled:SetPoint("TOPLEFT", PET_PARTY_FRAME_TEXTURE_OFFSET_LEFT, PET_PARTY_FRAME_TEXTURE_OFFSET_TOP);
+        texture_toggled:SetPoint("BOTTOMRIGHT", PET_PARTY_FRAME_TEXTURE_OFFSET_RIGHT, PET_PARTY_FRAME_TEXTURE_OFFSET_BOTTOM);
+        texture_toggled:SetTexture(PET_PARTY_FRAME_PUSHED_R,
+                                   PET_PARTY_FRAME_PUSHED_G,
+                                   PET_PARTY_FRAME_PUSHED_B,
+                                   PET_PARTY_FRAME_PUSHED_A);
+        pet_party_frame.texture_toggled = texture_toggled;
         
         -- Update the allocated frame count.
         PetParty_PetPartyContentFrame.content.frame_count_allocated = PetParty_PetPartyContentFrame.content.frame_count_allocated + 1;
     end
     
     -- Update the pet party frame's name.
-    pet_party_frame.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT);
-    pet_party_frame.font_string_name:SetText(name);
-    pet_party_frame.font_string_name:ClearAllPoints();
-    pet_party_frame.font_string_name:SetPoint("CENTER", pet_party_frame);
+    pet_party_frame:SetText(name);
     
     -- Update the pet party frame's pet information.
     pet_party_frame.pet_training_frame_id = nil;
@@ -179,7 +187,7 @@ function PetParty.AddPetPartyFrame(name)
         function(frame_a, frame_b)
             local result = false;
             
-            if (frame_a.font_string_name:GetText() < frame_b.font_string_name:GetText()) then
+            if (frame_a:GetText() < frame_b:GetText()) then
                 result = true;
             end
             
@@ -229,23 +237,8 @@ function PetParty.AddPetPartyFrame(name)
         frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
     end
     
-    --
     -- Select the new pet party frame.
-    --
-    
-    -- Store the previously selected pet party frame.
-    local pet_party_frame_previously_selected = PetParty.pet_party_frame_selected;
-    PetParty.pet_party_frame_selected = pet_party_frame;
-    
-    -- Update the previously selected frame. 
-    if (pet_party_frame_previously_selected ~= nil) then
-        PetParty.OnLeavePetPartyFrame(pet_party_frame_previously_selected, false);
-    end
-    
-    -- Update the selected frame.
-    if (PetParty.pet_party_frame_selected ~= nil) then
-        PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
-    end
+    PetParty.OnClickPetPartyFrame(pet_party_frame, "LeftButton", false);
     
     -- Update the scroll bar layout.
     PetParty.UpdatePetPartyScrollBarLayout();
@@ -418,68 +411,27 @@ function PetParty.DeserializePetParties()
         
         -- If there's a selected pet party ID...
         if (pet_party_selected_id ~= nil) then
-            -- Store the previously selected pet party frame.
-            local pet_party_frame_previously_selected = PetParty.pet_party_frame_selected;
-            PetParty.pet_party_frame_selected = PetParty_PetPartyContentFrame.content.frames[pet_party_selected_id];
-            
-            -- Update the previously selected frame. 
-            if (pet_party_frame_previously_selected ~= nil) then
-                PetParty.OnLeavePetPartyFrame(pet_party_frame_previously_selected, false);
-            end
-            
-            -- Update the selected frame.
-            if (PetParty.pet_party_frame_selected ~= nil) then
-                PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
-            end
+            local frame = PetParty_PetPartyContentFrame.content.frames[pet_party_selected_id];
+            PetParty.OnClickPetPartyFrame(frame, "LeftButton", false);
         end
     end
 end
 
--- Called when the mouse enters a pet party frame.
-function PetParty.OnEnterPetPartyFrame(self, motion)
-    -- Store the entered frame.
-    if (motion) then
-        pet_party_frame_entered = self;
-    end
-    
-    self.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT_HIGHLIGHT);
-end
-
--- Called when the mouse leaves a pet party frame.
-function PetParty.OnLeavePetPartyFrame(self, motion)
-    -- Reset the entered frame.
-    if (motion) then
-        pet_party_frame_entered = nil;
-    end
-    
-    if (self ~= PetParty.pet_party_frame_selected) then
-        self.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT);
-    else
-        self.font_string_name:SetFontObject(PET_PARTY_FRAME_FONT_SELECTED);
-    end
-end
-
--- Called when the mouse is pressed on a pet party frame.
-function PetParty.OnMouseDownPetPartyFrame(self, button)
-    pet_party_frame_pressed = self;
-end
-
--- Called when the mouse is released on a pet party frame.
-function PetParty.OnMouseUpPetPartyFrame(self, button)
-    if (button == "LeftButton") and (pet_party_frame_entered == pet_party_frame_pressed) then
+-- Called when the user clicks on a pet party frame.
+function PetParty.OnClickPetPartyFrame(self, button, down)
+    if (button == "LeftButton") then
         PetParty.HidePopups();
         
         -- Reset the old frame.
         if (PetParty.pet_party_frame_selected ~= nil) then
             -- Cache the old frame.
             local frame = PetParty.pet_party_frame_selected;
-            PetParty.pet_party_frame_selected = nil;
             
             -- Store the new frame.
             PetParty.pet_party_frame_selected = self;
             
             -- Reset the old frame.
-            PetParty.OnLeavePetPartyFrame(frame, false);
+            frame.texture_toggled:Hide();
         end
         
         -- For each pet...
@@ -513,12 +465,9 @@ function PetParty.OnMouseUpPetPartyFrame(self, button)
         PetParty.pet_party_frame_selected = self;
         
         -- Update the new frame.
-        PetParty.OnEnterPetPartyFrame(self, false);
+        self.texture_toggled:Show();
         
-        --
         -- Double click functionality.
-        --
-        
         if (self.time) < time() then
             self.time_start = false;
         end
@@ -559,7 +508,7 @@ function PetParty.SerializePetParties()
         pet_party.ability_guids = {};
         
         -- Store the pet party's name.
-        pet_party.name = pet_party_frame.font_string_name:GetText();
+        pet_party.name = pet_party_frame:GetText();
         
         -- Store the pet party's training pet's GUID.
         pet_party.pet_training_frame_id = pet_party_frame.pet_training_frame_id;

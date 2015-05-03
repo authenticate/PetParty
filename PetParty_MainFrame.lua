@@ -104,14 +104,10 @@ function PetParty.OnEventMainFrame(self, event, arg1, ...)
         
         -- If the pet parties have not been deserialized...
         if (not PetParty.are_pet_parties_deserialized) then
-            -- Deserialize the pet parties.
             PetParty.DeserializePetParties();
-            
-            -- Update the flag.
             PetParty.are_pet_parties_deserialized = true;
         end
         
-        -- Serialize the pet parties.
         PetParty.SerializePetParties()
     end
 end
@@ -197,19 +193,18 @@ function PetParty.OnLoadMainFrame()
             function (self)
                 local text = self.editBox:GetText();
                 if (text ~= nil) and (text ~= "") then
-                    -- If there's a selected pet party frame...
                     if (PetParty.pet_party_frame_selected ~= nil) then
                         -- Rename the pet party.
-                        PetParty.pet_party_frame_selected.font_string_name:SetText(text);
+                        PetParty.pet_party_frame_selected:SetText(text);
+                        PetParty.DeserializePetParties();
                     end
                 end
             end
         ,
         OnShow =
             function (self, data)
-                -- If there's a selected pet party frame...
                 if (PetParty.pet_party_frame_selected ~= nil) then
-                    local text = PetParty.pet_party_frame_selected.font_string_name:GetText();
+                    local text = PetParty.pet_party_frame_selected:GetText();
                     self.editBox:SetText(text);
                     self.button1:Disable();
                 else
@@ -223,9 +218,8 @@ function PetParty.OnLoadMainFrame()
                 
                 local text = self:GetText();
                 if (text ~= nil) and (text ~= "") then
-                    -- If there's a selected pet party frame...
                     if (PetParty.pet_party_frame_selected ~= nil) then
-                        local text_current = PetParty.pet_party_frame_selected.font_string_name:GetText();
+                        local text_current = PetParty.pet_party_frame_selected:GetText();
                         if (text ~= text_current) then
                             self:GetParent().button1:Enable();
                         end
@@ -278,8 +272,7 @@ function PetParty.OnShowMainFrame()
             pet_party_frame_entered = PetParty.pet_party_frame_selected;
             pet_party_frame_pressed = PetParty.pet_party_frame_selected;
             
-            PetParty.OnMouseUpPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
-            PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected);
+            PetParty.OnClickPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton", false);
             
             pet_party_frame_entered = nil;
             pet_party_frame_pressed = nil;
