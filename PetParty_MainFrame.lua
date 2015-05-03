@@ -47,17 +47,14 @@ function PetParty.OnClickMainFrameButtonDeletePetParty()
     -- Delete the selected pet party frame.
     PetParty.DeletePetPartyFrame();
     
-    -- Store the pet parties.
-    PetParty.SerializePetParties();
-    
     -- If there's a selected pet party frame...
     if (PetParty.pet_party_frame_selected ~= nil) then
         -- Simulate the selected pet party frame being selected.
-        PetParty.OnEnterPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
-        PetParty.OnMouseDownPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
-        PetParty.OnMouseUpPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
-        PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton");
+        PetParty.OnClickPetPartyFrame(PetParty.pet_party_frame_selected, "LeftButton", false);
     end
+    
+    -- Store the pet parties.
+    PetParty.SerializePetParties();
 end
 
 -- Called when the main frame receives an event.
@@ -196,7 +193,7 @@ function PetParty.OnLoadMainFrame()
                     if (PetParty.pet_party_frame_selected ~= nil) then
                         -- Rename the pet party.
                         PetParty.pet_party_frame_selected:SetText(text);
-                        PetParty.DeserializePetParties();
+                        PetParty.SerializePetParties();
                     end
                 end
             end

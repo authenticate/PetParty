@@ -360,9 +360,6 @@ function PetParty.DeletePetPartyFrame()
         end
         
         if (PetParty.pet_party_frame_selected ~= nil) then
-            PetParty.OnLeavePetPartyFrame(PetParty.pet_party_frame_selected, false);
-            
-            -- For each pet...
             for i = 1, PetParty.PETS_PER_PARTY do
                 -- Update the pet frames.
                 PetParty.SetPetGUIDPetInformationFrame(i, PetParty.pet_party_frame_selected.pet_guids[i]);
