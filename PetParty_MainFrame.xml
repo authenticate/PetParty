@@ -39,7 +39,7 @@
             <Layer level="ARTWORK">
                 <Texture name="$parent_Title" file="Interface\DialogFrame\UI-DialogBox-Header">
                     <Size>
-                        <AbsDimension x="256" y="64"/>
+                        <AbsDimension x="278" y="64"/>
                     </Size>
                     <Anchors>
                         <Anchor point="TOP">
