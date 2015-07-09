@@ -182,6 +182,7 @@ function PetParty.OnEventMainFrame(self, event, arg1, ...)
             LoadAddOn("Blizzard_Collections");
         end
         
+        -- Anchor the main frame to Blizzard's pet journal.
         PetParty_MainFrame:SetParent(PetJournal);
         PetParty_MainFrame:ClearAllPoints();
         PetParty_MainFrame:SetPoint("TOPLEFT", PetJournal, "TOPRIGHT");
