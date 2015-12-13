@@ -46,12 +46,20 @@ local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP -
                                 PetParty.PADDING -
                                 PetParty.PET_INFORMATION_FRAME_HEIGHT -
                                 PetParty.PET_INFORMATION_FRAME_PADDING -
+                                -- The 'Pet Parties' FontString.
                                 PetParty.FONT_STRING_HEIGHT -
                                 PetParty.FONT_STRING_PADDING -
+                                -- The 'Create', 'Rename', and 'Delete' Buttons.
                                 PetParty.FONT_STRING_HEIGHT -
                                 PetParty.FONT_STRING_PADDING -
+                                -- The 'Filter' FontString.
+                                PetParty.FONT_STRING_HEIGHT -
+                                PetParty.FONT_STRING_PADDING -
+                                -- The 'Filter' EditBox.
+                                PetParty.EDIT_BOX_HEIGHT -
                                 PetParty.PADDING -
-                                12;
+                                -- Add some extra padding.
+                                PetParty.PADDING;
 
 local SCROLL_FRAME_OFFSET_BOTTOM = 18;
 

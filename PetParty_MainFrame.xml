@@ -58,6 +58,7 @@
                 </FontString>
                 <FontString name="$parent_Font_String_Training_Pet" inherits="GameFontNormal"/>
                 <FontString name="$parent_Font_String_Pet_Parties" inherits="GameFontNormal"/>
+                <FontString name="$parent_Font_String_Filter" inherits="GameFontNormal"/>
             </Layer>
         </Layers>
         <Frames>
@@ -160,6 +161,38 @@
                     </OnLeave>
                 </Scripts>
             </Button>
+            <EditBox name="$parent_Edit_Box_Filter" hidden="false">
+                <Size>
+                    <AbsDimension x="180" y="32"/>
+                </Size>
+                <Layers>
+                    <Layer level="BACKGROUND">
+                        <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Left">
+                            <Size>
+                                <AbsDimension x="174" y="32"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="LEFT">
+                                    <Offset>
+                                        <AbsDimension x="-5" y="0"/>
+                                    </Offset>
+                                </Anchor>
+                            </Anchors>
+                        </Texture>
+                        <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Right">
+                            <Size>
+                                <AbsDimension x="174" y="32"/>
+                            </Size>
+                            <Anchors>
+                                <Anchor point="RIGHT"/>
+                            </Anchors>
+                        </Texture>
+                    </Layer>
+                </Layers>
+                <Scripts>
+                </Scripts>
+                <FontString inherits="ChatFontNormal"/>
+            </EditBox>
             <GameTooltip name="PetParty_Tooltip" inherits="GameTooltipTemplate" parent="UIParent"/>
         </Frames>
         <Scripts>

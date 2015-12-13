@@ -37,6 +37,9 @@ PetParty.PADDING = 2;
 PetParty.BUTTON_WIDTH = 22;
 PetParty.BUTTON_HEIGHT = 22;
 
+PetParty.EDIT_BOX_WIDTH = 180;
+PetParty.EDIT_BOX_HEIGHT = 32;
+
 PetParty.FONT_STRING_HEIGHT = 18;
 PetParty.FONT_STRING_PADDING = 4;
 
@@ -80,6 +83,7 @@ PetParty.STRING_DIALOG_TITLE_RENAME_PET_PARTY = "Rename the pet party.";
 PetParty.STRING_BATTLE_PETS_SLOTS_CONFIGURATION = "Battle Pet Slots' Configuration";
 PetParty.STRING_DRAG = "Drag a battle pet here.";
 PetParty.STRING_DRAG_BATTLE = "Drag a battle pet to train here.";
+PetParty.STRING_FILTER = "Filter";
 PetParty.STRING_PET_PARTY = "Pet Party";
 PetParty.STRING_PET_PARTIES = "Pet Parties";
 PetParty.STRING_TRAINING_PET = "Training Pet";
