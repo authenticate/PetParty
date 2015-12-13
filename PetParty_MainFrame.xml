@@ -58,7 +58,6 @@
                 </FontString>
                 <FontString name="$parent_Font_String_Training_Pet" inherits="GameFontNormal"/>
                 <FontString name="$parent_Font_String_Pet_Parties" inherits="GameFontNormal"/>
-                <FontString name="$parent_Font_String_Filter" inherits="GameFontNormal"/>
             </Layer>
         </Layers>
         <Frames>
@@ -161,39 +160,14 @@
                     </OnLeave>
                 </Scripts>
             </Button>
-            <EditBox name="$parent_Edit_Box_Filter" hidden="false">
+            <EditBox name="$parent_Edit_Box_Search" inherits="SearchBoxTemplate" autoFocus="false" hidden="false">
                 <Size>
                     <AbsDimension x="174" y="32"/>
                 </Size>
-                <Layers>
-                    <Layer level="BACKGROUND">
-                        <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Left">
-                            <Size>
-                                <AbsDimension x="174" y="32"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="LEFT">
-                                    <Offset>
-                                        <AbsDimension x="-8" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                        <Texture file="Interface\ChatFrame\UI-ChatInputBorder-Right">
-                            <Size>
-                                <AbsDimension x="174" y="32"/>
-                            </Size>
-                            <Anchors>
-                                <Anchor point="RIGHT">
-                                    <Offset>
-                                        <AbsDimension x="8" y="0"/>
-                                    </Offset>
-                                </Anchor>
-                            </Anchors>
-                        </Texture>
-                    </Layer>
-                </Layers>
                 <Scripts>
+                    <OnTextChanged>
+                        PetParty.OnTextChangedMainFrameEditBoxSearch();
+                    </OnTextChanged>
                 </Scripts>
                 <FontString inherits="ChatFontNormal"/>
             </EditBox>

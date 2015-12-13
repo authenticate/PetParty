@@ -174,6 +174,14 @@ function PetParty.OnClickMainFrameButtonDeletePetParty()
     PetParty.SerializePetParties();
 end
 
+-- Called when the main frame's search edit box's text is changed.
+function PetParty.OnTextChangedMainFrameEditBoxSearch()
+    print("TODO: Implement me!");
+    
+    -- Call the base class function.
+    SearchBoxTemplate_OnTextChanged(PetParty_MainFrame_Edit_Box_Search);
+end
+
 -- Called when the main frame receives an event.
 function PetParty.OnEventMainFrame(self, event, arg1, ...)
     if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
@@ -252,7 +260,6 @@ function PetParty.OnLoadMainFrame()
     PetParty_MainFrame_Button_Create_Pet_Party:SetText(PetParty.L[PetParty.STRING_BUTTON_CREATE]);
     PetParty_MainFrame_Button_Rename_Pet_Party:SetText(PetParty.L[PetParty.STRING_BUTTON_RENAME]);
     PetParty_MainFrame_Button_Delete_Pet_Party:SetText(PetParty.L[PetParty.STRING_BUTTON_DELETE]);
-    PetParty_MainFrame_Font_String_Filter:SetText(PetParty.L[PetParty.STRING_FILTER]);
 end
 
 -- Called when the main frame is shown.
@@ -362,20 +369,11 @@ function PetParty.UpdateMainFrameLayout()
     -- Update the starting location.
     start_y = start_y - PetParty_MainFrame_Button_Create_Pet_Party:GetHeight() - PetParty.PADDING;
     
-    -- Update the position of the filter label.
-    PetParty_MainFrame_Font_String_Filter:ClearAllPoints();
-    PetParty_MainFrame_Font_String_Filter:SetPoint("TOPLEFT", start_x, start_y);
-    PetParty_MainFrame_Font_String_Filter:SetPoint("RIGHT", PetParty.MAIN_FRAME_OFFSET_RIGHT, 0);
-    PetParty_MainFrame_Font_String_Filter:SetHeight(PetParty.FONT_STRING_HEIGHT);
-    
-    -- Update the starting location.
-    start_y = start_y - PetParty.FONT_STRING_HEIGHT;
-    
     -- Calculate the offset.
-    offset_x = ((PetParty.MAIN_FRAME_WIDTH - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT) - PetParty_MainFrame_Edit_Box_Filter:GetWidth()) / 2;
+    offset_x = ((PetParty.MAIN_FRAME_WIDTH - PetParty.MAIN_FRAME_OFFSET_LEFT + PetParty.MAIN_FRAME_OFFSET_RIGHT) - PetParty_MainFrame_Edit_Box_Search:GetWidth()) / 2;
     
-    -- Update the position of the filter edit box.
-    PetParty_MainFrame_Edit_Box_Filter:ClearAllPoints();
-    PetParty_MainFrame_Edit_Box_Filter:SetPoint("TOPLEFT", offset_x, start_y);
-    PetParty_MainFrame_Edit_Box_Filter:SetPoint("RIGHT", -offset_x, 0);
+    -- Update the position of the search edit box.
+    PetParty_MainFrame_Edit_Box_Search:ClearAllPoints();
+    PetParty_MainFrame_Edit_Box_Search:SetPoint("TOPLEFT", offset_x, start_y);
+    PetParty_MainFrame_Edit_Box_Search:SetPoint("RIGHT", -offset_x, 0);
 end
