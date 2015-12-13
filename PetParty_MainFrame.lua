@@ -142,6 +142,12 @@ StaticPopupDialogs[PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY] = {
     preferredIndex = 3,
 };
 
+-- Call to hide all pop-ups.
+function PetParty.HidePopups()
+    StaticPopup_Hide(PetParty.STRING_DIALOG_NAME_CREATE_PET_PARTY);
+    StaticPopup_Hide(PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY);
+end
+
 -- Called when the main frame's create pet party button is clicked.
 function PetParty.OnClickMainFrameButtonCreatePetParty()
     PetParty.HidePopups();
@@ -172,14 +178,6 @@ function PetParty.OnClickMainFrameButtonDeletePetParty()
     end
     
     PetParty.SerializePetParties();
-end
-
--- Called when the main frame's search edit box's text is changed.
-function PetParty.OnTextChangedMainFrameEditBoxSearch()
-    print("TODO: Implement me!");
-    
-    -- Call the base class function.
-    SearchBoxTemplate_OnTextChanged(PetParty_MainFrame_Edit_Box_Search);
 end
 
 -- Called when the main frame receives an event.
@@ -291,10 +289,12 @@ function PetParty.OnShowMainFrame()
     end
 end
 
--- Call to hide all pop-ups.
-function PetParty.HidePopups()
-    StaticPopup_Hide(PetParty.STRING_DIALOG_NAME_CREATE_PET_PARTY);
-    StaticPopup_Hide(PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY);
+-- Called when the main frame's search edit box's text is changed.
+function PetParty.OnTextChangedMainFrameEditBoxSearch()
+    print("TODO: Implement me!");
+    
+    -- Call the base class function.
+    SearchBoxTemplate_OnTextChanged(PetParty_MainFrame_Edit_Box_Search);
 end
 
 -- Call to update the main frame layout.

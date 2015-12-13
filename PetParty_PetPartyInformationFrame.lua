@@ -262,21 +262,6 @@ function PetParty.CreatePetInformationFrame(parent, name)
     return pet_information_frame;
 end
 
--- Call to get a pet's GUID from a pet information frame.
-function PetParty.GetPetGUIDPetInformationFrame(slot_index)
-    -- The result.
-    local pet_guid = nil;
-    
-    -- Get the pet frame.
-    local pet_information_frame = PetParty_PetPartyInformationFrame.pet_frames[slot_index];
-    if (pet_information_frame ~= nil) then
-        pet_guid = pet_information_frame.pet_guid;
-    end
-    
-    -- Return the result.
-    return pet_guid;
-end
-
 -- Call to get a pet's abilities' GUIDs from a pet information frame.
 function PetParty.GetPetAbilityGUIDsPetInformationFrame(slot_index)
     -- The result.
@@ -296,6 +281,21 @@ function PetParty.GetPetAbilityGUIDsPetInformationFrame(slot_index)
     
     -- Return the result.
     return ability_guids;
+end
+
+-- Call to get a pet's GUID from a pet information frame.
+function PetParty.GetPetGUIDPetInformationFrame(slot_index)
+    -- The result.
+    local pet_guid = nil;
+    
+    -- Get the pet frame.
+    local pet_information_frame = PetParty_PetPartyInformationFrame.pet_frames[slot_index];
+    if (pet_information_frame ~= nil) then
+        pet_guid = pet_information_frame.pet_guid;
+    end
+    
+    -- Return the result.
+    return pet_guid;
 end
 
 -- Called when the pet party information frame's activate button is clicked.

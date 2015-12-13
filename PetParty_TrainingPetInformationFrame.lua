@@ -42,18 +42,6 @@ function PetParty.DeserializeTrainingPet()
     end
 end
 
--- Call to get a pet's GUID from a training pet frame.
-function PetParty.GetPetGUIDTrainingPetFrame()
-    -- The result.
-    local pet_guid = nil;
-    
-    -- Get the pet information frame.
-    local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
-    
-    -- Return the result.
-    return pet_information_frame.pet_guid;
-end
-
 -- Call to get a pet's abilities' GUIDs from the training pet information frame.
 function PetParty.GetPetAbilityGUIDsTrainingPetFrame()
     -- The result.
@@ -73,6 +61,18 @@ function PetParty.GetPetAbilityGUIDsTrainingPetFrame()
     
     -- Return the result.
     return ability_guids;
+end
+
+-- Call to get a pet's GUID from a training pet frame.
+function PetParty.GetPetGUIDTrainingPetFrame()
+    -- The result.
+    local pet_guid = nil;
+    
+    -- Get the pet information frame.
+    local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
+    
+    -- Return the result.
+    return pet_information_frame.pet_guid;
 end
 
 -- Called when the training pet information frame receives an event.
@@ -326,6 +326,33 @@ function PetParty.SerializeTrainingPet()
     PetPartyDB.training_pet.ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
 end
 
+-- Call to set a pet's abilities in the training pet information frame.
+function PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids)
+    -- Get the pet information frame.
+    local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
+    
+    -- Reset the ability GUIDs.
+    pet_information_frame.pet_ability_buttons_active = {};
+    
+    -- Sanity.
+    if (ability_guids ~= nil) then
+        -- For each ability GUID...
+        for i = 1, #ability_guids do
+            -- For each ability button...
+            for j = 1, #pet_information_frame.pet_ability_buttons do
+                -- Get the ability GUID.
+                local ability_guid = ability_guids[i];
+                
+                -- Get the ability button.
+                local ability_button = pet_information_frame.pet_ability_buttons[j];
+                if (ability_button.ability_guid == ability_guid) then
+                    table.insert(pet_information_frame.pet_ability_buttons_active, ability_button);
+                end
+            end
+        end
+    end
+end
+
 -- Call to set a pet in the training pet information frame.
 function PetParty.SetPetGUIDTrainingPetFrame(pet_guid)
     -- Get the pet information frame.
@@ -373,33 +400,6 @@ function PetParty.SetPetGUIDTrainingPetFrame(pet_guid)
             pet_information_frame.pet_ability_buttons[i].ability_guid = nil;
             pet_information_frame.pet_ability_buttons[i].texture:SetTexture(nil);
             pet_information_frame.pet_ability_buttons[i].icon:Hide();
-        end
-    end
-end
-
--- Call to set a pet's abilities in the training pet information frame.
-function PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids)
-    -- Get the pet information frame.
-    local pet_information_frame = PetParty_TrainingPetInformationFrame.pet_frame;
-    
-    -- Reset the ability GUIDs.
-    pet_information_frame.pet_ability_buttons_active = {};
-    
-    -- Sanity.
-    if (ability_guids ~= nil) then
-        -- For each ability GUID...
-        for i = 1, #ability_guids do
-            -- For each ability button...
-            for j = 1, #pet_information_frame.pet_ability_buttons do
-                -- Get the ability GUID.
-                local ability_guid = ability_guids[i];
-                
-                -- Get the ability button.
-                local ability_button = pet_information_frame.pet_ability_buttons[j];
-                if (ability_button.ability_guid == ability_guid) then
-                    table.insert(pet_information_frame.pet_ability_buttons_active, ability_button);
-                end
-            end
         end
     end
 end
