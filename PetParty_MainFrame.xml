@@ -163,7 +163,7 @@
             </Button>
             <EditBox name="$parent_Edit_Box_Filter" hidden="false">
                 <Size>
-                    <AbsDimension x="180" y="32"/>
+                    <AbsDimension x="174" y="32"/>
                 </Size>
                 <Layers>
                     <Layer level="BACKGROUND">
@@ -174,7 +174,7 @@
                             <Anchors>
                                 <Anchor point="LEFT">
                                     <Offset>
-                                        <AbsDimension x="-5" y="0"/>
+                                        <AbsDimension x="-8" y="0"/>
                                     </Offset>
                                 </Anchor>
                             </Anchors>
@@ -184,7 +184,11 @@
                                 <AbsDimension x="174" y="32"/>
                             </Size>
                             <Anchors>
-                                <Anchor point="RIGHT"/>
+                                <Anchor point="RIGHT">
+                                    <Offset>
+                                        <AbsDimension x="8" y="0"/>
+                                    </Offset>
+                                </Anchor>
                             </Anchors>
                         </Texture>
                     </Layer>
