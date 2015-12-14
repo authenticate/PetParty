@@ -207,42 +207,11 @@ function PetParty.AddPetPartyFrame(name)
         PetParty_PetPartyContentFrame.content.frames[i] = active_pet_party_frames[i];
     end
     
-    --
-    -- Update the sorted pet party frames' IDs and anchors.
-    --
-    
-    for i = 1, #PetParty_PetPartyContentFrame.content.frames do
-        -- Get the frame.
-        local frame = PetParty_PetPartyContentFrame.content.frames[i];
-        
-        --
-        -- Update the pet party frame's ID.
-        --
-        
-        frame.id = i;
-        
-        --
-        -- Update the pet party frame's anchors.
-        --
-        
-        frame:ClearAllPoints();
-        
-        if (i == 1) then
-            -- Anchor the frame to the content frame.
-            frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
-        else
-            -- Get the previous frame.
-            local previous_frame = PetParty_PetPartyContentFrame.content.frames[i - 1];
-            
-            -- Anchor the frame to the previous frame.
-            frame:SetPoint("BOTTOMLEFT", previous_frame, "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
-        end
-        
-        frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
-    end
-    
     -- Select the new pet party frame.
     PetParty.OnClickPetPartyFrame(pet_party_frame, "LeftButton", false);
+    
+    -- Update the pet party content frames.
+    PetParty.UpdatePetPartyContentFrames();
     
     -- Update the scroll bar layout.
     PetParty.UpdatePetPartyScrollBarLayout();
@@ -309,34 +278,6 @@ function PetParty.DeletePetPartyFrame()
         PetParty.pet_party_frame_selected:Hide();
         PetParty.pet_party_frame_selected:SetParent(nil);
         
-        -- Get the previous frame.
-        local frame_previous = nil;
-        if (PetParty.pet_party_frame_selected.id - 1 > 0) then
-            frame_previous = PetParty_PetPartyContentFrame.content.frames[PetParty.pet_party_frame_selected.id - 1];
-        end
-        
-        -- Update the other frames.
-        for i = PetParty.pet_party_frame_selected.id + 1, PetParty_PetPartyContentFrame.content.frame_count do
-            -- Get the frame.
-            local frame = PetParty_PetPartyContentFrame.content.frames[i];
-            
-            -- Update the pet party frame's anchors.
-            frame:ClearAllPoints();
-            
-            if (frame_previous == nil) then
-                -- Anchor the frame to the content frame.
-                frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
-            else
-                -- Anchor the frame to the previous frame.
-                frame:SetPoint("BOTTOMLEFT", frame_previous, "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
-            end
-            
-            frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
-            
-            -- Update the previous frame.
-            frame_previous = frame;
-        end
-        
         -- Cache the original ID of the selected frame.
         local original_id = PetParty.pet_party_frame_selected.id;
         
@@ -370,6 +311,9 @@ function PetParty.DeletePetPartyFrame()
                 PetParty.SetPetAbilityGUIDsPetInformationFrame(i, PetParty.pet_party_frame_selected.ability_guids[i]);
             end
         end
+        
+        -- Update the pet party content frames.
+        PetParty.UpdatePetPartyContentFrames();
         
         -- Update the scroll bar layout.
         PetParty.UpdatePetPartyScrollBarLayout();
@@ -531,6 +475,92 @@ function PetParty.SerializePetParties()
     if (PetParty.pet_party_frame_selected) then
         -- Store the selected pet party's ID.
         PetPartyDB.pet_party_selected_id = PetParty.pet_party_frame_selected.id;
+    end
+end
+
+-- Call to update the pet party content frames.
+function PetParty.UpdatePetPartyContentFrames()
+    -- Retrieve the search key from the edit box.
+    local text = PetParty_MainFrame_Edit_Box_Search:GetText();
+    if (text ~= nil) and (text ~= "") then
+        local frame_previous = nil;
+        
+        -- Update the frames.
+        for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
+            --
+            -- Display all frames whose title string matches the search string.
+            --
+            
+            -- Get the frame.
+            local frame = PetParty_PetPartyContentFrame.content.frames[i];
+
+            -- Update the pet party frame's ID.
+            frame.id = i;
+            
+            -- Update the pet party frame's anchors.
+            frame:ClearAllPoints();
+            
+            -- Match the text against the pet party's name.
+            local name = frame:GetText();
+            if (name ~= nil) and (name ~= "") and (name:match(text) ~= nil) and (name:match(text) ~= "") then
+                --
+                -- Display the frame.
+                --
+                
+                if (frame_previous == nil) then
+                    -- Anchor the frame to the content frame.
+                    frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
+                else
+                    -- Anchor the frame to the previous frame.
+                    frame:SetPoint("BOTTOMLEFT", frame_previous, "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+                end
+                
+                frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
+                frame:Show();
+                
+                -- Update the previous frame.
+                frame_previous = frame;
+            else
+                --
+                -- Hide the frame.
+                --
+                
+                frame:Hide();
+            end
+        end
+    else
+        --
+        -- Display all frames.
+        --
+        
+        local frame_previous = nil;
+        
+        -- Update the frames.
+        for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
+            -- Get the frame.
+            local frame = PetParty_PetPartyContentFrame.content.frames[i];
+            
+            -- Update the pet party frame's ID.
+            frame.id = i;
+            
+            -- Update the pet party frame's anchors.
+            frame:ClearAllPoints();
+            
+            -- Display the frame.
+            if (frame_previous == nil) then
+                -- Anchor the frame to the content frame.
+                frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
+            else
+                -- Anchor the frame to the previous frame.
+                frame:SetPoint("BOTTOMLEFT", frame_previous, "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+            end
+            
+            frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
+            frame:Show();
+            
+            -- Update the previous frame.
+            frame_previous = frame;
+        end
     end
 end
 

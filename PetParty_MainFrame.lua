@@ -291,7 +291,8 @@ end
 
 -- Called when the main frame's search edit box's text is changed.
 function PetParty.OnTextChangedMainFrameEditBoxSearch()
-    print("TODO: Implement me!");
+    -- Update the pet party content frames.
+    PetParty.UpdatePetPartyContentFrames();
     
     -- Call the base class function.
     SearchBoxTemplate_OnTextChanged(PetParty_MainFrame_Edit_Box_Search);
