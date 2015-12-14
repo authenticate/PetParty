@@ -502,7 +502,7 @@ function PetParty.UpdatePetPartyContentFrames()
             
             -- Match the text against the pet party's name.
             local name = frame:GetText();
-            if (name ~= nil) and (name ~= "") and (name:match(text) ~= nil) and (name:match(text) ~= "") then
+            if (name ~= nil) and (name ~= "") and (name:lower():match(text:lower()) ~= nil) and (name:lower():match(text:lower()) ~= "") then
                 --
                 -- Display the frame.
                 --
