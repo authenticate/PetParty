@@ -53,6 +53,19 @@ function PetParty.CreatePetInformationFrame(parent, name)
     pet_information_frame:EnableMouse(true);
     pet_information_frame:RegisterForDrag("LeftButton");
     
+    -- Add a handler for when a drag is started on the pet information frame.
+    pet_information_frame:SetScript("OnDragStart",
+        function(self, button)
+            if (button == "LeftButton") and (self.pet_guid ~= nil) then
+                -- Pick up the information pet.
+                C_PetJournal.PickupPet(self.pet_guid);
+                
+                -- Update the flag.
+                PetParty.pet_information_frame_cursor = self;
+            end
+        end
+    );
+    
     -- Add a handler for when the mouse is released on the pet information frame.
     pet_information_frame:SetScript("OnMouseUp",
         function(self, button)

@@ -136,6 +136,15 @@
                     PetParty.pet_information_frame_cursor = self:GetParent();
                 end
             </OnClick>
+            <OnDragStart>
+                if (button == "LeftButton") and (self:GetParent().pet_guid ~= nil) then
+                    -- Pick up the information pet.
+                    C_PetJournal.PickupPet(self:GetParent().pet_guid);
+                    
+                    -- Update the flag.
+                    PetParty.pet_information_frame_cursor = self:GetParent();
+                end
+            </OnDragStart>
             <OnLoad>
                 self:RegisterForDrag("LeftButton");
                 self:RegisterForClicks("LeftButtonUp", "RightButtonUp");
