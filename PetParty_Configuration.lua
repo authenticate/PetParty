@@ -26,7 +26,7 @@ PetParty = {};
 --
 
 PetParty.ADDON_NAME = "PetParty";
-PetParty.ADDON_VERSION = "6.2.2";
+PetParty.ADDON_VERSION = "6.2.3";
 
 PetParty.ABILITY_GROUPS_PER_PET = 3;
 PetParty.ABILITIES_PER_ABILITY_GROUP = 2;
