@@ -533,33 +533,36 @@ function PetParty.UpdatePetPartyContentFrames()
         -- Display all frames.
         --
         
-        local frame_previous = nil;
+        if (PetParty_PetPartyContentFrame.content ~= nil) then
         
-        -- Update the frames.
-        for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
-            -- Get the frame.
-            local frame = PetParty_PetPartyContentFrame.content.frames[i];
+            local frame_previous = nil;
             
-            -- Update the pet party frame's ID.
-            frame.id = i;
-            
-            -- Update the pet party frame's anchors.
-            frame:ClearAllPoints();
-            
-            -- Display the frame.
-            if (frame_previous == nil) then
-                -- Anchor the frame to the content frame.
-                frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
-            else
-                -- Anchor the frame to the previous frame.
-                frame:SetPoint("BOTTOMLEFT", frame_previous, "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+            -- Update the frames.
+            for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
+                -- Get the frame.
+                local frame = PetParty_PetPartyContentFrame.content.frames[i];
+                
+                -- Update the pet party frame's ID.
+                frame.id = i;
+                
+                -- Update the pet party frame's anchors.
+                frame:ClearAllPoints();
+                
+                -- Display the frame.
+                if (frame_previous == nil) then
+                    -- Anchor the frame to the content frame.
+                    frame:SetPoint("TOPLEFT", PetParty_PetPartyContentFrame);
+                else
+                    -- Anchor the frame to the previous frame.
+                    frame:SetPoint("BOTTOMLEFT", frame_previous, "BOTTOMLEFT", 0, -PET_PARTY_FRAME_SIZE);
+                end
+                
+                frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
+                frame:Show();
+                
+                -- Update the previous frame.
+                frame_previous = frame;
             end
-            
-            frame:SetPoint("RIGHT", PetParty_PetPartyScrollFrame);
-            frame:Show();
-            
-            -- Update the previous frame.
-            frame_previous = frame;
         end
     end
 end
