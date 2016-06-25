@@ -18,13 +18,16 @@
 # along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-## Interface: 60200
-## Version: 6.2.3
+## Interface: 70000
+## Version: 7.0.3
 ## Title: Pet Party
 ## Notes: Creates groups of pets for the pet battle system.
 ## Author: Authentication
 ## SavedVariables: PetPartyDB
 ## SavedVariablesPerCharacter: PetPartyCharacterDB
+
+# The art files.
+PetParty_Art.tga
 
 # The configuration files.
 PetParty_Configuration.lua

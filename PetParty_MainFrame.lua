@@ -182,27 +182,15 @@ end
 
 -- Called when the main frame receives an event.
 function PetParty.OnEventMainFrame(self, event, arg1, ...)
-    if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
-        -- Load Blizzard's pet journal.
-        if not IsAddOnLoaded("Blizzard_Collections") then
-            LoadAddOn("Blizzard_Collections");
-        end
-        
+    if (event == "ADDON_LOADED") and (arg1 == "Blizzard_Collections") then
         -- Anchor the main frame to Blizzard's pet journal.
         PetParty_MainFrame:SetParent(PetJournal);
         PetParty_MainFrame:ClearAllPoints();
         PetParty_MainFrame:SetPoint("TOPLEFT", PetJournal, "TOPRIGHT");
         PetParty_MainFrame:SetPoint("BOTTOM", PetJournal);
         PetParty_MainFrame:SetWidth(PetParty.MAIN_FRAME_WIDTH);
-    elseif (event == "PET_JOURNAL_LIST_UPDATE") then
-        -- Update the training pet frame's information.
-        PetParty.UpdateTrainingPetInformationFrame();
         
-        -- Update all pet frames' information.
-        for i = 1, PetParty.PETS_PER_PARTY do
-            PetParty.UpdatePetInformationPetInformationFrame(i);
-        end
-    elseif (event == "PLAYER_ENTERING_WORLD") then
+        -- Update the main frame.
         if (PetPartyCharacterDB ~= nil) then
             if (PetPartyCharacterDB.main_frame_hidden ~= nil) then
                 if (PetPartyCharacterDB.main_frame_hidden) then
@@ -213,7 +201,16 @@ function PetParty.OnEventMainFrame(self, event, arg1, ...)
             end
         end
         
+        -- Update the layout.
         PetParty.UpdateMainFrameLayout();
+    elseif (event == "PET_JOURNAL_LIST_UPDATE") then
+        -- Update the training pet frame's information.
+        PetParty.UpdateTrainingPetInformationFrame();
+        
+        -- Update all pet frames' information.
+        for i = 1, PetParty.PETS_PER_PARTY do
+            PetParty.UpdatePetInformationPetInformationFrame(i);
+        end
     elseif (event == "PLAYER_LOGOUT") then
         if (PetPartyCharacterDB == nil) then
             PetPartyCharacterDB = {};

@@ -31,16 +31,6 @@ local PET_PARTY_FRAME_TEXTURE_OFFSET_RIGHT = -3;
 local PET_PARTY_FRAME_TEXTURE_OFFSET_TOP = -1;
 local PET_PARTY_FRAME_TEXTURE_OFFSET_BOTTOM = 1;
 
-local PET_PARTY_FRAME_HIGHLIGHT_R = 1.0;
-local PET_PARTY_FRAME_HIGHLIGHT_G = 1.0;
-local PET_PARTY_FRAME_HIGHLIGHT_B = 1.0;
-local PET_PARTY_FRAME_HIGHLIGHT_A = 0.333;
-
-local PET_PARTY_FRAME_PUSHED_R = 0.769;
-local PET_PARTY_FRAME_PUSHED_G = 0.647;
-local PET_PARTY_FRAME_PUSHED_B = 0.157;
-local PET_PARTY_FRAME_PUSHED_A = 0.333;
-
 local SCROLL_FRAME_OFFSET_TOP = PetParty.MAIN_FRAME_OFFSET_TOP -
                                 PetParty.TRAINING_PET_INFORMATION_FRAME_HEIGHT -
                                 PetParty.PADDING -
@@ -111,32 +101,26 @@ function PetParty.AddPetPartyFrame(name)
         texture_highlight:ClearAllPoints();
         texture_highlight:SetPoint("TOPLEFT", PET_PARTY_FRAME_TEXTURE_OFFSET_LEFT, PET_PARTY_FRAME_TEXTURE_OFFSET_TOP);
         texture_highlight:SetPoint("BOTTOMRIGHT", PET_PARTY_FRAME_TEXTURE_OFFSET_RIGHT, PET_PARTY_FRAME_TEXTURE_OFFSET_BOTTOM);
-        texture_highlight:SetTexture(PET_PARTY_FRAME_HIGHLIGHT_R,
-                                     PET_PARTY_FRAME_HIGHLIGHT_G,
-                                     PET_PARTY_FRAME_HIGHLIGHT_B,
-                                     PET_PARTY_FRAME_HIGHLIGHT_A);
+        texture_highlight:SetTexture(PetParty.ART_FILE_NAME);
+        texture_highlight:SetTexCoord(PetParty.ART_FRAME_HIGHLIGHT_LEFT,
+                                      PetParty.ART_FRAME_HIGHLIGHT_RIGHT,
+                                      PetParty.ART_FRAME_HIGHLIGHT_TOP,
+                                      PetParty.ART_FRAME_HIGHLIGHT_BOTTOM);
+
         pet_party_frame:SetHighlightTexture(texture_highlight);
-        
-        local texture_pushed = pet_party_frame:CreateTexture(nil, "BACKGROUND");
-        texture_pushed:ClearAllPoints();
-        texture_pushed:SetPoint("TOPLEFT", PET_PARTY_FRAME_TEXTURE_OFFSET_LEFT, PET_PARTY_FRAME_TEXTURE_OFFSET_TOP);
-        texture_pushed:SetPoint("BOTTOMRIGHT", PET_PARTY_FRAME_TEXTURE_OFFSET_RIGHT, PET_PARTY_FRAME_TEXTURE_OFFSET_BOTTOM);
-        texture_pushed:SetTexture(PET_PARTY_FRAME_PUSHED_R,
-                                  PET_PARTY_FRAME_PUSHED_G,
-                                  PET_PARTY_FRAME_PUSHED_B,
-                                  PET_PARTY_FRAME_PUSHED_A);
-        pet_party_frame:SetPushedTexture(texture_pushed);
-        
+
         local texture_toggled = pet_party_frame:CreateTexture(nil, "BACKGROUND");
         texture_toggled:ClearAllPoints();
         texture_toggled:SetPoint("TOPLEFT", PET_PARTY_FRAME_TEXTURE_OFFSET_LEFT, PET_PARTY_FRAME_TEXTURE_OFFSET_TOP);
         texture_toggled:SetPoint("BOTTOMRIGHT", PET_PARTY_FRAME_TEXTURE_OFFSET_RIGHT, PET_PARTY_FRAME_TEXTURE_OFFSET_BOTTOM);
-        texture_toggled:SetTexture(PET_PARTY_FRAME_PUSHED_R,
-                                   PET_PARTY_FRAME_PUSHED_G,
-                                   PET_PARTY_FRAME_PUSHED_B,
-                                   PET_PARTY_FRAME_PUSHED_A);
+        texture_toggled:SetTexture(PetParty.ART_FILE_NAME);
+        texture_toggled:SetTexCoord(PetParty.ART_FRAME_PUSHED_LEFT,
+                                    PetParty.ART_FRAME_PUSHED_RIGHT,
+                                    PetParty.ART_FRAME_PUSHED_TOP,
+                                    PetParty.ART_FRAME_PUSHED_BOTTOM);
+
         pet_party_frame.texture_toggled = texture_toggled;
-        
+
         -- Update the allocated frame count.
         PetParty_PetPartyContentFrame.content.frame_count_allocated = PetParty_PetPartyContentFrame.content.frame_count_allocated + 1;
     end

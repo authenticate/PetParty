@@ -38,11 +38,7 @@ end
 
 -- Called when the pet journal button receives an event.
 function PetParty.OnEventPetJournalButton(self, event, arg1, ...)
-    if (event == "ADDON_LOADED") and (arg1 == PetParty.ADDON_NAME) then
-        if not IsAddOnLoaded("Blizzard_Collections") then
-            LoadAddOn("Blizzard_Collections");
-        end
-        
+    if (event == "ADDON_LOADED") and (arg1 == "Blizzard_Collections") then
         -- Anchor the pet journal button to Blizzard's pet journal.
         PetParty_PetJournalButton:SetParent(PetJournal);
         PetParty_PetJournalButton:ClearAllPoints();
