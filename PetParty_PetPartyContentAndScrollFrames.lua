@@ -64,14 +64,6 @@ local SCROLL_BAR_WIDTH = 16;
 
 -- Call to add a pet party frame.
 function PetParty.AddPetPartyFrame(name)
-    -- Initialize the battle pet frame variables.
-    if (PetParty_PetPartyContentFrame.content == nil) then
-        PetParty_PetPartyContentFrame.content = {};
-        PetParty_PetPartyContentFrame.content.frames = {};
-        PetParty_PetPartyContentFrame.content.frame_count = 0;
-        PetParty_PetPartyContentFrame.content.frame_count_allocated = 0;
-    end
-    
     -- Create or reuse a pet party frame.
     local pet_party_frame = nil;
     
@@ -425,7 +417,7 @@ function PetParty.SerializePetParties()
     -- Clear any old data.
     PetPartyDB.pet_parties = {};
     PetPartyDB.pet_party_selected_id = nil;
-    
+
     -- For each pet party frame...
     for i = 1, PetParty_PetPartyContentFrame.content.frame_count do
         -- Get the pet party frame.

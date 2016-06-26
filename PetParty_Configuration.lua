@@ -73,9 +73,6 @@ PetParty.STRING_BUTTON_CANCEL = "Cancel";
 PetParty.STRING_BUTTON_CREATE = "Create";
 PetParty.STRING_BUTTON_CREATE_TOOLTIP = "Creates a new Pet Party.";
 
-PetParty.STRING_BUTTON_RENAME = "Rename";
-PetParty.STRING_BUTTON_RENAME_TOOLTIP = "Renames the currently selected Pet Party.";
-
 PetParty.STRING_BUTTON_DELETE = "Delete";
 PetParty.STRING_BUTTON_DELETE_TOOLTIP = "Deletes the currently selected Pet Party.";
 
@@ -83,8 +80,16 @@ PetParty.STRING_BUTTON_HIDE_TOOLTIP = "Hides the Pet Party frame.";
 
 PetParty.STRING_BUTTON_JOURNAL_TOOLTIP = "Creates groups of pets for the pet battle system.";
 
+PetParty.STRING_BUTTON_OK = "OK";
+
+PetParty.STRING_BUTTON_RENAME = "Rename";
+PetParty.STRING_BUTTON_RENAME_TOOLTIP = "Renames the currently selected Pet Party.";
+
 PetParty.STRING_BUTTON_SAVE = "Save";
 PetParty.STRING_BUTTON_SAVE_TOOLTIP = "Stores the configuration into the currently selected Pet Party.";
+
+PetParty.STRING_DIALOG_NAME_ERROR_BATTLE_PET_TRAINING = "PetParty_ErrorBattlePetTrainingDialog";
+PetParty.STRING_DIALOG_TITLE_ERROR_BATTLE_PET_TRAINING = "Please learn Battle Pet Training before using Pet Party.";
 
 PetParty.STRING_DIALOG_NAME_CREATE_PET_PARTY = "PetParty_CreatePetPartyDialog";
 PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY = "Create a pet party.";

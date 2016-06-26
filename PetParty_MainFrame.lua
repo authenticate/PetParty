@@ -24,130 +24,6 @@
 
 local PET_PARTY_BUTTON_COUNT = 3;
 
---
--- Define some dialogs for creating and renaming pet parties.
---
-
-StaticPopupDialogs[PetParty.STRING_DIALOG_NAME_CREATE_PET_PARTY] = {
-    text = PetParty.L[PetParty.STRING_DIALOG_TITLE_CREATE_PET_PARTY],
-    button1 = PetParty.L[PetParty.STRING_BUTTON_CREATE],
-    button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
-    OnAccept =
-        function (self)
-            local text = self.editBox:GetText();
-            if (text ~= nil) and (text ~= "") then
-                -- Create a pet party frame.
-                PetParty.AddPetPartyFrame(text);
-                
-                -- Store the pet parties.
-                PetParty.SerializePetParties();
-            end
-        end
-    ,
-    OnShow =
-        function (self, data)
-            self.editBox:SetText("");
-            self.button1:Disable();
-        end
-    ,
-    EditBoxOnTextChanged =
-        function (self)
-            local text = self:GetText();
-            if (text ~= nil) and (text ~= "") then
-                self:GetParent().button1:Enable();
-            else
-                self:GetParent().button1:Disable();
-            end
-        end
-    ,
-    EditBoxOnEnterPressed =
-        function (self)
-            if (self:GetParent().button1:IsEnabled()) then
-                self:GetParent().button1:Click("LeftButton", false);
-            end
-        end
-    ,
-    EditBoxOnEscapePressed =
-        function (self)
-            self:GetParent():Hide();
-        end
-    ,
-    exclusive = true,
-    hasEditBox = true,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    preferredIndex = 3,
-};
-
-StaticPopupDialogs[PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY] = {
-    text = PetParty.L[PetParty.STRING_DIALOG_TITLE_RENAME_PET_PARTY],
-    button1 = PetParty.L[PetParty.STRING_BUTTON_RENAME],
-    button2 = PetParty.L[PetParty.STRING_BUTTON_CANCEL],
-    OnAccept =
-        function (self)
-            local text = self.editBox:GetText();
-            if (text ~= nil) and (text ~= "") then
-                if (PetParty.pet_party_frame_selected ~= nil) then
-                    -- Rename the pet party.
-                    PetParty.pet_party_frame_selected:SetText(text);
-                    PetParty.SerializePetParties();
-                end
-            end
-        end
-    ,
-    OnShow =
-        function (self, data)
-            if (PetParty.pet_party_frame_selected ~= nil) then
-                local text = PetParty.pet_party_frame_selected:GetText();
-                self.editBox:SetText(text);
-                self.button1:Disable();
-            else
-                self:Hide();
-            end
-        end
-    ,
-    EditBoxOnTextChanged =
-        function (self)
-            self:GetParent().button1:Disable();
-            
-            local text = self:GetText();
-            if (text ~= nil) and (text ~= "") then
-                if (PetParty.pet_party_frame_selected ~= nil) then
-                    local text_current = PetParty.pet_party_frame_selected:GetText();
-                    if (text ~= text_current) then
-                        self:GetParent().button1:Enable();
-                    end
-                end
-            end
-        end
-    ,
-    EditBoxOnEnterPressed =
-        function (self)
-            if (self:GetParent().button1:IsEnabled()) then
-                self:GetParent().button1:Click("LeftButton", false);
-            end
-        end
-    ,
-    EditBoxOnEscapePressed =
-        function (self)
-            self:GetParent():Hide();
-        end
-    ,
-    exclusive = true,
-    hasEditBox = true,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    preferredIndex = 3,
-};
-
--- Call to hide all pop-ups.
-function PetParty.HidePopups()
-    StaticPopup_Hide(PetParty.STRING_DIALOG_NAME_CREATE_PET_PARTY);
-    StaticPopup_Hide(PetParty.STRING_DIALOG_NAME_RENAME_PET_PARTY);
-end
-
 -- Called when the main frame's create pet party button is clicked.
 function PetParty.OnClickMainFrameButtonCreatePetParty()
     PetParty.HidePopups();
@@ -183,6 +59,14 @@ end
 -- Called when the main frame receives an event.
 function PetParty.OnEventMainFrame(self, event, arg1, ...)
     if (event == "ADDON_LOADED") and (arg1 == "Blizzard_Collections") then
+        -- Initialize the battle pet frame variables.
+        if (PetParty_PetPartyContentFrame.content == nil) then
+            PetParty_PetPartyContentFrame.content = {};
+            PetParty_PetPartyContentFrame.content.frames = {};
+            PetParty_PetPartyContentFrame.content.frame_count = 0;
+            PetParty_PetPartyContentFrame.content.frame_count_allocated = 0;
+        end
+        
         -- Anchor the main frame to Blizzard's pet journal.
         PetParty_MainFrame:SetParent(PetJournal);
         PetParty_MainFrame:ClearAllPoints();

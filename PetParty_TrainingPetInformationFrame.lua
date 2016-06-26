@@ -121,64 +121,78 @@ function PetParty.OnLoadTrainingPetInformationFrame()
         function (self, button, down)
             local cursorType, petID = GetCursorInfo();
             if (cursorType == "battlepet") then
-                -- If this is the training pet...
-                if (PetParty.training_pet_cursor) then
-                    -- Store the pet GUID.
-                    PetParty.SetPetGUIDTrainingPetFrame(petID);
+                local is_unlocked = PetParty.IsBattlePetTrainingUnlocked();
+                if is_unlocked then
+                    -- If this is the training pet...
+                    if (PetParty.training_pet_cursor) then
+                        -- Store the pet GUID.
+                        PetParty.SetPetGUIDTrainingPetFrame(petID);
+                        
+                        -- Store the pet's abilities' GUIDs.
+                        local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
+                        PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                    -- If this is an information pet...
+                    elseif (PetParty.pet_information_frame_cursor ~= nil) then
+                        -- Store the pet GUID.
+                        PetParty.SetPetGUIDTrainingPetFrame(petID);
+                        
+                        -- Get the pet's abilities' GUIDs.
+                        local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
+                        
+                        -- Store the pet's abilities' GUIDs.
+                        PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                    -- If this is a pet from Blizzard's UI...
+                    else
+                        -- Store the pet GUID.
+                        PetParty.SetPetGUIDTrainingPetFrame(petID);
+                        
+                        -- Cache the pet GUID of the pet currently loaded in slot one.
+                        local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
+                        
+                        -- Load the pet into slot one.
+                        C_PetJournal.SetPetLoadOutInfo(1, petID);
+                        
+                        -- Get the active abilities of the pet from slot one.
+                        local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(1);
+                        
+                        -- Reset slot one.
+                        C_PetJournal.SetPetLoadOutInfo(1, petGUID_cache);
+                        
+                        -- Store the pet's abilities' GUIDs.
+                        local ability_guids = { ability1, ability2, ability3 };
+                        PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                    end
                     
-                    -- Store the pet's abilities' GUIDs.
-                    local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
-                    PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
-                -- If this is an information pet...
-                elseif (PetParty.pet_information_frame_cursor ~= nil) then
-                    -- Store the pet GUID.
-                    PetParty.SetPetGUIDTrainingPetFrame(petID);
+                    -- Reset the cursor.
+                    ClearCursor();
                     
-                    -- Get the pet's abilities' GUIDs.
-                    local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
+                    -- Update the flags.
+                    PetParty.pet_information_frame_cursor = nil;
+                    PetParty.training_pet_cursor = false;
                     
-                    -- Store the pet's abilities' GUIDs.
-                    PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
-                -- If this is a pet from Blizzard's UI...
+                    -- Update the display.
+                    PetParty.UpdateTrainingPetInformationFrame();
+                    
+                    -- Signal the training pet has changed.
+                    PetParty.OnTrainingPetChangedPetPartyInformationFrame();
                 else
-                    -- Store the pet GUID.
-                    PetParty.SetPetGUIDTrainingPetFrame(petID);
-                    
-                    -- Cache the pet GUID of the pet currently loaded in slot one.
-                    local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
-                    
-                    -- Load the pet into slot one.
-                    C_PetJournal.SetPetLoadOutInfo(1, petID);
-                    
-                    -- Get the active abilities of the pet from slot one.
-                    local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(1);
-                    
-                    -- Reset slot one.
-                    C_PetJournal.SetPetLoadOutInfo(1, petGUID_cache);
-                    
-                    -- Store the pet's abilities' GUIDs.
-                    local ability_guids = { ability1, ability2, ability3 };
-                    PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                    -- Display an error message.
+                    PetParty.HidePopups();
+                    StaticPopup_Show(PetParty.STRING_DIALOG_NAME_ERROR_BATTLE_PET_TRAINING);
                 end
-                
-                -- Reset the cursor.
-                ClearCursor();
-                
-                -- Update the flags.
-                PetParty.pet_information_frame_cursor = nil;
-                PetParty.training_pet_cursor = false;
-                
-                -- Update the display.
-                PetParty.UpdateTrainingPetInformationFrame();
-                
-                -- Signal the training pet has changed.
-                PetParty.OnTrainingPetChangedPetPartyInformationFrame();
             elseif (button == "LeftButton") and (self:GetParent().pet_guid ~= nil) then
-                -- Pick up the training pet.
-                C_PetJournal.PickupPet(self:GetParent().pet_guid);
-                
-                -- Update the training pet cursor flag.
-                PetParty.training_pet_cursor = true;
+                local is_unlocked = PetParty.IsBattlePetTrainingUnlocked();
+                if is_unlocked then
+                    -- Pick up the training pet.
+                    C_PetJournal.PickupPet(self:GetParent().pet_guid);
+                    
+                    -- Update the training pet cursor flag.
+                    PetParty.training_pet_cursor = true;
+                else
+                    -- Display an error message.
+                    PetParty.HidePopups();
+                    StaticPopup_Show(PetParty.STRING_DIALOG_NAME_ERROR_BATTLE_PET_TRAINING);
+                end
             end
         end
     );
@@ -220,58 +234,65 @@ function PetParty.OnLoadTrainingPetInformationFrame()
         function(self, button)
             local cursorType, petID = GetCursorInfo();
             if (cursorType == "battlepet") then
-                -- If this is the training pet...
-                if (PetParty.training_pet_cursor) then
-                    -- Store the pet GUID.
-                    PetParty.SetPetGUIDTrainingPetFrame(petID);
+                local is_unlocked = PetParty.IsBattlePetTrainingUnlocked();
+                if is_unlocked then
+                    -- If this is the training pet...
+                    if (PetParty.training_pet_cursor) then
+                        -- Store the pet GUID.
+                        PetParty.SetPetGUIDTrainingPetFrame(petID);
+                        
+                        -- Store the pet's abilities' GUIDs.
+                        local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
+                        PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                    -- If this is an information pet...
+                    elseif (PetParty.pet_information_frame_cursor ~= nil) then
+                        -- Store the pet GUID.
+                        PetParty.SetPetGUIDTrainingPetFrame(petID);
+                        
+                        -- Get the pet's abilities' GUIDs.
+                        local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
+                        
+                        -- Store the pet's abilities' GUIDs.
+                        PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                    -- If this is a pet from Blizzard's UI...
+                    else
+                        -- Store the pet GUID.
+                        PetParty.SetPetGUIDTrainingPetFrame(petID);
+                        
+                        -- Cache the pet GUID of the pet currently loaded in slot one.
+                        local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
+                        
+                        -- Load the pet into slot one.
+                        C_PetJournal.SetPetLoadOutInfo(1, petID);
+                        
+                        -- Get the active abilities of the pet from slot one.
+                        local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(1);
+                        
+                        -- Reset slot one.
+                        C_PetJournal.SetPetLoadOutInfo(1, petGUID_cache);
+                        
+                        -- Store the pet's abilities' GUIDs.
+                        local ability_guids = { ability1, ability2, ability3 };
+                        PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                    end
                     
-                    -- Store the pet's abilities' GUIDs.
-                    local ability_guids = PetParty.GetPetAbilityGUIDsTrainingPetFrame();
-                    PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
-                -- If this is an information pet...
-                elseif (PetParty.pet_information_frame_cursor ~= nil) then
-                    -- Store the pet GUID.
-                    PetParty.SetPetGUIDTrainingPetFrame(petID);
+                    -- Reset the cursor.
+                    ClearCursor();
                     
-                    -- Get the pet's abilities' GUIDs.
-                    local ability_guids = PetParty.GetPetAbilityGUIDsPetInformationFrame(PetParty.pet_information_frame_cursor.id);
+                    -- Update the flags.
+                    PetParty.pet_information_frame_cursor = nil;
+                    PetParty.training_pet_cursor = false;
                     
-                    -- Store the pet's abilities' GUIDs.
-                    PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
-                -- If this is a pet from Blizzard's UI...
+                    -- Update the display.
+                    PetParty.UpdateTrainingPetInformationFrame();
+                    
+                    -- Signal the training pet has changed.
+                    PetParty.OnTrainingPetChangedPetPartyInformationFrame();
                 else
-                    -- Store the pet GUID.
-                    PetParty.SetPetGUIDTrainingPetFrame(petID);
-                    
-                    -- Cache the pet GUID of the pet currently loaded in slot one.
-                    local petGUID_cache, ability1_cache, ability2_cache, ability3_cache, locked_cache = C_PetJournal.GetPetLoadOutInfo(1);
-                    
-                    -- Load the pet into slot one.
-                    C_PetJournal.SetPetLoadOutInfo(1, petID);
-                    
-                    -- Get the active abilities of the pet from slot one.
-                    local petGUID, ability1, ability2, ability3, locked = C_PetJournal.GetPetLoadOutInfo(1);
-                    
-                    -- Reset slot one.
-                    C_PetJournal.SetPetLoadOutInfo(1, petGUID_cache);
-                    
-                    -- Store the pet's abilities' GUIDs.
-                    local ability_guids = { ability1, ability2, ability3 };
-                    PetParty.SetPetAbilityGUIDsTrainingPetFrame(ability_guids);
+                    -- Display an error message.
+                    PetParty.HidePopups();
+                    StaticPopup_Show(PetParty.STRING_DIALOG_NAME_ERROR_BATTLE_PET_TRAINING);
                 end
-                
-                -- Reset the cursor.
-                ClearCursor();
-                
-                -- Update the flags.
-                PetParty.pet_information_frame_cursor = nil;
-                PetParty.training_pet_cursor = false;
-                
-                -- Update the display.
-                PetParty.UpdateTrainingPetInformationFrame();
-                
-                -- Signal the training pet has changed.
-                PetParty.OnTrainingPetChangedPetPartyInformationFrame();
             end
         end
     );
