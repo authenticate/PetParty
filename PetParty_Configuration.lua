@@ -26,7 +26,7 @@ PetParty = {};
 --
 
 PetParty.ADDON_NAME = "PetParty";
-PetParty.ADDON_VERSION = "7.1.0";
+PetParty.ADDON_VERSION = "8.0.3";
 
 PetParty.ART_FILE_NAME = "Interface\\AddOns\\PetParty\\PetParty_Art.tga";
 

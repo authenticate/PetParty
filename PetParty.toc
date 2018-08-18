@@ -1,6 +1,6 @@
 #
 # Pet Party
-# Copyright 2014 - 2016 James Lammlein
+# Copyright 2014 - 2018 James Lammlein
 #
 # This file is part of Pet Party.
 #
@@ -18,8 +18,8 @@
 # along with Pet Party.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-## Interface: 70100
-## Version: 7.1.0
+## Interface: 80000
+## Version: 8.0.3
 ## Title: Pet Party
 ## Notes: Creates groups of pets for the pet battle system.
 ## Author: Authentication
